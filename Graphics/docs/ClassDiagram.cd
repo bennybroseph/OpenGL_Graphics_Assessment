@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="RenderingGeomApplication">
+    <Position X="0.5" Y="8.5" Width="2.25" />
+    <NestedTypes>
+      <Struct Name="RenderingGeomApplication::Vertex" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>tutorials\RenderingGeomApplication.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAAAMABAAIAAAQgAAAAAAAAAGAAAAAUAAA=</HashCode>
+      <FileName>tutorials\RenderingGeomApplication.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RenderingOBJApplication">
+    <Position X="0.5" Y="5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAYABAAIAAEAgAAAAAABAAAAAAABEAAA=</HashCode>
+      <FileName>tutorials\RenderingOBJApplication.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gizmos">
+    <Position X="12" Y="2.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <NestedTypes>
+      <Struct Name="Gizmos::GizmoVertex" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>src\Gizmos.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Struct Name="Gizmos::GizmoLine" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>src\Gizmos.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Struct Name="Gizmos::GizmoTri" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>src\Gizmos.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AEACgJMECAwBBEAAAZKEgkAAACCCEAggCghAAARoAlY=</HashCode>
+      <FileName>src\Gizmos.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BaseApplication">
+    <Position X="4.25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAgAAAAAAAAABQAIAAAAgACAAAAgAAAAACAAEAAA=</HashCode>
+      <FileName>src\BaseApplication.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AIEMaterial">
+    <Position X="6" Y="2.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>QAAACIAAABAAAAgIEBAAAAIAQAAAAAAABAAAAEBAEBA=</HashCode>
+      <FileName>src\Mesh.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AIETexture">
+    <Position X="8.25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABABAAAAAQAQAAACAAAAAAAAAAAAAACAAAgAAI=</HashCode>
+      <FileName>src\Mesh.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SolarSystemApplication">
+    <Position X="0.5" Y="2.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAAAIABAAIAAAAgAAAAAAAIAAAAAAAEAAA=</HashCode>
+      <FileName>tutorials\SolarSystemApplication.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TexturedOBJApplication">
+    <Position X="0.5" Y="12.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAAAIABAAIAAEAgAAAAAAAAAAAAQABEAAA=</HashCode>
+      <FileName>tutorials\TexturedOBJApplication.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mesh">
+    <Position X="10" Y="5.25" Width="1.75" />
+    <NestedTypes>
+      <Struct Name="Mesh::MeshChunk" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>src\Mesh.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>YAAAAABAAAEAAAAAAAIAAAEAAEAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>src\Mesh.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Camera">
+    <Position X="8.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAgAIAAFAAEAFRCAAAAAQAABQAgEAAAAAABAEAAA=</HashCode>
+      <FileName>src\Camera.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Shader">
+    <Position X="6" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAACAAIAAAAAAAAAAgAAAAAAAAEAABAAAAABQAcA=</HashCode>
+      <FileName>src\Shader.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="AIEVertex">
+    <Position X="10" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAAAAAAAAAAAIAgAEAAAAAAAAAIAAgEAAAA=</HashCode>
+      <FileName>src\Mesh.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
