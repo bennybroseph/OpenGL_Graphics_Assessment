@@ -3,7 +3,7 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <IncludePath>$(SolutionDir)tutorials;$(SolutionDir)src;$(SolutionDir)dep/glm;$(SolutionDir)dep/glfw-3.1.2/include;$(SolutionDir)dep/stb-master;$(SolutionDir)dep/imgui;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)tutorials;$(SolutionDir)src;$(SolutionDir)dep/glm;$(SolutionDir)dep/glfw-3.1.2/include;$(SolutionDir)dep/stb-master;$(SolutionDir)dep/imgui;$(VC_IncludePath);$(ProjectDir);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)dep\glfw-3.1.2\src\$(Configuration);$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
     <OutDir>$(ProjectDir)bin\</OutDir>
     <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>

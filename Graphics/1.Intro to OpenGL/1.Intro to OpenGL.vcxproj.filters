@@ -24,12 +24,24 @@
     <ClCompile Include="..\src\gl_core_4_4.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BaseApplication.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MyApplication.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\gl_core_4_4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Gizmos.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseApplication.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MyApplication.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
