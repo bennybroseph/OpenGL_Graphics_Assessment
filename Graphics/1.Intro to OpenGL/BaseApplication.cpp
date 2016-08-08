@@ -1,11 +1,13 @@
 #include "BaseApplication.h"
 
-bool BaseApplication::createWindow(const char * title, int width, int height)
+#include <cstdio>
+
+int BaseApplication::createWindow(const char * title, int width, int height)
 {
 	if (glfwInit() == false)
 		return -1;
 
-	m_window = glfwCreateWindow(1280, 720, "Computer Graphics", nullptr, nullptr);
+	m_window = glfwCreateWindow(width, height, title, nullptr, nullptr);
 
 	if (m_window == nullptr)
 	{
@@ -25,7 +27,8 @@ bool BaseApplication::createWindow(const char * title, int width, int height)
 	auto major = ogl_GetMajorVersion();
 	auto minor = ogl_GetMinorVersion();
 	printf("GL: %i.%i\n", major, minor);
-	glClearColor(0.25f, 0.25f, 0.25f, 1);
+
+	glClearColor(0.25f, 0.25f, 0.25f, 1);
 	glEnable(GL_DEPTH_TEST); // enables the depth buffer
 	return false;
 }
@@ -38,14 +41,27 @@ void BaseApplication::destroyWindow()
 
 void BaseApplication::run()
 {
-	float prevTime = glfwGetTime();
-	float currTime = 0;
-	while (currTime = glfwGetTime(), update((currTime - prevTime)))//wat
+	auto currTime = glfwGetTime();
+	double prevTime;
+
+	// set currTime to glfwGetTime() and run the update() fucntion
+	// the loop runs so long as update returns true
+	while (m_isRunning)
 	{
+		prevTime = currTime;
+		currTime = glfwGetTime();
+		m_deltaTime = static_cast<float>(currTime - prevTime);
+
 		glfwPollEvents();
+		parseInput();
+		if (!m_isRunning)
+			continue;
+
+		update();
+		lateUpdate();
+
 		draw(); //call the implemented draw function of whatever application we have designated
 		glfwSwapBuffers(m_window);
-		prevTime = currTime;
 	}
 }
- 
+

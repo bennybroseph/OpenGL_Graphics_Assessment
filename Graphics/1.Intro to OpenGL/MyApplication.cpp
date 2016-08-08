@@ -1,11 +1,14 @@
 #include "MyApplication.h"
+#include <Gizmos.h>
 
 using glm::vec3;
 using glm::vec4;
 using glm::mat4;
 
+const static int GRID_SIZE = 10;
+const static int GRID_SEPARATOR = 5;
 
-bool MyApplication::startup()
+int MyApplication::startup()
 {
 	createWindow("Intro to OpenGL", 1280, 720);
 
@@ -29,31 +32,59 @@ void MyApplication::shutdown()
 	destroyWindow();
 }
 
-bool MyApplication::update(float deltaTime)
+void MyApplication::parseInput()
 {
 	// close the application if the window closes or we press escape
 	if (glfwWindowShouldClose(m_window) || glfwGetKey(m_window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-		return false;
-
-	Gizmos::clear();	
-	
-	vec4 white(1);
-	vec4 black(0, 0, 0, 1);
-	
-	for (int i = 0; i < 21; ++i)
 	{
-		Gizmos::addLine(vec3(-10 + i, 0, 10), vec3(-10 + i, 0, -10), i == 10 ? white : black);
-		Gizmos::addLine(vec3(10, 0, -10 + i), vec3(-10, 0, -10 + i), i == 10 ? white : black);
+		m_isRunning = false;
+		return;
 	}
 
-	Gizmos::addTransform(glm::mat4(1));
+	if (glfwGetKey(m_window, GLFW_KEY_F1) == GLFW_PRESS && m_prevF1State != GLFW_PRESS)
+		m_shouldDrawGrid = !m_shouldDrawGrid;
 
-	return true;
+	m_prevF1State = glfwGetKey(m_window, GLFW_KEY_F1);
+}
+
+void MyApplication::update()
+{
+
+}
+
+void MyApplication::lateUpdate()
+{
+
 }
 
 void MyApplication::draw()
 {
+	Gizmos::clear();
+
+	if (m_shouldDrawGrid)
+		drawGrid();
+
 	// clear the screen for this frame
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	Gizmos::draw(m_projection * m_view);
+}
+
+void MyApplication::drawGrid()
+{
+	vec4 white(1);
+	vec4 black(0, 0, 0, 1);
+
+	for (auto i = 0; i <= GRID_SIZE * 2; ++i)
+	{
+		Gizmos::addLine(
+			vec3(-GRID_SIZE + i, 0, GRID_SIZE),
+			vec3(-GRID_SIZE + i, 0, -GRID_SIZE),
+			(i - GRID_SIZE) % GRID_SEPARATOR == 0 ? white : black);
+		Gizmos::addLine(
+			vec3(GRID_SIZE, 0, -GRID_SIZE + i),
+			vec3(-GRID_SIZE, 0, -GRID_SIZE + i),
+			(i - GRID_SIZE) % GRID_SEPARATOR == 0 ? white : black);
+	}
+
+	Gizmos::addTransform(mat4(1));
 }

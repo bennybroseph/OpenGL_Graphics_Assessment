@@ -1,19 +1,30 @@
-#pragma once
-#include "Gizmos.h"
-#include <glm/glm.hpp>
+#ifndef _MY_APPLICATION_H_
+#define _MY_APPLICATION_H_
+
 #include <glm/ext.hpp>
 #include "BaseApplication.h"
 
 class MyApplication : public BaseApplication {
 public:
-	virtual bool startup();
+
+	int startup() override;
 
 private:
 
 	// Inherited via BaseApplication
-	virtual void shutdown() override;
-	virtual bool update(float deltaTime) override;
-	virtual void draw() override;
+	void shutdown() override;
+	void parseInput() override;
+	void update() override;
+	void lateUpdate() override;
+	void draw() override;
+
+	void drawGrid();
+
 	glm::mat4 m_view;
 	glm::mat4 m_projection;
+
+	bool m_shouldDrawGrid = true;
+	int m_prevF1State = GLFW_RELEASE;
 };
+
+#endif // _MY_APPLICATION_H_
