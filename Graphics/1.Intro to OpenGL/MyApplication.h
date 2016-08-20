@@ -2,7 +2,13 @@
 #define _MY_APPLICATION_H_
 
 #include <glm/ext.hpp>
+
 #include "BaseApplication.h"
+#include "Planet.h"
+
+using glm::vec3;
+using glm::vec4;
+using glm::mat4;
 
 class MyApplication : public BaseApplication {
 public:
@@ -21,11 +27,12 @@ private:
 	void drawSolarSystem();
 	void drawGrid();
 
-	glm::mat4 m_view;
-	glm::mat4 m_projection;
+	mat4 m_view;
+	mat4 m_projection;
 
-	glm::mat4 m_sun;
-	glm::mat4 m_earth;
+	Planet m_sun;
+	Planet m_earth;
+	Planet m_moon;
 
 	bool m_shouldDrawGrid = true;
 	int m_prevF1State = GLFW_RELEASE;
