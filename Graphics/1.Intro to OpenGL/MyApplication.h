@@ -23,9 +23,9 @@ private:
 	void update() override;
 	void lateUpdate() override;
 	void draw() override;
-
+	
 	void drawSolarSystem();
-	void drawGrid();
+	void drawGrid() const;
 
 	mat4 m_view;
 	mat4 m_projection;

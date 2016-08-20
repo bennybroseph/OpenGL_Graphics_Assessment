@@ -16,16 +16,15 @@ int MyApplication::startup()
 	m_view = lookAt(vec3(10, 10, 10), vec3(0), vec3(0, 1, 0));
 	m_projection = glm::perspective(glm::pi<float>() * 0.25f, 16 / 9.f, 0.1f, 1000.f);
 
-	m_sun = Planet(vec3(0, 0, 0), 1.5f, vec4(255.f / 255.f, 235.f / 255.f, 59.f / 255.f, 1.f));
+	m_sun = Planet(vec3(0, 0, 0), 1.5f, vec4(255.f / 255.f, 235.f / 255.f, 59.f / 255.f, 1.f), 0.1f);
 
-	m_earth = Planet(vec3(5, 0, 0), 1.f, vec4(139 / 255.f, 195 / 255.f, 74 / 255.f, 1.f), 0.01f);
-	m_earth.getTransform().setParent(&m_sun.getTransform());
+	m_earth = Planet(vec3(5, 0, 0), 1.f, vec4(139 / 255.f, 195 / 255.f, 74 / 255.f, 1.f), 0.5f);
+	m_earth.transform().setParent(&m_sun.transform());
 
-	m_moon = Planet(vec3(2, 0.5f, 0), 0.3f, vec4(0.9f, 0.9f, 0.9f, 1), 0.1f);
-	m_moon.getTransform().setParent(&m_earth.getTransform());
+	m_moon = Planet(vec3(2, 0.5f, 0), 0.3f, vec4(0.9f, 0.9f, 0.9f, 1), 1.f);
+	m_moon.transform().setParent(&m_earth.transform());
 
-
-	//setinputcallback
+	//set input callback
 	//to do
 
 	return true;
@@ -51,44 +50,33 @@ void MyApplication::parseInput()
 		m_shouldDrawGrid = !m_shouldDrawGrid;
 
 	if (glfwGetKey(m_window, GLFW_KEY_1) == GLFW_PRESS)
-	{
-		m_sun.getTransform().setPosition(
+		m_sun.transform().setPosition(
 			vec3(
-				m_sun.getTransform().getPosition().x,
-				m_sun.getTransform().getPosition().y + 0.02f,
-				m_sun.getTransform().getPosition().z));
-	}
+				m_sun.transform().getPosition().x,
+				m_sun.transform().getPosition().y + 0.02f,
+				m_sun.transform().getPosition().z));
 
 	if (glfwGetKey(m_window, GLFW_KEY_2) == GLFW_PRESS)
-	{
-		m_earth.getTransform().setLocalPosition(
+		m_earth.transform().setLocalPosition(
 			vec3(
-				m_earth.getTransform().getLocalPosition().x + 0.02f,
-				m_earth.getTransform().getLocalPosition().y,
-				m_earth.getTransform().getLocalPosition().z));
-	}
+				m_earth.transform().getLocalPosition().x + 0.02f,
+				m_earth.transform().getLocalPosition().y,
+				m_earth.transform().getLocalPosition().z));
 
 	if (glfwGetKey(m_window, GLFW_KEY_3) == GLFW_PRESS)
-	{
-		m_moon.getTransform().setPosition(vec3(0, 5, 0));
-	}
+		m_moon.transform().setPosition(vec3(0, 5, 0));
 
 	m_prevF1State = glfwGetKey(m_window, GLFW_KEY_F1);
 }
 
 void MyApplication::update()
 {
-	m_sun.update();
-	m_earth.update();
-	m_moon.update();
+	m_sun.update(m_deltaTime);
+	m_earth.update(m_deltaTime);
+	m_moon.update(m_deltaTime);
 }
 
-void MyApplication::lateUpdate()
-{
-	m_sun.lateUpdate();
-	m_earth.lateUpdate();
-	m_moon.lateUpdate();
-}
+void MyApplication::lateUpdate() { }
 
 void MyApplication::draw()
 {
@@ -103,19 +91,29 @@ void MyApplication::draw()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	Gizmos::draw(m_projection * m_view);
 }
-float rotinc = 5;
+
 void MyApplication::drawSolarSystem()
 {
-	printf("%f \n", m_deltaTime);
-	rotinc += m_deltaTime;
-	//m_sun = rotate(m_sun, rotinc * -1.f  , vec3(0, 1, 0));	
+	Gizmos::addSphere(
+		m_sun.transform().getPosition(),
+		m_sun.radius(), 25, 25,
+		m_sun.colour(),
+		&m_sun.transform().getWorldSpaceMatrix());
 
-	Gizmos::addSphere(m_sun.getTransform().getPosition(), m_sun.radius(), 25, 25, m_sun.color(), &m_sun.getTransform().getMatrix());
-	Gizmos::addSphere(m_earth.getTransform().getPosition(), m_earth.radius(), 25, 25, m_earth.color(), &m_earth.getTransform().getMatrix());
-	Gizmos::addSphere(m_moon.getTransform().getPosition(), m_moon.radius(), 25, 25, m_moon.color(), &m_moon.getTransform().getMatrix());
+	Gizmos::addSphere(
+		m_earth.transform().getPosition(),
+		m_earth.radius(), 25, 25,
+		m_earth.colour(),
+		&m_earth.transform().getWorldSpaceMatrix());
+
+	Gizmos::addSphere(
+		m_moon.transform().getPosition(),
+		m_moon.radius(), 25, 25,
+		m_moon.colour(),
+		&m_moon.transform().getWorldSpaceMatrix());
 }
 
-void MyApplication::drawGrid()
+void MyApplication::drawGrid() const
 {
 	vec4 white(1);
 	vec4 black(0, 0, 0, 1);
