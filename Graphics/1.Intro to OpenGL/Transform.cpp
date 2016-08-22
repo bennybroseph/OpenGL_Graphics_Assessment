@@ -4,7 +4,7 @@ Transform::Transform() { }
 
 void Transform::rotate(const float &angle, const vec3 &axis)
 {
-	m_matrix = glm::rotate(m_matrix, angle, axis);
+	m_matrix *= glm::rotate(glm::radians(angle), axis);
 }
 
 Transform* Transform::getParent()
@@ -36,7 +36,7 @@ void Transform::setPosition(const vec3 &newPosition)
 	if (m_parent != nullptr)
 	{
 		// Create a new matrix with a position of the parameter passed
-		auto newWorldSpaceMatrix = mat4(1);	
+		auto newWorldSpaceMatrix = mat4(1);
 		newWorldSpaceMatrix[3] = vec4(newPosition.x, newPosition.y, newPosition.z, 1);
 		// Set the matrix such that the local position offsets the parent to equal the parameter passed
 		newWorldSpaceMatrix = inverse(m_parent->getWorldSpaceMatrix()) * newWorldSpaceMatrix;
