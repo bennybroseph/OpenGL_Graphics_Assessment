@@ -50,18 +50,10 @@ void MyApplication::parseInput()
 		m_shouldDrawGrid = !m_shouldDrawGrid;
 
 	if (glfwGetKey(m_window, GLFW_KEY_1) == GLFW_PRESS)
-		m_sun.transform().setPosition(
-			vec3(
-				m_sun.transform().getPosition().x,
-				m_sun.transform().getPosition().y + 1.f * m_deltaTime,
-				m_sun.transform().getPosition().z));
+		m_sun.transform().translate(vec3(0.f, 1.f * m_deltaTime, 0.f));
 
 	if (glfwGetKey(m_window, GLFW_KEY_2) == GLFW_PRESS)
-		m_earth.transform().setLocalPosition(
-			vec3(
-				m_earth.transform().getLocalPosition().x + 1.f * m_deltaTime,
-				m_earth.transform().getLocalPosition().y,
-				m_earth.transform().getLocalPosition().z));
+		m_earth.transform().translate(vec3(0.f, 1.f * m_deltaTime, 0.f));
 
 	if (glfwGetKey(m_window, GLFW_KEY_3) == GLFW_PRESS)
 		m_moon.transform().setPosition(vec3(0, 5, 0));

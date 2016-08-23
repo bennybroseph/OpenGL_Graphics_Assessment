@@ -13,12 +13,13 @@ public:
 
 	Transform();
 
+	void translate(const vec3 &translation);
 	/// <summary>
 	/// Rotates the transform matrix by 'angle' degrees on 'axis'
 	/// </summary>
 	/// <param name="angle">The angle in degrees to rotate</param>
 	/// <param name="axis">The vector which defines the axis to rotate on</param>
-	void rotate(const float& angle, const vec3& axis);
+	void rotate(const float &angle, const vec3 &axis);
 
 	/// <summary>
 	/// Returns a modifiable pointer to the parent transform
@@ -30,7 +31,7 @@ public:
 	/// </summary>
 	/// <param name="newParent">The new transform to parent to</param>
 	/// <param name="keepWorldPosition">Whether or not to keep the transform's previous world position after</param>
-	void setParent(Transform * newParent, const bool& keepWorldPosition = false);
+	void setParent(Transform *newParent, const bool &keepWorldPosition = false);
 
 	/// <summary>
 	/// Parses the world position out of a transform's world space matrix
@@ -68,7 +69,7 @@ public:
 	~Transform();
 
 private:
-	
+
 	// A pointer to the transform's parent transform
 	Transform* m_parent = nullptr;
 

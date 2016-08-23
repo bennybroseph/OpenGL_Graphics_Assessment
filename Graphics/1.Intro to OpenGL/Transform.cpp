@@ -2,6 +2,10 @@
 
 Transform::Transform() { }
 
+void Transform::translate(const vec3& translation)
+{
+	m_matrix *= glm::translate(translation);
+}
 void Transform::rotate(const float &angle, const vec3 &axis)
 {
 	m_matrix *= glm::rotate(glm::radians(angle), axis);
@@ -11,8 +15,7 @@ Transform* Transform::getParent()
 {
 	return m_parent;
 }
-
-void Transform::setParent(Transform *newParent, const bool& keepWorldPosition)
+void Transform::setParent(Transform *newParent, const bool &keepWorldPosition)
 {
 	m_parent = newParent;
 
@@ -30,7 +33,6 @@ vec3 Transform::getPosition() const
 
 	return getLocalPosition();
 }
-
 void Transform::setPosition(const vec3 &newPosition)
 {
 	if (m_parent != nullptr)
@@ -55,7 +57,6 @@ vec3 Transform::getLocalPosition() const
 {
 	return vec3(m_matrix[3].x, m_matrix[3].y, m_matrix[3].z);
 }
-
 void Transform::setLocalPosition(const vec3& newPosition)
 {
 	m_matrix[3] = vec4(newPosition.x, newPosition.y, newPosition.z, 1);
@@ -68,7 +69,6 @@ mat4 Transform::getWorldSpaceMatrix() const
 
 	return getLocalSpaceMatrix();
 }
-
 const mat4 & Transform::getLocalSpaceMatrix() const
 {
 	return m_matrix;
