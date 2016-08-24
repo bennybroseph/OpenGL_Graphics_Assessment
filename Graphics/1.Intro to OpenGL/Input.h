@@ -53,7 +53,6 @@ public:
 	static int getMouseButton(const int &button, const int &mods);
 
 	static const Position& getScrollPosition();
-	static Position deltaScrollPosition();
 
 	static void addOnKeyCallback(const OnKeyCallback &delegate);
 	static void addOnCursorPosCallback(const OnCursorPosCallback &delegate);

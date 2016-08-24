@@ -66,10 +66,7 @@ const Input::Position& Input::getScrollPosition()
 {
 	return m_scrollPos;
 }
-Input::Position Input::deltaScrollPosition()
-{
-	return m_scrollPos - m_prevScrollPos;
-}
+
 #pragma region //{ Add Callback Functions
 void Input::addOnKeyCallback(const OnKeyCallback &delegate)
 {
@@ -104,6 +101,9 @@ void Input::lateUpdate()
 	}
 
 	m_prevCursorPos = m_cursorPos;
+
+	m_scrollPos.x = 0;
+	m_scrollPos.y = 0;
 }
 
 void Input::onKey(GLFWwindow *window, int key, int scanecode, int action, int mods)

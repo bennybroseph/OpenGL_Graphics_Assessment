@@ -44,7 +44,16 @@ void MyApplication::parseInput()
 	}
 
 	if (Input::getMouseButton(GLFW_MOUSE_BUTTON_1) >= GLFW_PRESS)
-		m_view *= rotate(glm::radians(static_cast<float>(Input::deltaCursorPosition().x) / 5.f), vec3(0, 1, 0));
+	{
+		m_view = inverse(
+			inverse(m_view) *
+			//rotate(glm::radians(static_cast<float>(Input::deltaCursorPosition().x) / 15.f), vec3(0, 1, 0)) *
+			rotate(glm::radians(static_cast<float>(Input::deltaCursorPosition().y) / 15.f), vec3(1, 0, 0)));
+
+	}
+	m_view = inverse(
+		inverse(m_view) *
+		translate(vec3(0.f, static_cast<float>(Input::getScrollPosition().y), 0.f)));
 
 	if (Input::getKey(GLFW_KEY_F1) == GLFW_PRESS)
 		m_shouldDrawGrid = !m_shouldDrawGrid;
