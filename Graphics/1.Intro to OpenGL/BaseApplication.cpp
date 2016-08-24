@@ -14,15 +14,17 @@ int BaseApplication::createWindow(const char * title, int width, int height)
 		glfwTerminate();
 		return -2;
 	}
-	
+
 	glfwMakeContextCurrent(m_window);
 	glfwSwapInterval(1);
+
+	Input::init();
 
 	// the rest of our code goes here!
 	if (ogl_LoadFunctions() == ogl_LOAD_FAILED)
 	{
 		glfwDestroyWindow(m_window);
-		glfwTerminate(); //misspelled glfwterminate()
+		glfwTerminate();
 		return -3;
 	}
 
@@ -49,7 +51,7 @@ void BaseApplication::run()
 	// set currTime to glfwGetTime() and run the update() function
 	// the loop runs so long as update returns true
 	auto fps = 0;
-	auto time = 0.f; 
+	auto time = 0.f;
 	while (m_isRunning)
 	{
 		prevTime = currTime;
@@ -63,10 +65,11 @@ void BaseApplication::run()
 
 		update();
 		lateUpdate();
+		Input::lateUpdate();
 
 		draw(); //call the implemented draw function of whatever application we have designated
 
-		time += m_deltaTime;
+		/*time += m_deltaTime;
 		fps++;
 
 		if(time >= 1.f)
@@ -74,9 +77,9 @@ void BaseApplication::run()
 			printf("\n%i", fps);
 
 			fps = 0;
-			time = 0;			
-		}
-		
+			time = 0;
+		}*/
+
 		glfwSwapBuffers(m_window);
 	}
 }

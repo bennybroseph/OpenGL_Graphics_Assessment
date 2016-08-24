@@ -129,6 +129,7 @@
     <ClCompile Include="..\src\gl_core_4_4.c" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="BaseApplication.cpp" />
+    <ClCompile Include="Input.cpp" />
     <ClCompile Include="MyApplication.cpp" />
     <ClCompile Include="Planet.cpp" />
     <ClCompile Include="Transform.cpp" />
@@ -137,6 +138,8 @@
     <ClInclude Include="..\src\Gizmos.h" />
     <ClInclude Include="..\src\gl_core_4_4.h" />
     <ClInclude Include="BaseApplication.h" />
+    <ClInclude Include="Delegate.h" />
+    <ClInclude Include="Input.h" />
     <ClInclude Include="MyApplication.h" />
     <ClInclude Include="Planet.h" />
     <ClInclude Include="Transform.h" />

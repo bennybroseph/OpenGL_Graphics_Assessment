@@ -24,9 +24,6 @@ int MyApplication::startup()
 	m_moon = Planet(vec3(2, 0.5f, 0), 0.3f, vec4(0.9f, 0.9f, 0.9f, 1), 5.f);
 	m_moon.transform().setParent(&m_earth.transform());
 
-	//set input callback
-	//to do
-
 	return true;
 }
 
@@ -40,25 +37,26 @@ void MyApplication::shutdown()
 void MyApplication::parseInput()
 {
 	// close the application if the window closes or we press escape
-	if (glfwWindowShouldClose(m_window) || glfwGetKey(m_window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+	if (glfwWindowShouldClose(m_window) || Input::getKey(GLFW_KEY_ESCAPE) >= GLFW_PRESS)
 	{
 		m_isRunning = false;
 		return;
 	}
 
-	if (glfwGetKey(m_window, GLFW_KEY_F1) == GLFW_PRESS && m_prevF1State != GLFW_PRESS)
+	if (Input::getMouseButton(GLFW_MOUSE_BUTTON_1) >= GLFW_PRESS)
+		m_view *= rotate(glm::radians(static_cast<float>(Input::deltaCursorPosition().x) / 5.f), vec3(0, 1, 0));
+
+	if (Input::getKey(GLFW_KEY_F1) == GLFW_PRESS)
 		m_shouldDrawGrid = !m_shouldDrawGrid;
 
-	if (glfwGetKey(m_window, GLFW_KEY_1) == GLFW_PRESS)
+	if (Input::getKey(GLFW_KEY_1, GLFW_MOD_SHIFT | GLFW_MOD_CONTROL) >= GLFW_PRESS)
 		m_sun.transform().translate(vec3(0.f, 1.f * m_deltaTime, 0.f));
 
-	if (glfwGetKey(m_window, GLFW_KEY_2) == GLFW_PRESS)
+	if (Input::getKey(GLFW_KEY_2) >= GLFW_PRESS)
 		m_earth.transform().translate(vec3(0.f, 1.f * m_deltaTime, 0.f));
 
-	if (glfwGetKey(m_window, GLFW_KEY_3) == GLFW_PRESS)
+	if (Input::getKey(GLFW_KEY_3) >= GLFW_PRESS)
 		m_moon.transform().setPosition(vec3(0, 5, 0));
-
-	m_prevF1State = glfwGetKey(m_window, GLFW_KEY_F1);
 }
 
 void MyApplication::update()

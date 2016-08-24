@@ -10,7 +10,8 @@ using glm::vec3;
 using glm::vec4;
 using glm::mat4;
 
-class MyApplication : public BaseApplication {
+class MyApplication : public BaseApplication
+{
 public:
 
 	int startup() override;
@@ -23,7 +24,7 @@ private:
 	void update() override;
 	void lateUpdate() override;
 	void draw() override;
-	
+
 	void drawSolarSystem();
 	void drawGrid() const;
 
@@ -35,7 +36,6 @@ private:
 	Planet m_moon;
 
 	bool m_shouldDrawGrid = true;
-	int m_prevF1State = GLFW_RELEASE;
 };
 
 #endif // _MY_APPLICATION_H_
