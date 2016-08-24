@@ -60,6 +60,8 @@ public:
 	/// </summary>
 	/// <returns>The transform's world space matrix</returns>
 	mat4 getWorldSpaceMatrix() const;
+
+	void setLocalSpaceMatrix(const mat4 &newMatrix);
 	/// <summary>
 	/// Returns a non-modifiable reference to the 'm_matrix' variable
 	/// </summary>

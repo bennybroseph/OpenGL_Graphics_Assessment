@@ -1,14 +1,10 @@
 #ifndef _MY_APPLICATION_H_
 #define _MY_APPLICATION_H_
 
-#include <glm/ext.hpp>
-
 #include "BaseApplication.h"
-#include "Planet.h"
+#include "Camera.h"
 
-using glm::vec3;
-using glm::vec4;
-using glm::mat4;
+#include "Planet.h"
 
 class MyApplication : public BaseApplication
 {
@@ -28,14 +24,14 @@ private:
 	void drawSolarSystem();
 	void drawGrid() const;
 
-	mat4 m_view;
-	mat4 m_projection;
+	Camera* m_camera;
 
 	Planet m_sun;
 	Planet m_earth;
 	Planet m_moon;
 
 	bool m_shouldDrawGrid = true;
+
 };
 
 #endif // _MY_APPLICATION_H_

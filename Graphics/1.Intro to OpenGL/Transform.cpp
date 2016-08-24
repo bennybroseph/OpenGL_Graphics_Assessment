@@ -69,6 +69,12 @@ mat4 Transform::getWorldSpaceMatrix() const
 
 	return getLocalSpaceMatrix();
 }
+
+void Transform::setLocalSpaceMatrix(const mat4 &newMatrix)
+{
+	m_matrix = newMatrix;
+}
+
 const mat4 & Transform::getLocalSpaceMatrix() const
 {
 	return m_matrix;

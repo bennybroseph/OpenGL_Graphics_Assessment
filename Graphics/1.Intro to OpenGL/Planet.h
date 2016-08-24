@@ -17,7 +17,7 @@ public:
 	/// <param name="speed">The initial rotation speed of the planet</param>
 	explicit Planet(const vec3 &position, const float& radius, const vec4 &colour, const float &speed);
 
-	void update(float deltaTime);
+	void update(const float &deltaTime);
 
 	/// <summary>
 	/// Returns a modifiable reference to the 'm_transform' variable
