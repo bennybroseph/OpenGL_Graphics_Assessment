@@ -21,7 +21,7 @@ public:
 	void setPosition(const vec3 &position);
 
 	const Transform& getWorldPosition() const;
-	const Transform& getView() const;
+	mat4 getView() const;
 	const Transform& getProjection() const;
 
 	mat4 getProjectionView() const;
@@ -30,10 +30,7 @@ public:
 
 protected:
 
-	void updateProjectionViewTransform();
-
 	Transform m_worldTransform;
-	Transform m_viewTransform;
 	Transform m_projectionTransform;
 
 };

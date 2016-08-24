@@ -15,6 +15,7 @@ void FlyCamera::update(const float &deltaTime)
 		m_worldTransform.rotate(static_cast<float>(Input::deltaCursorPosition().x) / 16.f, vec3(0.f, 1.f, 0.f));
 		m_worldTransform.rotate(static_cast<float>(Input::deltaCursorPosition().y) / 9.f, vec3(1.f, 0.f, 0.f));
 	}
+
 	if (Input::getKey(GLFW_KEY_W) >= GLFW_PRESS)
 		m_worldTransform.translate(vec3(0, 0, -m_speed * deltaTime));
 	if (Input::getKey(GLFW_KEY_A) >= GLFW_PRESS)
