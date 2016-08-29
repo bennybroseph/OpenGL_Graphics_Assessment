@@ -63,7 +63,8 @@ public:
 	static void lateUpdate();
 
 	static void quit();
-
+	static Position m_cursorPos;
+	static Position m_prevCursorPos;
 private:
 
 	static void onKey(GLFWwindow *window, int key, int scanecode, int action, int mods);
@@ -76,8 +77,7 @@ private:
 	static map<int, KeyState> m_keyStates;
 
 	static vector<OnCursorPosCallback> m_onCursorPosCallback;
-	static Position m_cursorPos;
-	static Position m_prevCursorPos;
+	
 
 	static vector<OnMouseButtonCallback> m_onMouseButtonCallbacks;
 	static map<int, KeyState> m_mouseButtonStates;

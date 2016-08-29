@@ -48,8 +48,7 @@ const Transform& Camera::getProjection() const
 mat4 Camera::getProjectionView() const
 {
 	return
-		m_projectionTransform.getLocalSpaceMatrix() *
-		inverse(m_worldTransform.getLocalSpaceMatrix());
+		m_projectionTransform.getLocalSpaceMatrix() * getView();
 }
 
 Camera::~Camera() { }
