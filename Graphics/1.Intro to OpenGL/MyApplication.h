@@ -6,6 +6,8 @@
 
 #include "Planet.h"
 
+struct Vertex;
+
 class MyApplication : public BaseApplication
 {
 public:
@@ -22,7 +24,7 @@ private:
 	void draw() override;
 
 	void drawSolarSystem();
-	void drawGrid() const;
+	void generateGrid();
 
 	Camera* m_camera;
 
@@ -30,8 +32,20 @@ private:
 	Planet m_earth;
 	Planet m_moon;
 
+	unsigned int m_programID;
+
+	unsigned int m_VAO;
+	unsigned int m_VBO;
+	unsigned int m_IBO;
+
 	bool m_shouldDrawGrid = true;
 
+};
+
+struct Vertex
+{
+	vec4 position;
+	vec4 colour;
 };
 
 #endif // _MY_APPLICATION_H_
