@@ -5,14 +5,15 @@
 #include "Camera.h"
 
 #include "Planet.h"
-
-struct Vertex;
+#include "Shape3D.h"
 
 class MyApplication : public BaseApplication
 {
 public:
 
 	int startup() override;
+
+	~MyApplication();
 
 private:
 
@@ -24,28 +25,17 @@ private:
 	void draw() override;
 
 	void drawSolarSystem();
-	void generateGrid();
 
-	Camera* m_camera;
+	Camera* m_camera = nullptr;
 
 	Planet m_sun;
 	Planet m_earth;
 	Planet m_moon;
 
-	unsigned int m_programID;
-
-	unsigned int m_VAO;
-	unsigned int m_VBO;
-	unsigned int m_IBO;
+	vector<Shape3D*> m_shapes;
 
 	bool m_shouldDrawGrid = true;
 
-};
-
-struct Vertex
-{
-	vec4 position;
-	vec4 colour;
 };
 
 #endif // _MY_APPLICATION_H_

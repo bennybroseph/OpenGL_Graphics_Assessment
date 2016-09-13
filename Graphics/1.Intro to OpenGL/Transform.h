@@ -2,6 +2,7 @@
 #define _TRANSFORM_H_
 
 #include <glm/ext.hpp>
+#include <glm/detail/type_mat.hpp>
 
 using glm::vec3;
 using glm::vec4;
@@ -20,6 +21,7 @@ public:
 	/// <param name="angle">The angle in degrees to rotate</param>
 	/// <param name="axis">The vector which defines the axis to rotate on</param>
 	void rotate(const float &angle, const vec3 &axis);
+	void scale(vec3 scale);
 
 	/// <summary>
 	/// Returns a modifiable pointer to the parent transform

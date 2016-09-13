@@ -20,6 +20,8 @@ public:
 	void setLookAt(const vec3 &from, const vec3 &to, const vec3 &up);
 	void setPosition(const vec3 &position);
 
+	static Camera& mainCamera();
+
 	const Transform& getWorldPosition() const;
 	mat4 getView() const;
 	const Transform& getProjection() const;
@@ -29,6 +31,8 @@ public:
 	virtual ~Camera();
 
 protected:
+
+	static Camera* s_mainCamera;
 
 	Transform m_worldTransform;
 	Transform m_projectionTransform;

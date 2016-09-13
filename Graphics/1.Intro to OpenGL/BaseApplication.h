@@ -7,10 +7,11 @@
 #include <GLFW/glfw3.h>
 
 #include "Input.h"
+#include "Shader.h"
 
 struct GLFWwindow;
 
-class BaseApplication 
+class BaseApplication
 {
 public:
 	/* Notes on virtual functions
@@ -27,7 +28,7 @@ public:
 	// = 0 makes it a pure virtual function so you MUST inherit from this class and implement this function
 	// in order to use it. It cannot be called if this is the object type
 	virtual int startup() = 0;
-	virtual void shutdown() = 0;	
+	virtual void shutdown() = 0;
 
 protected:
 

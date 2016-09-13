@@ -10,6 +10,10 @@ void Transform::rotate(const float &angle, const vec3 &axis)
 {
 	m_matrix *= glm::rotate(glm::radians(angle), axis);
 }
+void Transform::scale(vec3 scale)
+{
+	m_matrix *= glm::scale(scale);
+}
 
 Transform* Transform::getParent()
 {

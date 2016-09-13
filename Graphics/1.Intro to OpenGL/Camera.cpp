@@ -1,6 +1,6 @@
 #include "Camera.h"
 
-
+Camera* Camera::s_mainCamera;
 
 void Camera::setPerspective(const float &fieldOfView, const float& aspectRatio, const float &newNear, const float &newFar)
 {
@@ -30,6 +30,11 @@ void Camera::setLookAt(const vec3 &from, const vec3 &to, const vec3 &up)
 void Camera::setPosition(const vec3& position)
 {
 	m_worldTransform.setLocalPosition(position);
+}
+
+Camera& Camera::mainCamera()
+{
+	return *s_mainCamera;
 }
 
 const Transform& Camera::getWorldPosition() const

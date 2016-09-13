@@ -130,10 +130,14 @@
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="BaseApplication.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Cube.cpp" />
     <ClCompile Include="FlyCamera.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="MyApplication.cpp" />
+    <ClCompile Include="Plane.cpp" />
     <ClCompile Include="Planet.cpp" />
+    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Shape3D.cpp" />
     <ClCompile Include="Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -141,12 +145,20 @@
     <ClInclude Include="..\src\gl_core_4_4.h" />
     <ClInclude Include="BaseApplication.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Cube.h" />
     <ClInclude Include="Delegate.h" />
     <ClInclude Include="FlyCamera.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="MyApplication.h" />
+    <ClInclude Include="Plane.h" />
     <ClInclude Include="Planet.h" />
+    <ClInclude Include="Shader.h" />
+    <ClInclude Include="Shape3D.h" />
     <ClInclude Include="Transform.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="FragmentShader.glsl" />
+    <Text Include="VertexShader.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

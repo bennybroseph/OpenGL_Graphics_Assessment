@@ -32,8 +32,13 @@ int BaseApplication::createWindow(const char * title, int width, int height)
 	auto minor = ogl_GetMinorVersion();
 	printf("GL: %i.%i\n", major, minor);
 
+	// Enable alpha transparency drawing
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	glClearColor(0.25f, 0.25f, 0.25f, 1);
-	glEnable(GL_DEPTH_TEST); // enables the depth buffer	
+	glEnable(GL_DEPTH_TEST); // enables the depth buffer
+
 	return false;
 }
 

@@ -1,6 +1,6 @@
 #include "Input.h"
 
-#pragma region //{ Static Initializer
+#pragma region // Static Initializer
 vector<OnKeyCallback> Input::m_onKeyCallbacks = vector<OnKeyCallback>();
 map<int, Input::KeyState> Input::m_keyStates = map<int, KeyState>();
 
@@ -16,7 +16,7 @@ Input::Position Input::m_scrollPos;
 Input::Position Input::m_prevScrollPos;
 
 vector<OnCursorEnterCallback> Input::m_onCursorEnterCallback = vector<OnCursorEnterCallback>();
-#pragma endregion //}
+#pragma endregion 
 
 void Input::init()
 {
@@ -67,7 +67,7 @@ const Input::Position& Input::getScrollPosition()
 	return m_scrollPos;
 }
 
-#pragma region //{ Add Callback Functions
+#pragma region // Add Callback Functions
 void Input::addOnKeyCallback(const OnKeyCallback &delegate)
 {
 	m_onKeyCallbacks.push_back(delegate);
@@ -88,7 +88,7 @@ void Input::onCursorEnterCallback(const OnCursorEnterCallback &delegate)
 {
 	m_onCursorEnterCallback.push_back(delegate);
 }
-#pragma endregion //}
+#pragma endregion
 
 void Input::lateUpdate()
 {
