@@ -20,21 +20,22 @@ public:
 	Shader();
 	static int init();
 
-	int createHandle();
-
 	int addShader(string path, ShaderType type);
 
-	static const Shader &defaultShader();
-	static const GLuint &defaultShaderID();
+	static const Shader& defaultShader();
+	static const Shader& positionShader();
+
+	static const GLuint& defaultShaderID();
+	static const GLuint& positionShaderID();
 
 	const GLuint& programID() const;
 
-	~Shader();	
+	~Shader();
 
 private:
 
 	static Shader s_defaultShader;
-	static GLuint &s_defaultShaderID;
+	static Shader s_positionShader;
 
 	GLuint m_programID;
 

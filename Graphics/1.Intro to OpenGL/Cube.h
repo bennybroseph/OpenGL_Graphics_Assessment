@@ -1,11 +1,13 @@
 #ifndef _CUBE_H_
 #define _CUBE_H_
 
-#include "Shape3D.h"
+#include "Shape.h"
 
-class Cube : public Shape3D
+class Cube : public Shape
 {
 public:
+
+	Cube();
 
 	static void init();
 
@@ -14,7 +16,10 @@ public:
 
 	~Cube();
 
+private:
+
+	static Model* s_cube;
+
 };
 
 #endif // _CUBE_H_
-

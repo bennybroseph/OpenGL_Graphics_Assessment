@@ -5,7 +5,7 @@
 using std::fstream;
 
 Shader Shader::s_defaultShader = Shader();
-GLuint &Shader::s_defaultShaderID = s_defaultShader.m_programID;
+Shader Shader::s_positionShader = Shader();
 
 Shader::Shader() { }
 
@@ -13,11 +13,21 @@ int Shader::init()
 {
 	s_defaultShader.m_programID = glCreateProgram();
 
-	auto returnValue = s_defaultShader.addShader("VertexShader.glsl", ShaderType::Vertex);
+	auto returnValue = s_defaultShader.addShader("DefaultVertexShader.glsl", ShaderType::Vertex);
 	if (returnValue != 0)
 		return returnValue;
 
-	returnValue = s_defaultShader.addShader("FragmentShader.glsl", ShaderType::Fragment);
+	returnValue = s_defaultShader.addShader("DefaultFragmentShader.glsl", ShaderType::Fragment);
+	if (returnValue != 0)
+		return returnValue;
+
+	s_positionShader.m_programID = glCreateProgram();
+
+	returnValue = s_positionShader.addShader("PositionVertexShader.glsl", ShaderType::Vertex);
+	if (returnValue != 0)
+		return returnValue;
+
+	returnValue = s_positionShader.addShader("DefaultFragmentShader.glsl", ShaderType::Fragment);
 	if (returnValue != 0)
 		return returnValue;
 
@@ -90,13 +100,23 @@ int Shader::addShader(string path, ShaderType type)
 	return 0;
 }
 
-const Shader& Shader::defaultShader()
+const Shader & Shader::defaultShader()
 {
 	return s_defaultShader;
 }
+const Shader & Shader::positionShader()
+{
+	return s_positionShader;
+}
+
 const GLuint & Shader::defaultShaderID()
 {
-	return s_defaultShaderID;
+	return s_defaultShader.m_programID;
+}
+
+const GLuint & Shader::positionShaderID()
+{
+	return s_positionShader.m_programID;
 }
 
 const GLuint & Shader::programID() const

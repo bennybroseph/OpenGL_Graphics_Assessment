@@ -1,11 +1,13 @@
 #ifndef _PLANE_H_
 #define _PLANE_H_
 
-#include "Shape3D.h"
+#include "Shape.h"
 
-class Plane : public Shape3D
+class Plane : public Shape
 {
 public:
+
+	Plane();
 
 	static void init();
 
@@ -14,7 +16,10 @@ public:
 
 	~Plane();
 
+private:
+
+	static Model* s_plane;
+
 };
 
 #endif // _PLANE_H_
-

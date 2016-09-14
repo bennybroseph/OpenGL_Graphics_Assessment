@@ -5,7 +5,7 @@
 #include "Camera.h"
 
 #include "Planet.h"
-#include "Shape3D.h"
+#include "Model.h"
 
 class MyApplication : public BaseApplication
 {
@@ -32,7 +32,7 @@ private:
 	Planet m_earth;
 	Planet m_moon;
 
-	vector<Shape3D*> m_shapes;
+	vector<Shape*> m_shapes = vector<Shape*>();
 
 	bool m_shouldDrawGrid = true;
 
