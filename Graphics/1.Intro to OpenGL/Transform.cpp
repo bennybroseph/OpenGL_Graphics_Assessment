@@ -1,5 +1,7 @@
 #include "Transform.h"
 
+
+
 Transform::Transform() { }
 
 void Transform::translate(const vec3& translation)
@@ -15,9 +17,9 @@ void Transform::scale(vec3 scale)
 	m_matrix *= glm::scale(scale);
 }
 
-Transform* Transform::getParent()
+Transform& Transform::getParent() const
 {
-	return m_parent;
+	return *m_parent;
 }
 void Transform::setParent(Transform *newParent, const bool &keepWorldPosition)
 {

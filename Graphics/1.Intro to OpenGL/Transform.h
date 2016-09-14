@@ -2,7 +2,7 @@
 #define _TRANSFORM_H_
 
 #include <glm/ext.hpp>
-#include <glm/detail/type_mat.hpp>
+//#include <glm/detail/type_mat.hpp>
 
 using glm::vec3;
 using glm::vec4;
@@ -27,7 +27,7 @@ public:
 	/// Returns a modifiable pointer to the parent transform
 	/// </summary>
 	/// <returns>Modifiable pointer to the parent transform</returns>
-	Transform* getParent();
+	Transform& getParent() const;
 	/// <summary>
 	/// Sets the parent of the transform
 	/// </summary>

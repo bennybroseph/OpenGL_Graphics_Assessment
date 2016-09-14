@@ -15,11 +15,10 @@ namespace Gizmos
 		return 0;
 	}
 
-	int drawSphere(const mat4 &transform, const float &radius, const vec4 &colour, const bool &drawWireFrame)
+	int drawSphere(const mat4 &transform, const vec4 &colour, const bool &drawWireFrame)
 	{
 		auto newSphere = Sphere();
 
-		newSphere.transform().scale(vec3(radius, radius, radius));
 		newSphere.transform().setLocalSpaceMatrix(transform);
 
 		newSphere.materialColour() = colour;

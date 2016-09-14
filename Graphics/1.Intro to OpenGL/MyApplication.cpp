@@ -26,7 +26,7 @@ int MyApplication::startup()
 
 	m_sun = Planet(vec3(0, 0, 0), 1.5f, vec4(255.f / 255.f, 235.f / 255.f, 59.f / 255.f, 1.f), 1.5f);
 
-	m_earth = Planet(vec3(5, 0, 0), 1.f, vec4(139 / 255.f, 195 / 255.f, 74 / 255.f, 1.f), 3.f);
+	m_earth = Planet(vec3(5, 0, 0), 0.5f, vec4(139 / 255.f, 195 / 255.f, 74 / 255.f, 1.f), 3.f);
 	m_earth.transform().setParent(&m_sun.transform());
 
 	m_moon = Planet(vec3(2, 0.5f, 0), 0.3f, vec4(0.9f, 0.9f, 0.9f, 1.f), 5.f);
@@ -110,9 +110,9 @@ void MyApplication::draw()
 
 void MyApplication::drawSolarSystem()
 {
-	Gizmos::drawSphere(m_sun.transform().getWorldSpaceMatrix(), m_sun.radius(), m_sun.colour(), true);
-	Gizmos::drawSphere(m_earth.transform().getWorldSpaceMatrix(), m_earth.radius(), m_earth.colour(), true);
-	Gizmos::drawSphere(m_moon.transform().getWorldSpaceMatrix(), m_moon.radius(), m_moon.colour(), true);
+	Gizmos::drawSphere(m_sun.transform().getWorldSpaceMatrix(), m_sun.colour(), true);
+	Gizmos::drawSphere(m_earth.transform().getWorldSpaceMatrix(), m_earth.colour(), true);
+	Gizmos::drawSphere(m_moon.transform().getWorldSpaceMatrix(), m_moon.colour(), true);
 }
 
 MyApplication::~MyApplication()

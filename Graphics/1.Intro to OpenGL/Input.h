@@ -18,6 +18,7 @@ typedef Delegate<void, int, int, int> OnMouseButtonCallback;
 typedef Delegate<void, double, double> OnScrollCallback;
 typedef Delegate<void, int> OnCursorEnterCallback;
 
+//TODO: Convert to namespace. Static class seems unnecessary without a singleton pattern
 class Input
 {
 public:
@@ -77,7 +78,6 @@ private:
 	static map<int, KeyState> m_keyStates;
 
 	static vector<OnCursorPosCallback> m_onCursorPosCallback;
-	
 
 	static vector<OnMouseButtonCallback> m_onMouseButtonCallbacks;
 	static map<int, KeyState> m_mouseButtonStates;
