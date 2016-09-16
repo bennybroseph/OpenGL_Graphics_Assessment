@@ -4,7 +4,6 @@
 #include "Plane.h"
 #include "Cube.h"
 #include "Sphere.h"
-#include <glm/ext.hpp>
 
 namespace Gizmos
 {

@@ -1,8 +1,6 @@
 #ifndef _CAMERA_H_
 #define _CAMERA_H_
 
-#include <glm/ext.hpp>
-
 #include "Transform.h"
 
 using glm::vec3;
@@ -36,6 +34,8 @@ protected:
 
 	Transform m_worldTransform;
 	Transform m_projectionTransform;
+
+	vec3 m_rotation;
 
 };
 

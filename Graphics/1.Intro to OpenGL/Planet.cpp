@@ -8,6 +8,7 @@ Planet::Planet(const vec3 &position, const float& radius, const vec4 &colour, co
 {
 	m_transform.scale(vec3(radius, radius, radius));
 	m_transform.setPosition(position);
+	
 	m_radius = radius;
 	m_colour = colour;
 

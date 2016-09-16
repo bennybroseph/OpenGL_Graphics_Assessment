@@ -11,6 +11,7 @@ enum class ShaderType
 {
 	Vertex,
 	Fragment,
+	Geometry,
 };
 
 class Shader
@@ -20,7 +21,7 @@ public:
 	Shader();
 	static int init();
 
-	int addShader(string path, ShaderType type);
+	int addShader(string path, ShaderType type) const;
 
 	static const Shader& defaultShader();
 	static const Shader& positionShader();

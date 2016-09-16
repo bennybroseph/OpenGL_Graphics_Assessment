@@ -34,9 +34,24 @@ int Shader::init()
 	return returnValue;
 }
 
-int Shader::addShader(string path, ShaderType type)
+int Shader::addShader(string path, ShaderType type) const
 {
-	auto parsedType = type == ShaderType::Vertex ? GL_VERTEX_SHADER : GL_FRAGMENT_SHADER;
+	GLint parsedType;
+	switch (type)
+	{
+	case ShaderType::Vertex:
+		parsedType = GL_VERTEX_SHADER;
+		break;
+	case ShaderType::Fragment:
+		parsedType = GL_FRAGMENT_SHADER;
+		break;
+	case ShaderType::Geometry:
+		parsedType = GL_GEOMETRY_SHADER;
+		break;
+
+	default:
+		return -1;
+	}
 
 	fstream shaderFile;
 	shaderFile.open(path, std::ios::in);

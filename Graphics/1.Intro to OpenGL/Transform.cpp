@@ -1,5 +1,5 @@
 #include "Transform.h"
-#include <glm/detail/type_mat.hpp>
+
 
 
 Transform::Transform() { }
@@ -21,12 +21,17 @@ Transform& Transform::getParent() const
 {
 	return *m_parent;
 }
-void Transform::setParent(Transform *newParent, const bool &keepWorldPosition)
+void Transform::setParent(Transform *newParent, const bool &keepWorldTransformation)
 {
 	m_parent = newParent;
 
-	if (keepWorldPosition)
-		setPosition(vec3(m_matrix[3].x, m_matrix[3].y, m_matrix[3].z));
+	// Makes sure the world space position, rotation and scale of the object before being parented is kept
+	if (keepWorldTransformation)
+	{
+		setPosition(getLocalPosition());
+		setEulerAngle(getLocalEulerAngle());
+		setScale(getLocalScale());
+	}
 }
 
 vec3 Transform::getPosition() const
@@ -69,16 +74,18 @@ void Transform::setEulerAngle(const vec3 &newEulerAngle)
 {
 	if (m_parent != nullptr)
 	{
-		auto newMatrix = mat4(1);
-		setEulerAngle(newMatrix, newEulerAngle);
+		// Create a new Rotation matrix from the vec3 passed in
+		auto newRotationMatrix = eulerRotation(newEulerAngle);
 
-		auto oldPosition = getLocalPosition();
-		auto oldScale = getLocalScale();
+		// Grab the current rotation matrix
+		auto oldRotationMatrix = eulerRotation(getLocalEulerAngle());
+		// Remove the rotation from the current local space matrix
+		m_matrix *= inverse(oldRotationMatrix);
 
-		m_matrix = inverse(m_parent->getWorldSpaceMatrix()) * newMatrix;
-
-		setLocalPosition(oldPosition);
-		setLocalScale(oldScale);
+		// Grab the rotation matrix out of the parent's world space matrix
+		auto parentRotationMatrix = eulerRotation(getEulerAngle(m_parent->getWorldSpaceMatrix()));
+		// Offset the local space matrix such that it's world space rotation is equal to 'newRotationMatrix'
+		m_matrix *= inverse(parentRotationMatrix) * newRotationMatrix;
 	}
 	else
 		setLocalEulerAngle(newEulerAngle);
@@ -95,43 +102,39 @@ void Transform::setLocalEulerAngle(const vec3 &newEulerAngle)
 	setEulerAngle(m_matrix, newEulerAngle);
 }
 
-vec3 Transform::getScale() const
+float Transform::getScale() const
 {
 	return getScale(getWorldSpaceMatrix());
 }
-void Transform::setScale(const vec3 &newScale)
+void Transform::setScale(const float &newScale)
 {
 	if (m_parent != nullptr)
 	{
-		auto newMatrix = mat4(1);
-		setScale(newMatrix, newScale);
+		// Create a new Scale matrix from the vec3 passed in
+		auto newScaleMatrix = mat4(1);
+		setScale(newScaleMatrix, newScale);
 
-		auto oldScale = mat4(1);
-		setScale(oldScale, getLocalScale());
+		// Grab the current scale matrix
+		auto oldScaleMatrix = mat4(1);
+		setScale(oldScaleMatrix, getLocalScale());
+		// Remove the scale from the current local space matrix
+		m_matrix *= inverse(oldScaleMatrix);
 
-		auto oldRotation = mat4(1);
-		setEulerAngle(oldRotation, getLocalEulerAngle());
-
-		auto oldPosition = mat4(1);
-		setPosition(oldPosition, getLocalPosition());
-
-		m_matrix = m_matrix * inverse(oldScale);
-		//m_matrix = m_matrix * inverse(oldPosition);
-		//m_matrix = m_matrix * inverse(oldRotation);
-		m_matrix = inverse(m_parent->getWorldSpaceMatrix()) * newMatrix;
-
-		//setLocalEulerAngle(oldRotation);
-		//setLocalPosition(oldPosition);		
+		// Grab the scale matrix out of the parent's world space matrix
+		auto parentScaleMatrix = mat4(1);
+		setScale(parentScaleMatrix, getScale(m_parent->getWorldSpaceMatrix()));
+		// Offset the local space matrix such that it's world space scale is equal to 'newScaleMatrix'
+		m_matrix *= inverse(parentScaleMatrix) * newScaleMatrix;
 	}
 	else
 		setLocalScale(newScale);
 }
 
-vec3 Transform::getLocalScale() const
+float Transform::getLocalScale() const
 {
 	return getScale(m_matrix);
 }
-void Transform::setLocalScale(const vec3 &newScale)
+void Transform::setLocalScale(const float &newScale)
 {
 	setScale(m_matrix, newScale);
 }
@@ -165,62 +168,108 @@ void Transform::setPosition(mat4 &matrix, const vec3 &newPosition)
 	matrix[3] = vec4(newPosition.x, newPosition.y, newPosition.z, 1);
 }
 
+mat4 Transform::eulerRotation(vec3 newEulerAngle)
+{
+	newEulerAngle = radians(newEulerAngle);
+
+	// Create 3 identity matrices to hold each rotation on an axis
+	auto rotationX = mat4(1);
+	auto rotationY = mat4(1);
+	auto rotationZ = mat4(1);
+
+	// X Axis Rotation
+	rotationX[1].y = cos(newEulerAngle.x);
+	rotationX[1].z = sin(newEulerAngle.x);
+
+	rotationX[2].y = -sin(newEulerAngle.x);
+	rotationX[2].z = cos(newEulerAngle.x);
+
+	// Y Axis Rotation
+	rotationY[0].x = cos(newEulerAngle.y);
+	rotationY[0].z = -sin(newEulerAngle.y);
+
+	rotationY[2].x = sin(newEulerAngle.y);
+	rotationY[2].z = cos(newEulerAngle.y);
+
+	// Z Axis Rotation
+	rotationZ[0].x = cos(newEulerAngle.z);
+	rotationZ[0].y = sin(newEulerAngle.z);
+
+	rotationZ[1].x = -sin(newEulerAngle.z);
+	rotationZ[1].y = cos(newEulerAngle.z);
+
+	// Apply
+	return rotationZ * rotationY * rotationX;
+}
+
 vec3 Transform::getEulerAngle(const mat4 &matrix)
 {
+	// Grab the angle of rotation in degrees from the matrix on each axis
 	auto x = glm::degrees(atan2(matrix[1].z, matrix[2].z));
 	auto y = glm::degrees(atan2(-matrix[0].z, sqrt(pow(matrix[1].z, 2.f) + pow(matrix[2].z, 2.f))));
 	auto z = glm::degrees(atan2(matrix[0].y, matrix[0].x));
+
+	x = clampAngle(x);
+	y = clampAngle(y);
+	z = clampAngle(z);
 
 	return vec3(x, y, z);
 }
 void Transform::setEulerAngle(mat4 &matrix, const vec3 &newEulerAngle)
 {
-	auto deltaAngle = newEulerAngle - getEulerAngle(matrix);
-	deltaAngle = vec3(glm::radians(deltaAngle.x), glm::radians(deltaAngle.y), glm::radians(deltaAngle.z));
+	// Grab the current rotation and create a new matrix to represent it
+	auto oldEulerAngle = getEulerAngle(matrix);
+	auto oldRotationMatrix = eulerRotation(oldEulerAngle);
+	// Remove the rotation from the current matrix
+	matrix *= inverse(oldRotationMatrix);
 
-	auto rotationX = mat4(1);
-	auto rotationY = mat4(1);
-	auto rotationZ = mat4(1);
-
-	rotationX[1].y = cos(deltaAngle.x);
-	rotationX[1].z = sin(deltaAngle.x);
-
-	rotationX[2].y = -sin(deltaAngle.x);
-	rotationX[2].z = cos(deltaAngle.x);
-
-	rotationY[0].x = cos(deltaAngle.y);
-	rotationY[0].z = -sin(deltaAngle.y);
-
-	rotationY[2].x = sin(deltaAngle.y);
-	rotationY[2].z = cos(deltaAngle.y);
-
-	rotationZ[0].x = cos(deltaAngle.z);
-	rotationZ[0].y = sin(deltaAngle.z);
-
-	rotationZ[1].x = -sin(deltaAngle.z);
-	rotationZ[1].y = cos(deltaAngle.z);
-
-	matrix *= rotationZ * rotationY * rotationX;
+	// Apply the new rotation
+	matrix *= eulerRotation(newEulerAngle);
 }
 
-vec3 Transform::getScale(const mat4 &matrix)
+float Transform::getScale(const mat4 &matrix)
 {
+	// Grab the scale out of the matrix for each axis
 	auto x = length(vec3(matrix[0].x, matrix[1].x, matrix[2].x));
 	auto y = length(vec3(matrix[0].y, matrix[1].y, matrix[2].y));
 	auto z = length(vec3(matrix[0].z, matrix[1].z, matrix[2].z));
 
-	return vec3(x, y, z);
+	// Since we can't deal with non-uniform scaling, get the uniform scale by calculating the average
+	return (x + y + z) / 3.f;
 }
-void Transform::setScale(mat4 &matrix, const vec3 &newScale)
+void Transform::setScale(mat4 &matrix, const float &newScale)
 {
+	// Get the quotient of the new scale and the current one
 	auto deltaScale = newScale / getScale(matrix);
 
+	// Set the scale matrix based on 'deltaScale'
 	auto scale =
 		mat4(
-			vec4(deltaScale.x, 0.f, 0.f, 0.f),
-			vec4(0.f, deltaScale.y, 0.f, 0.f),
-			vec4(0.f, 0.f, deltaScale.z, 0.f),
-			vec4(0.f, 0.f, 0.f, 1.f));
+			1.f * deltaScale, 0.f, 0.f, 0.f,
+			0.f, 1.f * deltaScale, 0.f, 0.f,
+			0.f, 0.f, 1.f * deltaScale, 0.f,
+			0.f, 0.f, 0.f, 1.f);
 
+	// Apply
 	matrix *= scale;
+}
+
+float Transform::clampAngle(float angle)
+{
+	while (angle >= 360.f)
+		angle -= 360.f;
+	while (angle < 0.f)
+		angle += 360.f;
+
+	angle = abs(angle);
+
+	return angle;
+}
+vec3 Transform::clampAngle(vec3 eulerAngle)
+{
+	clampAngle(eulerAngle.x);
+	clampAngle(eulerAngle.y);
+	clampAngle(eulerAngle.z);
+
+	return eulerAngle;
 }

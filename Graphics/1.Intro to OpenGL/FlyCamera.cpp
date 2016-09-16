@@ -18,11 +18,10 @@ void FlyCamera::update(const float &deltaTime)
 		auto thetaYaw = -static_cast<float>(Input::deltaCursorPosition().x) / 16.f;
 		auto thetaPitch = -static_cast<float>(Input::deltaCursorPosition().y) / 9.f;
 
-		m_worldTransform.setLocalEulerAngle(
-			vec3(
-				m_worldTransform.getLocalEulerAngle().x + thetaPitch,
-				m_worldTransform.getLocalEulerAngle().y + thetaYaw,
-				m_worldTransform.getLocalEulerAngle().z));
+		m_rotation.x += thetaPitch;
+		m_rotation.y += thetaYaw;
+
+		m_worldTransform.setLocalEulerAngle(m_rotation);
 	}
 
 	if (Input::getKey(GLFW_KEY_W) >= GLFW_PRESS)
