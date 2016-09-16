@@ -16,7 +16,7 @@ Planet::Planet(const vec3 &position, const float& radius, const vec4 &colour, co
 
 void Planet::update(const float &deltaTime)
 {
-	m_transform.rotate(m_speed * deltaTime, vec3(0, 1, 0));
+	m_transform.rotate(m_speed * deltaTime, vec3(1, 1, 0));
 }
 
 Transform& Planet::transform()

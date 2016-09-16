@@ -14,16 +14,16 @@ void Camera::setLookAt(const vec3 &from, const vec3 &to, const vec3 &up)
 	auto yAxis = cross(zAxis, xAxis);
 
 	auto orientation = mat4(
-		xAxis[0], yAxis[0], zAxis[0], 0,
-		xAxis[1], yAxis[1], zAxis[1], 0,
-		xAxis[2], yAxis[2], zAxis[2], 0,
+		xAxis.x, yAxis.x, zAxis.x, 0,
+		xAxis.y, yAxis.y, zAxis.y, 0,
+		xAxis.z, yAxis.z, zAxis.z, 0,
 		0, 0, 0, 1);
 
 	auto translation = mat4(
 		1, 0, 0, 0,
 		0, 1, 0, 0,
 		0, 0, 1, 0,
-		-from[0], -from[1], -from[2], 1);
+		-from.x, -from.y, -from.z, 1);
 
 	m_worldTransform.setLocalSpaceMatrix(inverse(orientation * translation));
 }

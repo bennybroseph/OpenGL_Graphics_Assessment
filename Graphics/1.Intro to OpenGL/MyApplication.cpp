@@ -24,27 +24,30 @@ int MyApplication::startup()
 	//setup some camera stuff
 	m_camera = new FlyCamera();
 
-	m_sun = Planet(vec3(0, 0, 0), 1.5f, vec4(255.f / 255.f, 235.f / 255.f, 59.f / 255.f, 1.f), 1.5f);
+	m_sun = Planet(vec3(0, 0, 0), 1.5f, vec4(255.f / 255.f, 235.f / 255.f, 59.f / 255.f, 1.f), 3.f);
 
-	m_earth = Planet(vec3(5, 0, 0), 0.5f, vec4(139 / 255.f, 195 / 255.f, 74 / 255.f, 1.f), 3.f);
+	m_earth = Planet(vec3(5, 0, 0), 0.5f, vec4(139 / 255.f, 195 / 255.f, 74 / 255.f, 1.f), 10.f);
 	m_earth.transform().setParent(&m_sun.transform());
 
-	m_moon = Planet(vec3(2, 0.5f, 0), 0.3f, vec4(0.9f, 0.9f, 0.9f, 1.f), 5.f);
+	m_moon = Planet(vec3(2, 0.5f, 0), 0.3f, vec4(0.9f, 0.9f, 0.9f, 1.f), -6.f);
 	m_moon.transform().setParent(&m_earth.transform());
 
 	/*auto newSphere = new Sphere();
 	newSphere->shader() = Shader::positionShader();
 	newSphere->shouldDrawWireFrame() = true;
 	newSphere->transform().setLocalPosition(vec3(0.f, 0.5f, 0.f));
-	m_shapes.push_back(newSphere);
+	m_shapes.push_back(newSphere);*/
 
-	auto newPlane = new Plane();
+	/*auto newPlane = new Plane();
 	newPlane->transform().scale(vec3(5.f, 1.f, 5.f));
-	m_shapes.push_back(newPlane);
+	newPlane->transform().setParent(&m_sun.transform());
+	m_shapes.push_back(newPlane);*/
 
 	auto newCube = new Cube();
 	newCube->transform().setLocalPosition(vec3(1.f, 0.5f, 0.f));
-	m_shapes.push_back(newCube);*/
+	newCube->transform().setLocalEulerAngle(vec3(45.f, 0.f, 45.f));
+	newCube->transform().setParent(&m_sun.transform());
+	m_shapes.push_back(newCube);
 
 	return true;
 }
@@ -71,16 +74,24 @@ void MyApplication::parseInput()
 		m_sun.transform().translate(vec3(0.f, 1.f * m_deltaTime, 0.f));
 
 	if (Input::getKey(GLFW_KEY_2) >= GLFW_PRESS)
-		m_earth.transform().translate(vec3(0.f, 1.f * m_deltaTime, 0.f));
+		m_earth.transform().setPosition(
+			vec3(
+				m_earth.transform().getPosition().x,
+				m_earth.transform().getPosition().y + 1.f * m_deltaTime,
+				m_earth.transform().getPosition().z));
 
 	if (Input::getKey(GLFW_KEY_3) >= GLFW_PRESS)
-		m_moon.transform().setPosition(vec3(0, 5, 0));
+	{
+		//m_moon.transform().setPosition(vec3(5.f, 2.5f, -5.5f));
+		//m_moon.transform().setEulerAngle(vec3(90.f, 0, 0));
+		m_moon.transform().setScale(vec3(1.5f, 1.5f, 1.5f));
+	}
 
 	if (Input::getKey(GLFW_KEY_PERIOD, GLFW_MOD_SHIFT) >= GLFW_PRESS)
-		m_shapes[0]->transform().scale(vec3(1.f + m_deltaTime, 1.f + m_deltaTime, 1.f + m_deltaTime));
+		m_sun.transform().scale(vec3(1.f + m_deltaTime, 1.f + m_deltaTime, 1.f + m_deltaTime));
 
 	if (Input::getKey(GLFW_KEY_COMMA, GLFW_MOD_SHIFT) >= GLFW_PRESS)
-		m_shapes[0]->transform().scale(vec3(1.f - m_deltaTime, 1.f - m_deltaTime, 1.f - m_deltaTime));
+		m_sun.transform().scale(vec3(1.f - m_deltaTime, 1.f - m_deltaTime, 1.f - m_deltaTime));
 }
 
 void MyApplication::update()

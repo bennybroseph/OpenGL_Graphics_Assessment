@@ -35,9 +35,9 @@ void Sphere::genVertexes(const float &radius, const float &segments)
 		{
 			vertex.position =
 				vec4(
-					vertex.position.x * cosf(phi) + vertex.position.z * -sinf(phi),
+					vertex.position.x * cos(phi) + vertex.position.z * -sin(phi),
 					vertex.position.y,
-					vertex.position.x * sinf(phi) + vertex.position.z * cosf(phi), 1.f);
+					vertex.position.x * sin(phi) + vertex.position.z * cos(phi), 1.f);
 			s_sphere->m_vertexes.push_back(vertex);
 		}
 	}
@@ -51,7 +51,7 @@ vector<Vertex> Sphere::genHalfCircle(const float &radius, const float &points)
 		auto theta = PI * i / (points - 1.f);
 		vertexes.push_back(
 		{
-			vec4(sinf(theta) * radius, cosf(theta) * radius, 0.f, 1.f),
+			vec4(sin(theta) * radius, cos(theta) * radius, 0.f, 1.f),
 			vec4(1.f, 1.f, 1.f, 1.f)
 		});
 	}

@@ -2,6 +2,8 @@
 #define _TRANSFORM_H_
 
 #include <glm/ext.hpp>
+#include <glm/detail/_noise.hpp>
+#include <glm/detail/type_mat.hpp>
 //#include <glm/detail/type_mat.hpp>
 
 using glm::vec3;
@@ -24,9 +26,9 @@ public:
 	void scale(vec3 scale);
 
 	/// <summary>
-	/// Returns a modifiable pointer to the parent transform
+	/// Returns a modifiable reference to the parent transform
 	/// </summary>
-	/// <returns>Modifiable pointer to the parent transform</returns>
+	/// <returns>Modifiable reference to the parent transform</returns>
 	Transform& getParent() const;
 	/// <summary>
 	/// Sets the parent of the transform
@@ -57,6 +59,18 @@ public:
 	/// <param name="newPosition">The transform's new local position</param>
 	void setLocalPosition(const vec3 &newPosition);
 
+	vec3 getEulerAngle() const;
+	void setEulerAngle(const vec3 &newEulerAngle);
+
+	vec3 getLocalEulerAngle() const;
+	void setLocalEulerAngle(const vec3 &newEulerAngle);
+
+	vec3 getScale() const;
+	void setScale(const vec3 &newScale);
+
+	vec3 getLocalScale() const;
+	void setLocalScale(const vec3 &newScale);
+
 	/// <summary>
 	/// Parses the transform's world space matrix based on its parent transform and local space matrix
 	/// </summary>
@@ -71,6 +85,15 @@ public:
 	const mat4 & getLocalSpaceMatrix() const;
 
 	~Transform();
+
+	static vec3 getPosition(const mat4 &matrix);
+	static void setPosition(mat4 &matrix, const vec3 &newPosition);
+
+	static vec3 getEulerAngle(const mat4 &matrix);
+	static void setEulerAngle(mat4 &matrix, const vec3 &newEulerAngle);
+
+	static vec3 getScale(const mat4 &matrix);
+	static void setScale(mat4 &matrix, const vec3 &newScale);
 
 private:
 
