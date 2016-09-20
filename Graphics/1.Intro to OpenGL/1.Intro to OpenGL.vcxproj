@@ -151,6 +151,7 @@
     <ClInclude Include="FlyCamera.h" />
     <ClInclude Include="Gizmos.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="Light.h" />
     <ClInclude Include="MyApplication.h" />
     <ClInclude Include="Plane.h" />
     <ClInclude Include="Planet.h" />

@@ -2,6 +2,7 @@
 #define _TRANSFORM_H_
 
 #include <glm/ext.hpp>
+#include <gl_core_4_4.h>
 
 using glm::vec3;
 using glm::vec4;
@@ -116,6 +117,8 @@ public:
 	/// </summary>
 	/// <returns>Non-modifiable reference to the 'm_matrix' variable</returns>
 	const mat4 & getLocalSpaceMatrix() const;
+
+	void draw(const GLfloat &lineWidth = 1.f) const;
 
 	~Transform();
 

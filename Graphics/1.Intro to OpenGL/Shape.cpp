@@ -84,6 +84,4 @@ bool& Shape::shouldDrawWireFrame()
 	return m_shouldDrawWireFrame;
 }
 
-Shape::~Shape()
-{
-}
+Shape::~Shape() { }

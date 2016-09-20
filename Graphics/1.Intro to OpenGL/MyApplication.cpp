@@ -47,7 +47,7 @@ int MyApplication::startup()
 	newCube->transform().setParent(&m_sun.transform());
 	newCube->transform().setLocalPosition(vec3(1.f, 0.5f, 0.f));
 	newCube->transform().setLocalEulerAngle(vec3(45.f, 0.f, 45.f));
-	
+
 	m_shapes.push_back(newCube);*/
 
 	return true;
@@ -82,10 +82,10 @@ void MyApplication::parseInput()
 				m_earth.transform().getPosition().z));
 
 	if (Input::getKey(GLFW_KEY_3) >= GLFW_PRESS)
-	{		
-		m_moon.transform().setPosition(vec3(5.f, 2.5f, -5.5f));		
+	{
+		m_moon.transform().setPosition(vec3(5.f, 2.5f, -5.5f));
 		m_moon.transform().setEulerAngle(vec3(90.f, 0, 0));
-		m_moon.transform().setScale(5.f);	
+		m_moon.transform().setScale(5.f);
 	}
 
 	if (Input::getKey(GLFW_KEY_PERIOD, GLFW_MOD_SHIFT) >= GLFW_PRESS)

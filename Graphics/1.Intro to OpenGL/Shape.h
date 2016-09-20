@@ -12,9 +12,9 @@ public:
 	virtual void draw();
 
 	GLint& drawType();
-	
+
 	Shader& shader();
-	
+
 	vec4& materialColour();
 
 	Transform& transform();

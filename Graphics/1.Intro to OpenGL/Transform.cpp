@@ -1,6 +1,6 @@
 #include "Transform.h"
 
-
+#include "Gizmos.h"
 
 Transform::Transform() { }
 
@@ -155,6 +155,11 @@ void Transform::setLocalSpaceMatrix(const mat4 &newMatrix)
 const mat4 & Transform::getLocalSpaceMatrix() const
 {
 	return m_matrix;
+}
+
+void Transform::draw(const GLfloat& lineWidth) const
+{
+	//Gizmos::drawLine(getPosition(), );
 }
 
 Transform::~Transform() { }
