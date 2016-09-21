@@ -6,8 +6,6 @@ Cube::Cube()
 {
 	m_model = s_cube;
 	m_drawType = GL_TRIANGLE_STRIP;
-
-	m_shouldDrawWireFrame = true;
 }
 
 void Cube::init()

@@ -14,6 +14,7 @@ struct Vertex
 {
 	vec4 position;
 	vec4 colour;
+	vec4 normal;
 };
 
 class Model

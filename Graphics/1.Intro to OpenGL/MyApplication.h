@@ -6,6 +6,7 @@
 
 #include "Planet.h"
 #include "Model.h"
+#include "Light.h"
 
 class MyApplication : public BaseApplication
 {
@@ -27,6 +28,7 @@ private:
 	void drawSolarSystem();
 
 	Camera* m_camera = nullptr;
+	Light* m_light = nullptr;
 
 	Planet m_sun;
 	Planet m_earth;

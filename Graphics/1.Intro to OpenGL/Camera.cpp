@@ -14,7 +14,7 @@ void Camera::setLookAt(const vec3 &from, const vec3 &to, const vec3 &up)
 	auto xAxis = normalize(cross(up, zAxis));
 	auto yAxis = cross(zAxis, xAxis);
 
-	auto orientation = 
+	auto orientation =
 		mat4(
 			xAxis.x, yAxis.x, zAxis.x, 0,
 			xAxis.y, yAxis.y, zAxis.y, 0,
@@ -47,7 +47,7 @@ const Transform& Camera::getWorldPosition() const
 }
 mat4 Camera::getView() const
 {
-	return inverse(m_worldTransform.localSpaceMatrix());
+	return inverse(m_worldTransform.getLocalSpaceMatrix());
 }
 const Transform& Camera::getProjection() const
 {
@@ -57,7 +57,7 @@ const Transform& Camera::getProjection() const
 mat4 Camera::getProjectionView() const
 {
 	return
-		m_projectionTransform.localSpaceMatrix() * getView();
+		m_projectionTransform.getLocalSpaceMatrix() * getView();
 }
 
 Camera::~Camera() { }

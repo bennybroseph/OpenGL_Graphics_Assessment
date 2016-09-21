@@ -159,7 +159,7 @@ const mat4 & Transform::getLocalSpaceMatrix() const
 
 void Transform::draw(const GLfloat& lineWidth) const
 {
-	//Gizmos::drawLine(getPosition(), );
+	draw(getWorldSpaceMatrix(), lineWidth);
 }
 
 Transform::~Transform() { }
@@ -277,4 +277,19 @@ vec3 Transform::clampAngle(vec3 eulerAngle)
 	clampAngle(eulerAngle.z);
 
 	return eulerAngle;
+}
+
+void Transform::draw(const mat4 &matrix, const GLfloat &lineWidth)
+{
+	auto endX = matrix * glm::translate(vec3(0.5f, 0.f, 0.f));
+	auto endY = matrix * glm::translate(vec3(0.f, 0.5f, 0.f));
+	auto endZ = matrix * glm::translate(vec3(0.f, 0.f, 0.5f));
+
+	glDisable(GL_DEPTH_TEST);
+	{
+		Gizmos::drawLine(getPosition(matrix), vec3(endX[3].x, endX[3].y, endX[3].z), vec4(1.f, 0.f, 0.f, 1.f), lineWidth);
+		Gizmos::drawLine(getPosition(matrix), vec3(endY[3].x, endY[3].y, endY[3].z), vec4(0.f, 1.f, 0.f, 1.f), lineWidth);
+		Gizmos::drawLine(getPosition(matrix), vec3(endZ[3].x, endZ[3].y, endZ[3].z), vec4(0.f, 0.f, 1.f, 1.f), lineWidth);
+	}
+	glEnable(GL_DEPTH_TEST);
 }

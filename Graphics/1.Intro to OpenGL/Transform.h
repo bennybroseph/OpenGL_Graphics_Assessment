@@ -118,7 +118,7 @@ public:
 	/// <returns>Non-modifiable reference to the 'm_matrix' variable</returns>
 	const mat4 & getLocalSpaceMatrix() const;
 
-	void draw(const GLfloat &lineWidth = 1.f) const;
+	void draw(const GLfloat &lineWidth = 3.f) const;
 
 	~Transform();
 
@@ -140,6 +140,8 @@ public:
 
 	static float clampAngle(float angle);
 	static vec3 clampAngle(vec3 eulerAngle);
+
+	static void draw(const mat4 &matrix, const GLfloat &lineWidth = 3.f);
 
 private:
 

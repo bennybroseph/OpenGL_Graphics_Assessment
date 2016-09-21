@@ -1,9 +1,7 @@
 #include "Gizmos.h"
-#include "Camera.h"
-#include <glm/detail/type_mat.hpp>
-#include <glm/detail/type_mat.hpp>
-#include <glm/detail/type_mat.hpp>
 
+#include "Camera.h"
+#include <glm/ext.hpp>
 
 namespace Gizmos
 {
@@ -66,7 +64,7 @@ namespace Gizmos
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 		glUseProgram(Shader::defaultShaderID());
-		unsigned int projectionViewUniform = glGetUniformLocation(Shader::defaultShaderID(), "projectionViewWorldMatrix");
+		unsigned int projectionViewUniform = glGetUniformLocation(Shader::defaultShaderID(), "ProjectionViewModel");
 
 		glUniformMatrix4fv(
 			projectionViewUniform,
@@ -77,9 +75,13 @@ namespace Gizmos
 		unsigned int materialColor = glGetUniformLocation(Shader::defaultShaderID(), "vMatColor");
 		glUniform4fv(materialColor, 1, value_ptr(colour));
 
-		glLineWidth(width);
 		glBindVertexArray(VAO);
-		glDrawElements(GL_LINES, indexes.size(), GL_UNSIGNED_INT, nullptr);
+
+		glLineWidth(width);
+		{
+			glDrawElements(GL_LINES, indexes.size(), GL_UNSIGNED_INT, nullptr);
+		}
+		glLineWidth(1.f);
 
 		return 0;
 	}

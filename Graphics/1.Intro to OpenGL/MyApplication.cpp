@@ -5,6 +5,7 @@
 #include "Shader.h"
 #include "FlyCamera.h"
 #include "Gizmos.h"
+#include "DirectionalLight.h"
 
 using std::fstream;
 
@@ -21,8 +22,13 @@ int MyApplication::startup()
 	Shader::init();
 	Gizmos::init();
 
-	//setup some camera stuff
+	// setup some camera stuff
 	m_camera = new FlyCamera();
+
+	m_light = new DirectionalLight();
+	m_light->m_transform.setPosition(vec3(0.f, 5.f, 0.f));
+	m_light->m_transform.rotate(45.f, vec3(1.f, 0.f, 0.f));
+	m_light->m_direction = vec3(0.f, 0.f, 1.f);
 
 	m_sun = Planet(vec3(0, 0, 0), 1.5f, vec4(255.f / 255.f, 235.f / 255.f, 59.f / 255.f, 1.f), 3.f);
 
@@ -33,12 +39,12 @@ int MyApplication::startup()
 	m_moon.transform().setParent(&m_earth.transform(), false);
 
 	/*auto newSphere = new Sphere();
-	newSphere->shader() = Shader::positionShader();
-	newSphere->shouldDrawWireFrame() = true;
-	newSphere->transform().setLocalPosition(vec3(0.f, 0.5f, 0.f));
+	newSphere->shader() = Shader::phongShader();
+	newSphere->transform().setLocalPosition(vec3(0.f, 1.5f, 0.f));
 	m_shapes.push_back(newSphere);*/
 
 	/*auto newPlane = new Plane();
+	newPlane->shader() = Shader::phongShader();
 	newPlane->transform().scale(vec3(5.f, 1.f, 5.f));
 	newPlane->transform().setParent(&m_sun.transform());
 	m_shapes.push_back(newPlane);*/
@@ -97,6 +103,8 @@ void MyApplication::parseInput()
 
 void MyApplication::update()
 {
+	m_light->m_transform.rotate(15.f * m_deltaTime, vec3(0.f, 1.f, -1.f));
+
 	m_sun.update(m_deltaTime);
 	m_earth.update(m_deltaTime);
 	m_moon.update(m_deltaTime);
@@ -113,18 +121,26 @@ void MyApplication::draw()
 
 	if (m_shouldDrawGrid)
 	{
-		for (auto shape : m_shapes)
-			shape->draw();
+		// TODO: Add grid function back in now that Gizmos::drawLine is implemented
 	}
 
+	for (auto shape : m_shapes)
+		shape->draw();
+
 	drawSolarSystem();
+
+	m_light->draw();
 }
 
 void MyApplication::drawSolarSystem()
 {
-	Gizmos::drawSphere(m_sun.transform().getWorldSpaceMatrix(), m_sun.colour(), true);
-	Gizmos::drawSphere(m_earth.transform().getWorldSpaceMatrix(), m_earth.colour(), true);
-	Gizmos::drawSphere(m_moon.transform().getWorldSpaceMatrix(), m_moon.colour(), true);
+	Gizmos::drawSphere(m_sun.transform().getWorldSpaceMatrix(), m_sun.colour());
+	Gizmos::drawSphere(m_earth.transform().getWorldSpaceMatrix(), m_earth.colour());
+	Gizmos::drawSphere(m_moon.transform().getWorldSpaceMatrix(), m_moon.colour());
+
+	m_sun.transform().draw();
+	m_earth.transform().draw();
+	m_moon.transform().draw();
 }
 
 MyApplication::~MyApplication()

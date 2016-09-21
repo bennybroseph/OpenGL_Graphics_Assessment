@@ -87,6 +87,12 @@
     <ClCompile Include="FlyCamera.cpp">
       <Filter>Source Files\Camera</Filter>
     </ClCompile>
+    <ClCompile Include="DirectionalLight.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\gl_core_4_4.h">
@@ -140,17 +146,21 @@
     <ClInclude Include="Light.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DirectionalLight.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="DefaultFragmentShader.glsl">
+    <None Include="Default.frag">
       <Filter>Resource Files</Filter>
-    </Text>
-    <Text Include="DefaultVertexShader.glsl">
+    </None>
+    <None Include="Default.vert">
       <Filter>Resource Files</Filter>
-    </Text>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="PositionVertexShader.glsl">
+    </None>
+    <None Include="Positional.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Phong.frag">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

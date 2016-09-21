@@ -1,12 +1,12 @@
 #version 410
 
-in vec4 vColour;
+in vec4 fragColour;
 
-out vec4 fragColor;
+out vec4 outColour;
 
 uniform vec4 vMatColor = vec4(1.0, 1.0, 1.0, 1.0);
 
 void main()
 {
-	fragColor = vColour * vMatColor;
+	outColour = fragColour * vMatColor;
 }

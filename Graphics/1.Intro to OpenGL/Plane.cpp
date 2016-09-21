@@ -6,8 +6,6 @@ Plane::Plane()
 {
 	m_model = s_plane;
 	m_drawType = GL_TRIANGLE_STRIP;
-
-	m_shouldDrawWireFrame = true;
 }
 
 void Plane::init()
@@ -25,22 +23,26 @@ void Plane::genVertexes()
 	s_plane->m_vertexes.push_back(
 	{
 		vec4(-1.f, 0.f, -1.f, 1.f),
-		vec4(1.f, 1.f, 1.f, 1.f)
+		vec4(1.f, 1.f, 1.f, 1.f),
+		vec4(0.f, 1.f, 0.f, 0.f)
 	});
 	s_plane->m_vertexes.push_back(
 	{
 		vec4(-1.f, 0.f, 1.f, 1.f),
-		vec4(1.f, 1.f, 1.f, 1.f)
+		vec4(1.f, 1.f, 1.f, 1.f),
+		vec4(0.f, 1.f, 0.f, 0.f)
 	});
 	s_plane->m_vertexes.push_back(
 	{
 		vec4(1.f, 0.f, -1.f, 1.f),
-		vec4(1.f, 1.f, 1.f, 1.f)
+		vec4(1.f, 1.f, 1.f, 1.f),
+		vec4(0.f, 1.f, 0.f, 0.f),
 	});
 	s_plane->m_vertexes.push_back(
 	{
 		vec4(1.f, 0.f, 1.f, 1.f),
-		vec4(1.f, 1.f, 1.f, 1.f)
+		vec4(1.f, 1.f, 1.f, 1.f),
+		vec4(0.f, 1.f, 0.f, 0.f)
 	});
 }
 

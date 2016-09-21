@@ -4,30 +4,38 @@
 
 using std::fstream;
 
-Shader Shader::s_defaultShader = Shader();
-Shader Shader::s_positionShader = Shader();
+Shader Shader::s_default = Shader();
+Shader Shader::s_positional = Shader();
+Shader Shader::s_phong = Shader();
 
 Shader::Shader() { }
 
 int Shader::init()
 {
-	s_defaultShader.m_programID = glCreateProgram();
+	s_default.m_programID = glCreateProgram();
 
-	auto returnValue = s_defaultShader.addShader("DefaultVertexShader.glsl", ShaderType::Vertex);
+	auto returnValue = s_default.addShader("Default.vert", ShaderType::Vertex);
+	if (returnValue != 0)
+		return returnValue;
+	returnValue = s_default.addShader("Default.frag", ShaderType::Fragment);
 	if (returnValue != 0)
 		return returnValue;
 
-	returnValue = s_defaultShader.addShader("DefaultFragmentShader.glsl", ShaderType::Fragment);
+	s_positional.m_programID = glCreateProgram();
+
+	returnValue = s_positional.addShader("Positional.vert", ShaderType::Vertex);
+	if (returnValue != 0)
+		return returnValue;
+	returnValue = s_positional.addShader("Default.frag", ShaderType::Fragment);
 	if (returnValue != 0)
 		return returnValue;
 
-	s_positionShader.m_programID = glCreateProgram();
+	s_phong.m_programID = glCreateProgram();
 
-	returnValue = s_positionShader.addShader("PositionVertexShader.glsl", ShaderType::Vertex);
+	returnValue = s_phong.addShader("Default.vert", ShaderType::Vertex);
 	if (returnValue != 0)
 		return returnValue;
-
-	returnValue = s_positionShader.addShader("DefaultFragmentShader.glsl", ShaderType::Fragment);
+	returnValue = s_phong.addShader("Phong.frag", ShaderType::Fragment);
 	if (returnValue != 0)
 		return returnValue;
 
@@ -36,17 +44,21 @@ int Shader::init()
 
 int Shader::addShader(string path, ShaderType type) const
 {
-	GLint parsedType;
+	GLint parsedTypeInt;
+	const char* parsedTypeName;
 	switch (type)
 	{
 	case ShaderType::Vertex:
-		parsedType = GL_VERTEX_SHADER;
+		parsedTypeInt = GL_VERTEX_SHADER;
+		parsedTypeName = "vertex";
 		break;
 	case ShaderType::Fragment:
-		parsedType = GL_FRAGMENT_SHADER;
+		parsedTypeInt = GL_FRAGMENT_SHADER;
+		parsedTypeName = "fragment";
 		break;
 	case ShaderType::Geometry:
-		parsedType = GL_GEOMETRY_SHADER;
+		parsedTypeInt = GL_GEOMETRY_SHADER;
+		parsedTypeName = "geometry";
 		break;
 
 	default:
@@ -59,16 +71,13 @@ int Shader::addShader(string path, ShaderType type) const
 	string parsedText = "";
 	string line;
 	while (getline(shaderFile, line))
-	{
-		if (parsedText == "")
-			line += "\n";
-		parsedText += line + " ";
-	}
+		parsedText += line + "\n";
+
 	shaderFile.close();
 
 	auto vertexShaderSource = parsedText.c_str();
 
-	auto shader = glCreateShader(parsedType);
+	auto shader = glCreateShader(parsedTypeInt);
 	glShaderSource(shader, 1, &vertexShaderSource, nullptr);
 	glCompileShader(shader);
 
@@ -83,7 +92,7 @@ int Shader::addShader(string path, ShaderType type) const
 		glGetShaderInfoLog(shader, infoLogLength, &infoLogLength, infoLog);
 		printf(
 			"Error: Failed to compile %s shader at path %s!\n",
-			type == ShaderType::Vertex ? "vertex" : "fragment",
+			parsedTypeName,
 			path.c_str());
 		printf("%s\n", infoLog);
 		delete[] infoLog;
@@ -117,21 +126,31 @@ int Shader::addShader(string path, ShaderType type) const
 
 const Shader & Shader::defaultShader()
 {
-	return s_defaultShader;
+	return s_default;
 }
-const Shader & Shader::positionShader()
+const Shader & Shader::positionalShader()
 {
-	return s_positionShader;
+	return s_positional;
+}
+
+const Shader & Shader::phongShader()
+{
+	return s_phong;
 }
 
 const GLuint & Shader::defaultShaderID()
 {
-	return s_defaultShader.m_programID;
+	return s_default.m_programID;
 }
 
-const GLuint & Shader::positionShaderID()
+const GLuint & Shader::positionalShaderID()
 {
-	return s_positionShader.m_programID;
+	return s_positional.m_programID;
+}
+
+const GLuint & Shader::phongShaderID()
+{
+	return s_phong.m_programID;
 }
 
 const GLuint & Shader::programID() const
