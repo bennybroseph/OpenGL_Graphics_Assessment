@@ -1,7 +1,6 @@
 #include "Shape.h"
 
 #include "Camera.h"
-#include <GLFW/glfw3.h>
 #include "Light.h"
 
 void Shape::draw()
@@ -55,24 +54,21 @@ void Shape::drawModel()
 	matUniform = glGetUniformLocation(m_shader.programID(), "NormalMatrix");
 	glUniformMatrix4fv(matUniform, 1, GL_TRUE, &normalMatrix[0][0]);
 
-	auto time = glfwGetTime() * 0.1f;
-	auto lightDirection =
-		(Light::s_lights[0]->m_transform.getWorldSpaceMatrix()
-		- Light::s_lights[0]->m_transform.getWorldSpaceMatrix() * translate(vec3(1.f, 0.f, 0.f)))[3];
+	auto lightDirection = Light::s_lights[0]->m_transform.forward();
 	// bind light data (not using structs or uniform block for now)
 	unsigned int lightUniform = glGetUniformLocation(m_shader.programID(), "LightDirection");
 	glUniform3fv(lightUniform, 1, &lightDirection[0]);
 
-	auto lightAmbient = vec4(0.25f);
+	auto lightAmbient = vec4(0.8f);
 	// bind ambient light
 	lightUniform = glGetUniformLocation(m_shader.programID(), "LightAmbient");
 	glUniform3fv(lightUniform, 1, &lightAmbient[0]);
 
-	auto lightDiffuse = vec4(1.f);
+	auto lightDiffuse = Light::s_lights[0]->m_diffuse;
 	lightUniform = glGetUniformLocation(m_shader.programID(), "LightDiffuse");
 	glUniform3fv(lightUniform, 1, &lightDiffuse[0]);
 
-	auto lightSpecular = vec4(1.f);
+	auto lightSpecular = Light::s_lights[0]->m_specular;
 	lightUniform = glGetUniformLocation(m_shader.programID(), "LightSpecular");
 	glUniform3fv(lightUniform, 1, &lightSpecular[0]);
 
@@ -85,7 +81,7 @@ void Shape::drawModel()
 	materialUniform = glGetUniformLocation(m_shader.programID(), "MaterialDiffuse");
 	glUniform3fv(materialUniform, 1, &materialDiffuse[0]);
 
-	auto materialSpecular = vec4(1.f);
+	auto materialSpecular = vec3(1.f);
 	materialUniform = glGetUniformLocation(m_shader.programID(), "MaterialSpecular");
 	glUniform3fv(materialUniform, 1, &materialSpecular[0]);
 
@@ -93,7 +89,7 @@ void Shape::drawModel()
 	unsigned int cameraUniform = glGetUniformLocation(m_shader.programID(), "CameraPosition");
 	glUniform3fv(cameraUniform, 1, &Camera::mainCamera().getWorldPosition().getWorldSpaceMatrix()[3][0]);
 
-	auto specularPower = 64.f;
+	auto specularPower = 32.f;
 	materialUniform = glGetUniformLocation(m_shader.programID(), "SpecularPower");
 	glUniform1f(materialUniform, specularPower);
 

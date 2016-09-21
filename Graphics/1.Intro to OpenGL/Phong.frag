@@ -30,10 +30,10 @@ void main()
 	// Do not normalize 'fragPosition', just convert it to a vec3
 	vec3 position = fragPosition.xyz;
 
-	vec3 colour = fragColour.xyz; // Never used
+	vec3 colour = fragColour.xyz;
 	vec3 normal = normalize(fragNormal.xyz);
 
-	// Normalize light values
+	// Normalize the light's direction direction
 	vec3 lightDirection = normalize(LightDirection);
 
 	vec3 lightAmbient = LightAmbient;
@@ -55,7 +55,7 @@ void main()
 	// Calculate Specular
 	vec3 specular = Specular(materialSpecular, lightSpecular, lightDirection, normal, cameraPosition, position);
 
-	outColour = vec4(ambient + diffuse + specular, 1.f);
+	outColour = vec4(colour * (ambient + diffuse + specular), 1.f);
 }
 
 /*

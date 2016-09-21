@@ -11,26 +11,21 @@ void DirectionalLight::draw()
 	auto lines = vector<Line>();
 
 	auto startMatrix = m_transform.getWorldSpaceMatrix();
-	auto endMatrix = m_transform.getWorldSpaceMatrix() * translate(vec3(1.f, 0.f, 0.f));
+	auto endMatrix = m_transform.getWorldSpaceMatrix() * translate(vec3(0.f, 0.f, 0.75f));
 
-	auto lineCount = 5;
-	for (auto i = 0; i < lineCount; ++i)
+	auto lineCount = 15.f;
+	for (auto i = 0.f; i < lineCount; ++i)
 	{
-		for (auto j = 0; j < lineCount; ++j)
-		{
-			auto newStartMatrix =
-				startMatrix
-				* translate(vec3(0.f, 0.25f * i / (lineCount - 1.f) - 0.125f, 0.25f * j / (lineCount - 1.f) - 0.125f));
-			auto newEndMatrix =
-				endMatrix
-				* translate(vec3(0.f, 0.25f * i / (lineCount - 1.f) - 0.125f, 0.25f * j / (lineCount - 1.f) - 0.125f));
+		auto theta = 2 * glm::pi<float>() * i / lineCount;
 
-			lines.push_back(
-			{
-				vec3(newStartMatrix[3].x, newStartMatrix[3].y, newStartMatrix[3].z),
-				vec3(newEndMatrix[3].x, newEndMatrix[3].y, newEndMatrix[3].z)
-			});
-		}
+		auto newStartMatrix = startMatrix * translate(vec3(0.25f * cos(theta), 0.25f * sin(theta), 0.f));
+		auto newEndMatrix = endMatrix * translate(vec3(0.25f * cos(theta), 0.25f * sin(theta), 0.f));
+
+		lines.push_back(
+		{
+			vec3(newStartMatrix[3].x, newStartMatrix[3].y, newStartMatrix[3].z),
+			vec3(newEndMatrix[3].x, newEndMatrix[3].y, newEndMatrix[3].z)
+		});
 	}
 
 	for (auto line : lines)

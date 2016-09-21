@@ -10,6 +10,9 @@ using glm::mat4;
 
 class Transform
 {
+
+	const static int DEFAULT_LINE_WIDTH = 3.f;	// Used when drawing the transform axis lines
+
 public:
 
 	Transform();
@@ -34,6 +37,15 @@ public:
 	/// <param name="newParent">The new transform to parent to</param>
 	/// <param name="keepWorldPosition">Whether or not to keep the transform's previous world position after</param>
 	void setParent(Transform *newParent, const bool &keepWorldPosition = true);
+
+	vec3 forward() const;
+	vec3 back() const;
+
+	vec3 right() const;
+	vec3 left() const;
+
+	vec3 up() const;
+	vec3 down() const;
 
 	/// <summary>
 	/// Parses the world space position out of a transform's local space matrix
@@ -118,9 +130,20 @@ public:
 	/// <returns>Non-modifiable reference to the 'm_matrix' variable</returns>
 	const mat4 & getLocalSpaceMatrix() const;
 
-	void draw(const GLfloat &lineWidth = 3.f) const;
+	void draw(const GLfloat &lineWidth = DEFAULT_LINE_WIDTH) const;
 
 	~Transform();
+
+#pragma region // StaticTransform.cpp
+
+	static vec3 forward(const mat4 &matrix);
+	static vec3 back(const mat4 &matrix);
+
+	static vec3 right(const mat4 &matrix);
+	static vec3 left(const mat4 &matrix);
+
+	static vec3 up(const mat4 &matrix);
+	static vec3 down(const mat4 &matrix);
 
 	static vec3 getPosition(const mat4 &matrix);
 	static void setPosition(mat4 &matrix, const vec3 &newPosition);
@@ -138,10 +161,9 @@ public:
 	static float getScale(const mat4 &matrix);
 	static void setScale(mat4 &matrix, const float &newScale);
 
-	static float clampAngle(float angle);
-	static vec3 clampAngle(vec3 eulerAngle);
+	static void draw(const mat4 &matrix, const GLfloat &lineWidth = DEFAULT_LINE_WIDTH);
 
-	static void draw(const mat4 &matrix, const GLfloat &lineWidth = 3.f);
+#pragma endregion
 
 private:
 

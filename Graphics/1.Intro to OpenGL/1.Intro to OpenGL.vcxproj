@@ -135,6 +135,7 @@
     <ClCompile Include="Gizmos.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Light.cpp" />
+    <ClCompile Include="Math.cpp" />
     <ClCompile Include="MyApplication.cpp" />
     <ClCompile Include="Plane.cpp" />
     <ClCompile Include="Planet.cpp" />
@@ -142,6 +143,7 @@
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Shape.cpp" />
     <ClCompile Include="Sphere.cpp" />
+    <ClCompile Include="StaticTransform.cpp" />
     <ClCompile Include="Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -155,6 +157,7 @@
     <ClInclude Include="Gizmos.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="Math.h" />
     <ClInclude Include="MyApplication.h" />
     <ClInclude Include="Plane.h" />
     <ClInclude Include="Planet.h" />

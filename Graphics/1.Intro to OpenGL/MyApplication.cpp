@@ -2,9 +2,10 @@
 
 #include <fstream>
 
+#include "Math.h"
+#include "Gizmos.h"
 #include "Shader.h"
 #include "FlyCamera.h"
-#include "Gizmos.h"
 #include "DirectionalLight.h"
 
 using std::fstream;
@@ -27,7 +28,8 @@ int MyApplication::startup()
 
 	m_light = new DirectionalLight();
 	m_light->m_transform.setPosition(vec3(0.f, 5.f, 0.f));
-	m_light->m_transform.rotate(-45.f, vec3(0.f, 0.f, 1.f));
+	m_light->m_transform.rotate(45.f, vec3(1.f, 0.f, 0.f));
+	m_light->m_diffuse = vec3(1.f, 1.f, 1.f);
 
 	m_sun = Planet(vec3(0, 0, 0), 1.5f, vec4(255.f / 255.f, 235.f / 255.f, 59.f / 255.f, 1.f), 3.f);
 
@@ -102,7 +104,9 @@ void MyApplication::parseInput()
 
 void MyApplication::update()
 {
-	m_light->m_transform.rotate(15.f * m_deltaTime, vec3(-1.f, 1.f, 0.f));
+	m_light->m_transform.rotate(15.f * m_deltaTime, vec3(0.f, 1.f, -1.f));
+
+	printf("%f = %f\n", -glfwGetTime() * 10.f, Math::clampAngle(-glfwGetTime() * 10.f));
 
 	m_sun.update(m_deltaTime);
 	m_earth.update(m_deltaTime);
