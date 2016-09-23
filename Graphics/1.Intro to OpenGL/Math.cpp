@@ -9,7 +9,7 @@ namespace Math
 		b = abs(b);
 
 		auto returnValue = a % b;
-		if (returnValue <= 0)
+		if (returnValue < 0)
 			returnValue += b;
 
 		return returnValue;
@@ -27,9 +27,9 @@ namespace Math
 	}
 	vec3 clampAngle(vec3 eulerAngle)
 	{
-		clampAngle(eulerAngle.x);
-		clampAngle(eulerAngle.y);
-		clampAngle(eulerAngle.z);
+		eulerAngle.x = clampAngle(eulerAngle.x);
+		eulerAngle.y = clampAngle(eulerAngle.y);
+		eulerAngle.z = clampAngle(eulerAngle.z);
 
 		return eulerAngle;
 	}

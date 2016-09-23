@@ -1,5 +1,5 @@
-#ifndef _SHAPE3D_H_
-#define _SHAPE3D_H_
+#ifndef _MESH_H_
+#define _MESH_H_
 
 #include <gl_core_4_4.h>
 #include <glm/ext.hpp>
@@ -17,8 +17,9 @@ struct Vertex
 	vec4 normal;
 };
 
-class Model
+class Mesh
 {
+
 	friend class Shape;
 	friend class Plane;
 	friend class Cube;
@@ -28,7 +29,7 @@ public:
 
 	virtual void genBuffers();
 
-	virtual ~Model();
+	virtual ~Mesh();
 
 protected:
 
@@ -41,4 +42,4 @@ protected:
 
 };
 
-#endif // _SHAPE3D_H_
+#endif // _MESH_H_

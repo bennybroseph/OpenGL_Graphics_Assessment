@@ -18,8 +18,6 @@ int BaseApplication::createWindow(const char * title, int width, int height)
 	glfwMakeContextCurrent(m_window);
 	glfwSwapInterval(1);
 
-	Input::init();
-
 	// the rest of our code goes here!
 	if (ogl_LoadFunctions() == ogl_LOAD_FAILED)
 	{
@@ -36,7 +34,7 @@ int BaseApplication::createWindow(const char * title, int width, int height)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	glClearColor(0.25f, 0.25f, 0.25f, 1);
+	glClearColor(0.25f, 0.25f, 0.25f, 1.f);
 	glEnable(GL_DEPTH_TEST); // enables the depth buffer
 
 	return false;
@@ -65,12 +63,13 @@ void BaseApplication::run()
 
 		glfwPollEvents();
 		parseInput();
+
 		if (!m_isRunning)
 			continue;
 
 		update();
 		lateUpdate();
-		Input::lateUpdate();
+
 
 		draw(); //call the implemented draw function of whatever application we have designated
 

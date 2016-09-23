@@ -3,7 +3,7 @@
 
 #include "Shader.h"
 #include "Transform.h"
-#include "Model.h"
+#include "Mesh.h"
 
 class Shape
 {
@@ -37,7 +37,7 @@ protected:
 
 	Transform m_transform;
 
-	Model *m_model = nullptr;
+	Mesh *m_model = nullptr;
 
 	bool m_isEnabled = true;
 	bool m_shouldDrawModel = true;

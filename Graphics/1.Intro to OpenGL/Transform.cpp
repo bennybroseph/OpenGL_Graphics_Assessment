@@ -90,7 +90,7 @@ vec3 Transform::getLocalPosition() const
 void Transform::setLocalPosition(const vec3& newPosition)
 {
 	// Call the static function equivalent and give it this 'm_matrix'
-	setPosition(m_matrix, newPosition);
+	setPosition(&m_matrix, newPosition);
 }
 
 vec3 Transform::getEulerAngle() const
@@ -127,7 +127,7 @@ vec3 Transform::getLocalEulerAngle() const
 void Transform::setLocalEulerAngle(const vec3 &newEulerAngle)
 {
 	// Call the static function equivalent and give it this 'm_matrix'
-	setEulerAngle(m_matrix, newEulerAngle);
+	setEulerAngle(&m_matrix, newEulerAngle);
 }
 
 float Transform::getScale() const
@@ -140,17 +140,17 @@ void Transform::setScale(const float &newScale)
 	{
 		// Create a new Scale matrix from the vec3 passed in
 		auto newScaleMatrix = mat4(1);
-		setScale(newScaleMatrix, newScale);
+		setScale(&newScaleMatrix, newScale);
 
 		// Grab the current scale matrix
 		auto oldScaleMatrix = mat4(1);
-		setScale(oldScaleMatrix, getLocalScale());
+		setScale(&oldScaleMatrix, getLocalScale());
 		// Remove the scale from the current local space matrix
 		m_matrix *= inverse(oldScaleMatrix);
 
 		// Grab the scale matrix out of the parent's world space matrix
 		auto parentScaleMatrix = mat4(1);
-		setScale(parentScaleMatrix, getScale(m_parent->getWorldSpaceMatrix()));
+		setScale(&parentScaleMatrix, getScale(m_parent->getWorldSpaceMatrix()));
 		// Offset the local space matrix such that it's world space scale is equal to 'newScaleMatrix'
 		m_matrix *= inverse(parentScaleMatrix) * newScaleMatrix;
 	}
@@ -164,7 +164,7 @@ float Transform::getLocalScale() const
 }
 void Transform::setLocalScale(const float &newScale)
 {
-	setScale(m_matrix, newScale);
+	setScale(&m_matrix, newScale);
 }
 
 mat4 Transform::getWorldSpaceMatrix() const
@@ -172,15 +172,15 @@ mat4 Transform::getWorldSpaceMatrix() const
 	if (m_parent != nullptr)
 		return m_parent->getWorldSpaceMatrix() * m_matrix;
 
-	return getLocalSpaceMatrix();
+	return m_matrix;
 }
 
-void Transform::setLocalSpaceMatrix(const mat4 &newMatrix)
+mat4 & Transform::localSpaceMatrix()
 {
-	m_matrix = newMatrix;
+	return m_matrix;
 }
 
-const mat4 & Transform::getLocalSpaceMatrix() const
+mat4 Transform::localSpaceMatrix() const
 {
 	return m_matrix;
 }
@@ -188,6 +188,11 @@ const mat4 & Transform::getLocalSpaceMatrix() const
 void Transform::draw(const GLfloat& lineWidth) const
 {
 	draw(getWorldSpaceMatrix(), lineWidth);
+}
+
+void Transform::drawGui()
+{
+	drawGui(&m_matrix);
 }
 
 Transform::~Transform() { }

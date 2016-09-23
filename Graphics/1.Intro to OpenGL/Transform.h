@@ -4,6 +4,7 @@
 #include <glm/ext.hpp>
 #include <gl_core_4_4.h>
 
+using glm::vec2;
 using glm::vec3;
 using glm::vec4;
 using glm::mat4;
@@ -11,7 +12,7 @@ using glm::mat4;
 class Transform
 {
 
-	const static int DEFAULT_LINE_WIDTH = 3.f;	// Used when drawing the transform axis lines
+	const static float DEFAULT_LINE_WIDTH;	// Used when drawing the transform axis lines
 
 public:
 
@@ -120,17 +121,14 @@ public:
 	mat4 getWorldSpaceMatrix() const;
 
 	/// <summary>
-	/// Set's the transform's local space matrix
+	/// Returns a modifiable reference to the 'm_matrix' variable
 	/// </summary>
-	/// <param name="newMatrix">The transform's new local space matrix</param>
-	void setLocalSpaceMatrix(const mat4 &newMatrix);
-	/// <summary>
-	/// Returns a non-modifiable reference to the 'm_matrix' variable
-	/// </summary>
-	/// <returns>Non-modifiable reference to the 'm_matrix' variable</returns>
-	const mat4 & getLocalSpaceMatrix() const;
+	/// <returns>Modifiable reference to the 'm_matrix' variable</returns>
+	mat4 & localSpaceMatrix();
+	mat4 localSpaceMatrix() const;
 
 	void draw(const GLfloat &lineWidth = DEFAULT_LINE_WIDTH) const;
+	void drawGui();
 
 	~Transform();
 
@@ -146,7 +144,7 @@ public:
 	static vec3 down(const mat4 &matrix);
 
 	static vec3 getPosition(const mat4 &matrix);
-	static void setPosition(mat4 &matrix, const vec3 &newPosition);
+	static void setPosition(mat4 *matrix, const vec3 &newPosition);
 
 	/// <summary>
 	/// Creates a rotation matrix given Euler angles in degrees
@@ -156,12 +154,13 @@ public:
 	static mat4 eulerRotation(vec3 newEulerAngle);
 
 	static vec3 getEulerAngle(const mat4 &matrix);
-	static void setEulerAngle(mat4 &matrix, const vec3 &newEulerAngle);
+	static void setEulerAngle(mat4 *matrix, const vec3 &newEulerAngle);
 
 	static float getScale(const mat4 &matrix);
-	static void setScale(mat4 &matrix, const float &newScale);
+	static void setScale(mat4 *matrix, const float &newScale);
 
 	static void draw(const mat4 &matrix, const GLfloat &lineWidth = DEFAULT_LINE_WIDTH);
+	static void drawGui(mat4 *matrix);
 
 #pragma endregion
 

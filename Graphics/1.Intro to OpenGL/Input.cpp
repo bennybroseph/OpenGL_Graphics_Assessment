@@ -1,6 +1,9 @@
 #include "Input.h"
 
+#include <imgui_impl_glfw_gl3.h>
+
 #pragma region // Static Initializer
+
 vector<OnKeyCallback> Input::m_onKeyCallbacks = vector<OnKeyCallback>();
 map<int, Input::KeyState> Input::m_keyStates = map<int, KeyState>();
 
@@ -16,7 +19,8 @@ Input::Position Input::m_scrollPos;
 Input::Position Input::m_prevScrollPos;
 
 vector<OnCursorEnterCallback> Input::m_onCursorEnterCallback = vector<OnCursorEnterCallback>();
-#pragma endregion 
+
+#pragma endregion
 
 void Input::init()
 {
@@ -31,10 +35,16 @@ void Input::init()
 
 int Input::getKey(const int &key)
 {
+	if (ImGui::GetIO().WantCaptureKeyboard)
+		return GLFW_RELEASED;
+
 	return m_keyStates[key].state;
 }
 int Input::getKey(const int &key, const int &mods)
 {
+	if (ImGui::GetIO().WantCaptureKeyboard)
+		return GLFW_RELEASED;
+
 	if (m_keyStates[key].mods == mods)
 		return  m_keyStates[key].state;
 
@@ -47,15 +57,24 @@ const Input::Position& Input::getCursorPosition()
 }
 Input::Position Input::deltaCursorPosition()
 {
+	if (ImGui::GetIO().WantCaptureMouse)
+		return Position();
+
 	return m_cursorPos - m_prevCursorPos;
 }
 
 int Input::getMouseButton(const int &button)
 {
+	if (ImGui::GetIO().WantCaptureMouse)
+		return GLFW_RELEASED;
+
 	return m_mouseButtonStates[button].state;
 }
 int Input::getMouseButton(const int &button, const int &mods)
 {
+	if (ImGui::GetIO().WantCaptureMouse)
+		return GLFW_RELEASED;
+
 	if (m_mouseButtonStates[button].mods == mods)
 		return m_mouseButtonStates[button].state;
 
@@ -64,10 +83,14 @@ int Input::getMouseButton(const int &button, const int &mods)
 
 const Input::Position& Input::getScrollPosition()
 {
+	if (ImGui::GetIO().WantCaptureMouse)
+		return Position();
+
 	return m_scrollPos;
 }
 
 #pragma region // Add Callback Functions
+
 void Input::addOnKeyCallback(const OnKeyCallback &delegate)
 {
 	m_onKeyCallbacks.push_back(delegate);
@@ -76,18 +99,19 @@ void Input::addOnCursorPosCallback(const OnCursorPosCallback &delegate)
 {
 	m_onCursorPosCallback.push_back(delegate);
 }
-void Input::onMouseButtonCallback(const OnMouseButtonCallback &delegate)
+void Input::addOnMouseButtonCallback(const OnMouseButtonCallback &delegate)
 {
 	m_onMouseButtonCallbacks.push_back(delegate);
 }
-void Input::onScrollCallback(const OnScrollCallback &delegate)
+void Input::addOnScrollCallback(const OnScrollCallback &delegate)
 {
 	m_onScrollCallback.push_back(delegate);
 }
-void Input::onCursorEnterCallback(const OnCursorEnterCallback &delegate)
+void Input::addOnCursorEnterCallback(const OnCursorEnterCallback &delegate)
 {
 	m_onCursorEnterCallback.push_back(delegate);
 }
+
 #pragma endregion
 
 void Input::lateUpdate()
@@ -108,9 +132,6 @@ void Input::lateUpdate()
 
 void Input::onKey(GLFWwindow *window, int key, int scanecode, int action, int mods)
 {
-	for (const auto &delegate : m_onKeyCallbacks)
-		delegate(key, scanecode, action, mods);
-
 	switch (action)
 	{
 	case GLFW_PRESS:
@@ -123,22 +144,25 @@ void Input::onKey(GLFWwindow *window, int key, int scanecode, int action, int mo
 		m_keyStates[key].mods = mods;
 		break;
 	}
+
+	if (ImGui::GetIO().WantCaptureKeyboard)
+		return;
+
+	for (const auto &delegate : m_onKeyCallbacks)
+		delegate(key, scanecode, action, mods);
 }
 
 void Input::onCursorPos(GLFWwindow *window, double x, double y)
 {
-	for (const auto &delegate : m_onCursorPosCallback)
-		delegate(x, y);
-
 	m_cursorPos.x = x;
 	m_cursorPos.y = y;
+
+	for (const auto &delegate : m_onCursorPosCallback)
+		delegate(x, y);
 }
 
 void Input::onMouseButton(GLFWwindow* window, int button, int action, int mods)
 {
-	for (const auto &delegate : m_onMouseButtonCallbacks)
-		delegate(button, action, mods);
-
 	switch (action)
 	{
 	case GLFW_PRESS:
@@ -151,15 +175,24 @@ void Input::onMouseButton(GLFWwindow* window, int button, int action, int mods)
 		m_mouseButtonStates[button].mods = mods;
 		break;
 	}
+
+	if (ImGui::GetIO().WantCaptureMouse)
+		return;
+
+	for (const auto &delegate : m_onMouseButtonCallbacks)
+		delegate(button, action, mods);
 }
 
 void Input::onScroll(GLFWwindow* window, double x, double y)
 {
-	for (const auto &delegate : m_onScrollCallback)
-		delegate(x, y);
-
 	m_scrollPos.x = x;
 	m_scrollPos.y = y;
+
+	if (ImGui::GetIO().WantCaptureMouse)
+		return;
+
+	for (const auto &delegate : m_onScrollCallback)
+		delegate(x, y);
 }
 
 void Input::onCursorEnter(GLFWwindow* window, int state)

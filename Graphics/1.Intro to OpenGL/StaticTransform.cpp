@@ -1,7 +1,11 @@
 #include "Transform.h"
 
+#include <imgui_impl_glfw_gl3.h>
+
 #include "Math.h"
 #include "Gizmos.h"
+
+const float Transform::DEFAULT_LINE_WIDTH = 3.f;
 
 vec3 Transform::forward(const mat4 & matrix)
 {
@@ -34,9 +38,9 @@ vec3 Transform::getPosition(const mat4 &matrix)
 {
 	return vec3(matrix[3].x, matrix[3].y, matrix[3].z);
 }
-void Transform::setPosition(mat4 &matrix, const vec3 &newPosition)
+void Transform::setPosition(mat4 *matrix, const vec3 &newPosition)
 {
-	matrix[3] = vec4(newPosition.x, newPosition.y, newPosition.z, 1);
+	(*matrix)[3] = vec4(newPosition.x, newPosition.y, newPosition.z, 1);
 }
 
 mat4 Transform::eulerRotation(vec3 newEulerAngle)
@@ -85,16 +89,16 @@ vec3 Transform::getEulerAngle(const mat4 &matrix)
 
 	return eulerAngle;
 }
-void Transform::setEulerAngle(mat4 &matrix, const vec3 &newEulerAngle)
+void Transform::setEulerAngle(mat4 *matrix, const vec3 &newEulerAngle)
 {
 	// Grab the current rotation and create a new matrix to represent it
-	auto oldEulerAngle = getEulerAngle(matrix);
+	auto oldEulerAngle = getEulerAngle(*matrix);
 	auto oldRotationMatrix = eulerRotation(oldEulerAngle);
 	// Remove the rotation from the current matrix
-	matrix *= inverse(oldRotationMatrix);
+	*matrix *= inverse(oldRotationMatrix);
 
 	// Apply the new rotation
-	matrix *= eulerRotation(newEulerAngle);
+	*matrix *= eulerRotation(newEulerAngle);
 }
 
 float Transform::getScale(const mat4 &matrix)
@@ -107,10 +111,10 @@ float Transform::getScale(const mat4 &matrix)
 	// Since we can't deal with non-uniform scaling, get the uniform scale by calculating the average
 	return (x + y + z) / 3.f;
 }
-void Transform::setScale(mat4 &matrix, const float &newScale)
+void Transform::setScale(mat4 *matrix, const float &newScale)
 {
 	// Get the quotient of the new scale and the current one
-	auto deltaScale = newScale / getScale(matrix);
+	auto deltaScale = newScale / getScale(*matrix);
 
 	// Set the scale matrix based on 'deltaScale'
 	auto scale =
@@ -121,7 +125,7 @@ void Transform::setScale(mat4 &matrix, const float &newScale)
 			0.f, 0.f, 0.f, 1.f);
 
 	// Apply
-	matrix *= scale;
+	*matrix *= scale;
 }
 
 void Transform::draw(const mat4 &matrix, const GLfloat &lineWidth)
@@ -136,9 +140,34 @@ void Transform::draw(const mat4 &matrix, const GLfloat &lineWidth)
 
 	glDisable(GL_DEPTH_TEST);
 	{
-		Gizmos::drawLine(getPosition(matrix), vec3(endX[3].x, endX[3].y, endX[3].z), vec4(1.f, 0.f, 0.f, 1.f), lineWidth);
-		Gizmos::drawLine(getPosition(matrix), vec3(endY[3].x, endY[3].y, endY[3].z), vec4(0.f, 1.f, 0.f, 1.f), lineWidth);
-		Gizmos::drawLine(getPosition(matrix), vec3(endZ[3].x, endZ[3].y, endZ[3].z), vec4(0.f, 0.f, 1.f, 1.f), lineWidth);
+		Gizmos::drawLine(
+			getPosition(matrix), vec3(endX[3].x, endX[3].y, endX[3].z), vec4(1.f, 0.f, 0.f, 1.f), lineWidth);
+		Gizmos::drawLine(
+			getPosition(matrix), vec3(endY[3].x, endY[3].y, endY[3].z), vec4(0.f, 1.f, 0.f, 1.f), lineWidth);
+		Gizmos::drawLine(
+			getPosition(matrix), vec3(endZ[3].x, endZ[3].y, endZ[3].z), vec4(0.f, 0.f, 1.f, 1.f), lineWidth);
 	}
 	glEnable(GL_DEPTH_TEST);
+}
+
+void Transform::drawGui(mat4 *matrix)
+{
+	auto position = getPosition(*matrix);
+	auto eulerAngle = getEulerAngle(*matrix);
+	auto scale = getScale(*matrix);
+
+	ImGui::PushID(&*matrix);
+	{
+		if (ImGui::CollapsingHeader("Transform", nullptr, true, true))
+		{
+			ImGui::DragFloat3("Position", value_ptr(position), 0.01f);
+			ImGui::DragFloat3("Rotation", value_ptr(eulerAngle), 0.1f);
+			ImGui::DragFloat("Scale", &scale, 0.01f, 0.01f, 50.f);
+		}
+	}
+	ImGui::PopID();
+
+	setPosition(matrix, position);
+	setEulerAngle(matrix, eulerAngle);
+	setScale(matrix, scale);
 }

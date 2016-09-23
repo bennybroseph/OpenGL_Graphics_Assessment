@@ -1,6 +1,6 @@
 #include "Plane.h"
 
-Model* Plane::s_plane = new Model();
+Mesh* Plane::s_plane = new Mesh();
 
 Plane::Plane()
 {

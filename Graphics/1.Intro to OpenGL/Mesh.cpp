@@ -1,4 +1,4 @@
-#include "Model.h"
+#include "Mesh.h"
 
 #include "Camera.h"
 
@@ -7,7 +7,7 @@ using std::fstream;
 using glm::mat4;
 using glm::vec3;
 
-void Model::genBuffers()
+void Mesh::genBuffers()
 {
 	//gen VBO, IBO
 	glGenBuffers(1, &m_VBO);
@@ -41,4 +41,4 @@ void Model::genBuffers()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-Model::~Model() { }
+Mesh::~Mesh() { }

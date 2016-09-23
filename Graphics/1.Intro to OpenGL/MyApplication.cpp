@@ -1,8 +1,10 @@
 #include "MyApplication.h"
 
 #include <fstream>
+#include <imgui_impl_glfw_gl3.h>
 
 #include "Math.h"
+#include "Input.h"
 #include "Gizmos.h"
 #include "Shader.h"
 #include "FlyCamera.h"
@@ -13,13 +15,18 @@ using std::fstream;
 const static int GRID_SIZE = 10;
 const static int GRID_SEPARATOR = 5;
 
-const static unsigned int VERTEX_SIZE = 4;
-const static unsigned int INDEX_BUFFER_SIZE = 4;
-
 int MyApplication::startup()
 {
-	createWindow("Intro to OpenGL", 1280, 720);
+	createWindow("Intro to OpenGL", m_screenSize.x, m_screenSize.y);
 
+	//Initialize ImGUI
+	ImGui_ImplGlfwGL3_Init(m_window, true);
+
+	auto &io = ImGui::GetIO();
+	io.DisplaySize.x = m_screenSize.x;
+	io.DisplaySize.y = m_screenSize.y;
+
+	Input::init();
 	Shader::init();
 	Gizmos::init();
 
@@ -62,12 +69,17 @@ int MyApplication::startup()
 
 void MyApplication::shutdown()
 {
+	Input::quit();
 	Gizmos::quit();
+	ImGui_ImplGlfwGL3_Shutdown();
+
 	destroyWindow();
 }
 
 void MyApplication::parseInput()
 {
+	ImGui_ImplGlfwGL3_NewFrame();
+
 	// close the application if the window closes or we press escape
 	if (glfwWindowShouldClose(m_window) || Input::getKey(GLFW_KEY_ESCAPE) >= GLFW_PRESS)
 	{
@@ -76,7 +88,7 @@ void MyApplication::parseInput()
 	}
 
 	if (Input::getKey(GLFW_KEY_F1) == GLFW_PRESS)
-		m_shouldDrawGrid = !m_shouldDrawGrid;
+		m_shouldDrawGui = !m_shouldDrawGui;
 
 	if (Input::getKey(GLFW_KEY_1) >= GLFW_PRESS)
 		m_sun.transform().translate(vec3(0.f, 1.f * m_deltaTime, 0.f));
@@ -104,9 +116,7 @@ void MyApplication::parseInput()
 
 void MyApplication::update()
 {
-	m_light->m_transform.rotate(15.f * m_deltaTime, vec3(0.f, 1.f, -1.f));
-
-	printf("%f = %f\n", -glfwGetTime() * 10.f, Math::clampAngle(-glfwGetTime() * 10.f));
+	//m_light->m_transform.rotate(15.f * m_deltaTime, vec3(0.f, 1.f, -1.f));
 
 	m_sun.update(m_deltaTime);
 	m_earth.update(m_deltaTime);
@@ -115,17 +125,19 @@ void MyApplication::update()
 	m_camera->update(m_deltaTime);
 }
 
-void MyApplication::lateUpdate() { }
+void MyApplication::lateUpdate()
+{
+	Input::lateUpdate();
+}
 
 void MyApplication::draw()
 {
+	glClearColor(m_clearColour.r, m_clearColour.g, m_clearColour.b, m_clearColour.a);
 	// clear the screen for this frame
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	if (m_shouldDrawGrid)
-	{
-		// TODO: Add grid function back in now that Gizmos::drawLine is implemented
-	}
+		Gizmos::drawGrid(vec3(0), vec2(1.f, 1.f), vec2(5.f, 5.f), vec4(1.f));
 
 	for (auto shape : m_shapes)
 		shape->draw();
@@ -133,6 +145,9 @@ void MyApplication::draw()
 	drawSolarSystem();
 
 	m_light->draw();
+
+	if (m_shouldDrawGui)
+		drawGui();
 }
 
 void MyApplication::drawSolarSystem()
@@ -144,6 +159,28 @@ void MyApplication::drawSolarSystem()
 	m_sun.transform().draw();
 	m_earth.transform().draw();
 	m_moon.transform().draw();
+}
+
+void MyApplication::drawGui()
+{
+	ImGui::Begin("Test Values");
+	{
+		ImGui::ColorEdit3("Clear Colour", value_ptr(m_clearColour));
+		ImGui::Checkbox("Draw Grid", &m_shouldDrawGrid);
+	}
+	ImGui::End();
+
+	m_light->drawGui();
+
+	ImGui::Begin("Debug");
+	{
+		m_sun.transform().drawGui();
+		m_earth.transform().drawGui();
+		m_moon.transform().drawGui();
+	}
+	ImGui::End();
+
+	ImGui::Render();
 }
 
 MyApplication::~MyApplication()

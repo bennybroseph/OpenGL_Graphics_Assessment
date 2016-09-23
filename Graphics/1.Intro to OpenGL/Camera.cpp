@@ -5,8 +5,7 @@ Camera* Camera::s_mainCamera;
 void Camera::setPerspective(
 	const float &fieldOfView, const float& aspectRatio, const float &newNear, const float &newFar)
 {
-	m_projectionTransform.setLocalSpaceMatrix(
-		glm::perspective(fieldOfView, aspectRatio, newNear, newFar));
+	m_projectionTransform.localSpaceMatrix() = glm::perspective(fieldOfView, aspectRatio, newNear, newFar);
 }
 void Camera::setLookAt(const vec3 &from, const vec3 &to, const vec3 &up)
 {
@@ -28,7 +27,7 @@ void Camera::setLookAt(const vec3 &from, const vec3 &to, const vec3 &up)
 			0, 0, 1, 0,
 			-from.x, -from.y, -from.z, 1);
 
-	m_worldTransform.setLocalSpaceMatrix(inverse(orientation * translation));
+	m_worldTransform.localSpaceMatrix() = inverse(orientation * translation);
 	m_rotation = m_worldTransform.getEulerAngle();
 }
 void Camera::setPosition(const vec3& position)
@@ -47,7 +46,7 @@ const Transform& Camera::getWorldPosition() const
 }
 mat4 Camera::getView() const
 {
-	return inverse(m_worldTransform.getLocalSpaceMatrix());
+	return inverse(m_worldTransform.localSpaceMatrix());
 }
 const Transform& Camera::getProjection() const
 {
@@ -57,7 +56,7 @@ const Transform& Camera::getProjection() const
 mat4 Camera::getProjectionView() const
 {
 	return
-		m_projectionTransform.getLocalSpaceMatrix() * getView();
+		m_projectionTransform.localSpaceMatrix() * getView();
 }
 
 Camera::~Camera() { }

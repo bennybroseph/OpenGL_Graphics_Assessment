@@ -1,6 +1,6 @@
 #include "Cube.h"
 
-Model* Cube::s_cube = new Model();
+Mesh* Cube::s_cube = new Mesh();
 
 Cube::Cube()
 {

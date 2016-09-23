@@ -18,7 +18,7 @@ public:
 
 private:
 
-	static Model* s_cube;
+	static Mesh* s_cube;
 
 };
 

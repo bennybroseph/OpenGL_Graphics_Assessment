@@ -1,6 +1,6 @@
 #include "Sphere.h"
 
-Model* Sphere::s_sphere = new Model();
+Mesh* Sphere::s_sphere = new Mesh();
 
 Sphere::Sphere()
 {

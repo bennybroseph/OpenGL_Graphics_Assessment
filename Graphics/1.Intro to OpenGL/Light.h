@@ -13,6 +13,7 @@ public:
 	Light();
 
 	virtual void draw() = 0;
+	virtual void drawGui(const char *title = "Light") = 0;
 
 	virtual ~Light();
 

@@ -25,7 +25,7 @@ public:
 
 private:
 
-	static Model* s_sphere;
+	static Mesh* s_sphere;
 
 };
 

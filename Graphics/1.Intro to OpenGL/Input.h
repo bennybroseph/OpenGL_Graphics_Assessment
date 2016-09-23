@@ -57,9 +57,9 @@ public:
 
 	static void addOnKeyCallback(const OnKeyCallback &delegate);
 	static void addOnCursorPosCallback(const OnCursorPosCallback &delegate);
-	static void onMouseButtonCallback(const OnMouseButtonCallback &delegate);
-	static void onScrollCallback(const OnScrollCallback &delegate);
-	static void onCursorEnterCallback(const OnCursorEnterCallback &delegate);
+	static void addOnMouseButtonCallback(const OnMouseButtonCallback &delegate);
+	static void addOnScrollCallback(const OnScrollCallback &delegate);
+	static void addOnCursorEnterCallback(const OnCursorEnterCallback &delegate);
 
 	static void lateUpdate();
 

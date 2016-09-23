@@ -18,7 +18,7 @@ public:
 
 private:
 
-	static Model* s_plane;
+	static Mesh* s_plane;
 
 };
 

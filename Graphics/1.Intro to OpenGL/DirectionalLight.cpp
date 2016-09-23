@@ -1,6 +1,7 @@
 #include "DirectionalLight.h"
 
 #include <vector>
+#include <imgui_impl_glfw_gl3.h>
 
 #include "Gizmos.h"
 
@@ -29,10 +30,20 @@ void DirectionalLight::draw()
 	}
 
 	for (auto line : lines)
-	{
 		Gizmos::drawLine(line.start, line.end, vec4(m_diffuse, 1.f));
-	}
+
 	m_transform.draw();
+}
+
+void DirectionalLight::drawGui(const char *title)
+{
+	ImGui::Begin(title);
+	{
+		m_transform.drawGui();
+		ImGui::ColorEdit3("Diffuse Color", value_ptr(m_diffuse));
+		ImGui::ColorEdit3("Specular Color", value_ptr(m_specular));
+	}
+	ImGui::End();
 }
 
 DirectionalLight::~DirectionalLight()

@@ -10,7 +10,14 @@ namespace Gizmos
 	int init();
 
 	int drawSphere(const mat4 &transform, const vec4 &colour, const bool &drawWireFrame = false);
-	int drawLine(const vec3 & start, const vec3 & end, const vec4 &colour, const GLfloat &width = 1.f);
+	int drawLine(const vec3 &start, const vec3 &end, const vec4 &colour, const GLfloat &width = 1.f);
+
+	int drawGrid(
+		const vec3 &center,
+		const vec2 &size,
+		const vec2 &segments,
+		const vec4 &colour,
+		const GLfloat &lineWidth = 1.f);
 
 	int quit();
 }

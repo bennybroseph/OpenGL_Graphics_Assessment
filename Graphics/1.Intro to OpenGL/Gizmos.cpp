@@ -1,7 +1,6 @@
 #include "Gizmos.h"
 
 #include "Camera.h"
-#include <glm/ext.hpp>
 
 namespace Gizmos
 {
@@ -18,7 +17,7 @@ namespace Gizmos
 	{
 		auto newSphere = Sphere();
 
-		newSphere.transform().setLocalSpaceMatrix(transform);
+		newSphere.transform().localSpaceMatrix() = transform;
 
 		newSphere.materialColour() = colour;
 
@@ -82,6 +81,62 @@ namespace Gizmos
 			glDrawElements(GL_LINES, indexes.size(), GL_UNSIGNED_INT, nullptr);
 		}
 		glLineWidth(1.f);
+
+		return 0;
+	}
+
+	int drawGrid(const vec3 &center, const vec2 &spacing, const vec2 &segments, const vec4 &colour, const GLfloat &lineWidth)
+	{
+		struct Line
+		{
+			vec3 start, end;
+			vec4 colour;
+		};
+
+		auto lines = vector<Line>();
+
+		auto originColour = vec4(1);
+		auto otherColour = vec4(0.75f, 0.75f, 0.75f, 1.f);
+
+		for (auto i = 0; i <= segments.y; ++i)
+		{
+			lines.push_back(
+			{
+				vec3(center.x - spacing.x * segments.x, 0.f, i * spacing.y),
+				vec3(center.x + spacing.x * segments.x, 0.f, i * spacing.y),
+				i == 0 ? originColour : otherColour
+			});
+			if (i != 0)
+			{
+				lines.push_back(
+				{
+					vec3(center.x - spacing.x * segments.x, 0.f, -i * spacing.y),
+					vec3(center.x + spacing.x * segments.x, 0.f, -i * spacing.y),
+					otherColour
+				});
+			}
+		}
+		for (auto i = 0; i <= segments.x; ++i)
+		{
+			lines.push_back(
+			{
+				vec3(i * spacing.x, 0.f, center.y - spacing.y * segments.y),
+				vec3(i * spacing.x, 0.f, center.y + spacing.y * segments.y),
+				i == 0 ? originColour : otherColour
+			});
+			if (i != 0)
+			{
+				lines.push_back(
+				{
+					vec3(-i * spacing.x, 0.f, center.y - spacing.y * segments.y),
+					vec3(-i * spacing.x, 0.f, center.y + spacing.y * segments.y),
+					otherColour
+				});
+			}
+		}
+
+		for (auto line : lines)
+			Gizmos::drawLine(line.start, line.end, line.colour);
 
 		return 0;
 	}
