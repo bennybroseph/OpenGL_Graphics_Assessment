@@ -29,10 +29,10 @@ void DirectionalLight::draw()
 		});
 	}
 
+	m_transform.draw();
+
 	for (auto line : lines)
 		Gizmos::drawLine(line.start, line.end, vec4(m_diffuse, 1.f));
-
-	m_transform.draw();
 }
 
 void DirectionalLight::drawGui(const char *title)

@@ -132,7 +132,6 @@ void MyApplication::lateUpdate()
 
 void MyApplication::draw()
 {
-	glClearColor(m_clearColour.r, m_clearColour.g, m_clearColour.b, m_clearColour.a);
 	// clear the screen for this frame
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -165,7 +164,8 @@ void MyApplication::drawGui()
 {
 	ImGui::Begin("Test Values");
 	{
-		ImGui::ColorEdit3("Clear Colour", value_ptr(m_clearColour));
+		if (ImGui::ColorEdit3("Clear Colour", value_ptr(m_clearColour)))
+			glClearColor(m_clearColour.r, m_clearColour.g, m_clearColour.b, m_clearColour.a);
 		ImGui::Checkbox("Draw Grid", &m_shouldDrawGrid);
 	}
 	ImGui::End();
