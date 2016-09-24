@@ -1,13 +1,16 @@
 #include "Camera.h"
 
-Camera* Camera::s_mainCamera;
+Camera *Camera::s_mainCamera = nullptr;
 
 void Camera::setPerspective(
-	const float &fieldOfView, const float& aspectRatio, const float &newNear, const float &newFar)
+	const float &fieldOfView,
+	const float& aspectRatio,
+	const float &newNear,
+	const float &newFar) const
 {
-	m_projectionTransform.localSpaceMatrix() = glm::perspective(fieldOfView, aspectRatio, newNear, newFar);
+	*m_projectionTransform->localSpaceMatrix() = glm::perspective(fieldOfView, aspectRatio, newNear, newFar);
 }
-void Camera::setLookAt(const vec3 &from, const vec3 &to, const vec3 &up)
+void Camera::setLookAt(const vec3 &from, const vec3 &to, const vec3 &up) const
 {
 	auto zAxis = normalize(from - to);
 	auto xAxis = normalize(cross(up, zAxis));
@@ -27,36 +30,45 @@ void Camera::setLookAt(const vec3 &from, const vec3 &to, const vec3 &up)
 			0, 0, 1, 0,
 			-from.x, -from.y, -from.z, 1);
 
-	m_worldTransform.localSpaceMatrix() = inverse(orientation * translation);
-	m_rotation = m_worldTransform.getEulerAngle();
+	*m_worldTransform->localSpaceMatrix() = inverse(orientation * translation);
+	*m_rotation = m_worldTransform->getEulerAngle();
 }
-void Camera::setPosition(const vec3& position)
+void Camera::setPosition(const vec3& position) const
 {
-	m_worldTransform.setLocalPosition(position);
+	m_worldTransform->setLocalPosition(position);
+}
+
+const Transform& Camera::getWorldPosition() const
+{
+	return *m_worldTransform;
+}
+mat4 Camera::getView() const
+{
+	return inverse(*m_worldTransform->localSpaceMatrix());
+}
+const Transform& Camera::getProjection() const
+{
+	return *m_projectionTransform;
+}
+
+mat4 Camera::getProjectionView() const
+{
+	return *m_projectionTransform->localSpaceMatrix() * getView();
+}
+
+Camera::~Camera()
+{
+	if (m_worldTransform != nullptr)
+		delete m_worldTransform;
+
+	if (m_projectionTransform != nullptr)
+		delete m_projectionTransform;
+
+	if (m_rotation != nullptr)
+		delete m_rotation;
 }
 
 Camera& Camera::mainCamera()
 {
 	return *s_mainCamera;
 }
-
-const Transform& Camera::getWorldPosition() const
-{
-	return m_worldTransform;
-}
-mat4 Camera::getView() const
-{
-	return inverse(m_worldTransform.localSpaceMatrix());
-}
-const Transform& Camera::getProjection() const
-{
-	return m_projectionTransform;
-}
-
-mat4 Camera::getProjectionView() const
-{
-	return
-		m_projectionTransform.localSpaceMatrix() * getView();
-}
-
-Camera::~Camera() { }

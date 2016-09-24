@@ -12,19 +12,19 @@ public:
 
 	Light();
 
-	virtual void draw() = 0;
-	virtual void drawGui(const char *title = "Light") = 0;
+	virtual void draw() const = 0;
+	virtual void drawGui(const char *title = "Light") const = 0;
 
 	virtual ~Light();
 
-	static vector<Light*> s_lights;
+	static vector<Light*> *const s_lights;
 
-	Transform m_transform;
+	Transform *const m_transform = new Transform();
 
-	vec3 m_direction = vec3(0.f);
+	vec3 *const m_direction = new vec3(0.f);
 
-	vec3 m_diffuse = vec3(1.f);
-	vec3 m_specular = vec3(1.f);
+	vec3 *const m_diffuse = new vec3(1.f);
+	vec3 *const m_specular = new vec3(1.f);
 
 };
 

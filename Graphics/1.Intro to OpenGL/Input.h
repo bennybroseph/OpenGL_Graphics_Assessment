@@ -3,11 +3,15 @@
 
 #include <GLFW/glfw3.h>
 #include <vector>
+#include <memory>
 #include <map>
 
 #include "Delegate.h"
 
 #define GLFW_RELEASED -1
+
+using std::unique_ptr;
+using std::make_unique;
 
 using std::vector;
 using std::map;
@@ -42,18 +46,25 @@ public:
 		}
 	};
 
+	// Well this is really nice TODO: Implement this unique_ptr's into the project..right?...jesus
+	template <typename T>
+	using vectorPtr = unique_ptr<vector<T>>;
+
+	typedef map<const int, const unique_ptr<KeyState>> KeyStateMap;
+	typedef unique_ptr<map<const int, const unique_ptr<KeyState>>> KeyStateMapPtr;
+
 	static void init();
 
 	static int getKey(const int &key);
 	static int getKey(const int &key, const int &mods);
 
-	static const Position& getCursorPosition();
+	static const Position & getCursorPosition();
 	static Position deltaCursorPosition();
 
 	static int getMouseButton(const int &button);
 	static int getMouseButton(const int &button, const int &mods);
 
-	static const Position& getScrollPosition();
+	static Position getScrollPosition();
 
 	static void addOnKeyCallback(const OnKeyCallback &delegate);
 	static void addOnCursorPosCallback(const OnCursorPosCallback &delegate);
@@ -64,8 +75,6 @@ public:
 	static void lateUpdate();
 
 	static void quit();
-	static Position m_cursorPos;
-	static Position m_prevCursorPos;
 private:
 
 	static void onKey(GLFWwindow *window, int key, int scanecode, int action, int mods);
@@ -74,19 +83,21 @@ private:
 	static void onScroll(GLFWwindow *window, double x, double y);
 	static void onCursorEnter(GLFWwindow *window, int state);
 
-	static vector<OnKeyCallback> m_onKeyCallbacks;
-	static map<int, KeyState> m_keyStates;
+	static vector<OnKeyCallback> *const m_onKeyCallbacks;
+	static const KeyStateMapPtr m_keyStates;
 
-	static vector<OnCursorPosCallback> m_onCursorPosCallback;
+	static vector<OnCursorPosCallback> *const m_onCursorPosCallback;
+	static Position *const m_cursorPos;
+	static Position *const m_prevCursorPos;
 
-	static vector<OnMouseButtonCallback> m_onMouseButtonCallbacks;
-	static map<int, KeyState> m_mouseButtonStates;
+	static vector<OnMouseButtonCallback> *const m_onMouseButtonCallbacks;
+	static const KeyStateMapPtr m_mouseButtonStates;
 
-	static vector<OnScrollCallback> m_onScrollCallback;
-	static Position m_scrollPos;
-	static Position m_prevScrollPos;
+	static vector<OnScrollCallback> *const m_onScrollCallback;
+	static Position *const m_scrollPos;
+	static Position *const m_prevScrollPos;
 
-	static vector<OnCursorEnterCallback> m_onCursorEnterCallback;
+	static vector<OnCursorEnterCallback> *const m_onCursorEnterCallback;
 };
 
 #endif // INPUT_H_

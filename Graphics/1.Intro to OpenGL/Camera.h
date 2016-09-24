@@ -11,14 +11,15 @@ class Camera
 {
 public:
 
-	virtual void update(const float &deltaTime) = 0;
+	virtual void update(const float &deltaTime) const = 0;
 
 	void setPerspective(
-		const float &fieldOfView, const float &aspectRatio, const float &newNear, const float &newFar);
-	void setLookAt(const vec3 &from, const vec3 &to, const vec3 &up);
-	void setPosition(const vec3 &position);
-
-	static Camera& mainCamera();
+		const float &fieldOfView,
+		const float &aspectRatio,
+		const float &newNear,
+		const float &newFar) const;
+	void setLookAt(const vec3 &from, const vec3 &to, const vec3 &up) const;
+	void setPosition(const vec3 &position) const;
 
 	const Transform& getWorldPosition() const;
 	mat4 getView() const;
@@ -28,14 +29,16 @@ public:
 
 	virtual ~Camera();
 
+	static Camera& mainCamera();
+
 protected:
 
-	static Camera* s_mainCamera;
+	static Camera *s_mainCamera;
 
-	Transform m_worldTransform;
-	Transform m_projectionTransform;
+	Transform *const m_worldTransform = new Transform();
+	Transform *const m_projectionTransform = new Transform();
 
-	vec3 m_rotation;
+	vec3 *const m_rotation = new vec3();
 
 };
 

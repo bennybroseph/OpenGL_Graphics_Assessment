@@ -17,7 +17,7 @@ namespace Gizmos
 	{
 		auto newSphere = Sphere();
 
-		newSphere.transform().localSpaceMatrix() = transform;
+		*newSphere.transform().localSpaceMatrix() = transform;
 
 		newSphere.materialColour() = colour;
 
@@ -27,7 +27,7 @@ namespace Gizmos
 
 		return 0;
 	}
-
+	// TODO: This function is so expensive...please only buffer once somehow
 	int drawLine(const vec3 & start, const vec3 & end, const vec4 &colour, const GLfloat &width)
 	{
 		vector<Vertex> vertexes =
@@ -63,7 +63,8 @@ namespace Gizmos
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 		glUseProgram(Shader::defaultShaderID());
-		unsigned int projectionViewUniform = glGetUniformLocation(Shader::defaultShaderID(), "ProjectionViewModel");
+		unsigned int projectionViewUniform =
+			glGetUniformLocation(Shader::defaultShaderID(), "ProjectionViewModel");
 
 		glUniformMatrix4fv(
 			projectionViewUniform,
@@ -81,6 +82,12 @@ namespace Gizmos
 			glDrawElements(GL_LINES, indexes.size(), GL_UNSIGNED_INT, nullptr);
 		}
 		glLineWidth(1.f);
+
+		// Don't forget to delete the data
+		glDeleteBuffers(1, &VBO);
+		glDeleteBuffers(1, &IBO);
+
+		glDeleteVertexArrays(1, &VAO);
 
 		return 0;
 	}

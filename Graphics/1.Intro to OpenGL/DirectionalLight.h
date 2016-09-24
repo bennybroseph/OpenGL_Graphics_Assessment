@@ -7,8 +7,8 @@ class DirectionalLight : public Light
 {
 public:
 
-	void draw() override;
-	void drawGui(const char *title = "Directional Light") override;
+	void draw() const override;
+	void drawGui(const char *title = "Directional Light") const override;
 
 	~DirectionalLight();
 

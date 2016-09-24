@@ -38,7 +38,7 @@ vec3 Transform::getPosition(const mat4 &matrix)
 {
 	return vec3(matrix[3].x, matrix[3].y, matrix[3].z);
 }
-void Transform::setPosition(mat4 *matrix, const vec3 &newPosition)
+void Transform::setPosition(mat4 *const &matrix, const vec3 &newPosition)
 {
 	(*matrix)[3] = vec4(newPosition.x, newPosition.y, newPosition.z, 1);
 }
@@ -105,7 +105,7 @@ vec3 Transform::getEulerAngle(const mat4 &matrix)
 
 	return eulerAngle;
 }
-void Transform::setEulerAngle(mat4 *matrix, const vec3 &newEulerAngle)
+void Transform::setEulerAngle(mat4 *const & matrix, const vec3 &newEulerAngle)
 {
 	// Grab the current rotation and create a new matrix to represent it
 	auto oldEulerAngle = getEulerAngle(*matrix);
@@ -127,7 +127,7 @@ float Transform::getScale(const mat4 &matrix)
 	// Since we can't deal with non-uniform scaling, get the uniform scale by calculating the average
 	return (x + y + z) / 3.f;
 }
-void Transform::setScale(mat4 *matrix, const float &newScale)
+void Transform::setScale(mat4 *const &matrix, const float &newScale)
 {
 	// Get the quotient of the new scale and the current one
 	auto deltaScale = newScale / getScale(*matrix);
@@ -162,7 +162,7 @@ void Transform::draw(const mat4 &matrix, const GLfloat &lineWidth)
 	glEnable(GL_DEPTH_TEST);
 }
 
-void Transform::drawGui(mat4 *matrix)
+void Transform::drawGui(mat4 *const &matrix)
 {
 	static auto _eulerAngle = vec3();
 	static void* _currentID = nullptr;

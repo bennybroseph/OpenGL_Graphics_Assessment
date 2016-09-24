@@ -6,17 +6,17 @@
 class FlyCamera : public Camera
 {
 public:
-	
+
 	FlyCamera();
 
-	void update(const float &deltaTime) override;
+	void update(const float &deltaTime) const override;
 
 	~FlyCamera() override;
 
 private:
 
-	float m_speed = 5.f;
-	vec3 m_up = vec3(0, 1, 0);
+	float *const m_speed = new float(5.f);
+	vec3 *const m_up = new vec3(0, 1, 0);
 
 };
 

@@ -34,17 +34,12 @@ int MyApplication::startup()
 	m_camera = new FlyCamera();
 
 	m_light = new DirectionalLight();
-	m_light->m_transform.setPosition(vec3(0.f, 5.f, 0.f));
-	m_light->m_transform.rotate(45.f, vec3(1.f, 0.f, 0.f));
-	m_light->m_diffuse = vec3(1.f, 1.f, 1.f);
+	m_light->m_transform->setPosition(vec3(0.f, 5.f, 0.f));
+	m_light->m_transform->rotate(45.f, vec3(1.f, 0.f, 0.f));
+	*m_light->m_diffuse = vec3(1.f, 1.f, 1.f);
 
-	m_sun = Planet(vec3(0, 0, 0), 1.5f, vec4(255.f / 255.f, 235.f / 255.f, 59.f / 255.f, 1.f), 3.f);
-
-	m_earth = Planet(vec3(5, 0, 0), 0.5f, vec4(139 / 255.f, 195 / 255.f, 74 / 255.f, 1.f), 10.f);
-	m_earth.transform().setParent(&m_sun.transform(), false);
-
-	m_moon = Planet(vec3(2, 0.5f, 0), 0.5f, vec4(0.9f, 0.9f, 0.9f, 1.f), -6.f);
-	m_moon.transform().setParent(&m_earth.transform(), false);
+	m_earth->transform().setParent(&m_sun->transform(), false);
+	m_moon->transform().setParent(&m_earth->transform(), false);
 
 	/*auto newSphere = new Sphere();
 	newSphere->shader() = Shader::phongShader();
@@ -91,36 +86,36 @@ void MyApplication::parseInput()
 		m_shouldDrawGui = !m_shouldDrawGui;
 
 	if (Input::getKey(GLFW_KEY_1) >= GLFW_PRESS)
-		m_sun.transform().translate(vec3(0.f, 1.f * m_deltaTime, 0.f));
+		m_sun->transform().translate(vec3(0.f, 1.f * m_deltaTime, 0.f));
 
 	if (Input::getKey(GLFW_KEY_2) >= GLFW_PRESS)
-		m_earth.transform().setPosition(
+		m_earth->transform().setPosition(
 			vec3(
-				m_earth.transform().getPosition().x,
-				m_earth.transform().getPosition().y + 1.f * m_deltaTime,
-				m_earth.transform().getPosition().z));
+				m_earth->transform().getPosition().x,
+				m_earth->transform().getPosition().y + 1.f * m_deltaTime,
+				m_earth->transform().getPosition().z));
 
 	if (Input::getKey(GLFW_KEY_3) >= GLFW_PRESS)
 	{
-		m_moon.transform().setPosition(vec3(5.f, 2.5f, -5.5f));
-		m_moon.transform().setEulerAngle(vec3(90.f, 0, 0));
-		m_moon.transform().setScale(5.f);
+		m_moon->transform().setPosition(vec3(5.f, 2.5f, -5.5f));
+		m_moon->transform().setEulerAngle(vec3(90.f, 0, 0));
+		m_moon->transform().setScale(5.f);
 	}
 
 	if (Input::getKey(GLFW_KEY_PERIOD, GLFW_MOD_SHIFT) >= GLFW_PRESS)
-		m_sun.transform().scale(vec3(1.f + m_deltaTime, 1.f + m_deltaTime, 1.f + m_deltaTime));
+		m_sun->transform().scale(vec3(1.f + m_deltaTime, 1.f + m_deltaTime, 1.f + m_deltaTime));
 
 	if (Input::getKey(GLFW_KEY_COMMA, GLFW_MOD_SHIFT) >= GLFW_PRESS)
-		m_sun.transform().scale(vec3(1.f - m_deltaTime, 1.f - m_deltaTime, 1.f - m_deltaTime));
+		m_sun->transform().scale(vec3(1.f - m_deltaTime, 1.f - m_deltaTime, 1.f - m_deltaTime));
 }
 
 void MyApplication::update()
 {
 	//m_light->m_transform.rotate(15.f * m_deltaTime, vec3(0.f, 1.f, -1.f));
 
-	m_sun.update(m_deltaTime);
-	m_earth.update(m_deltaTime);
-	m_moon.update(m_deltaTime);
+	m_sun->update(m_deltaTime);
+	m_earth->update(m_deltaTime);
+	m_moon->update(m_deltaTime);
 
 	m_camera->update(m_deltaTime);
 }
@@ -138,7 +133,7 @@ void MyApplication::draw()
 	if (m_shouldDrawGrid)
 		Gizmos::drawGrid(vec3(0), vec2(1.f, 1.f), vec2(5.f, 5.f), vec4(1.f));
 
-	for (auto shape : m_shapes)
+	for (auto shape : *m_shapes)
 		shape->draw();
 
 	drawSolarSystem();
@@ -151,13 +146,13 @@ void MyApplication::draw()
 
 void MyApplication::drawSolarSystem()
 {
-	Gizmos::drawSphere(m_sun.transform().getWorldSpaceMatrix(), m_sun.colour());
-	Gizmos::drawSphere(m_earth.transform().getWorldSpaceMatrix(), m_earth.colour());
-	Gizmos::drawSphere(m_moon.transform().getWorldSpaceMatrix(), m_moon.colour());
+	Gizmos::drawSphere(m_sun->transform().getWorldSpaceMatrix(), m_sun->colour());
+	Gizmos::drawSphere(m_earth->transform().getWorldSpaceMatrix(), m_earth->colour());
+	Gizmos::drawSphere(m_moon->transform().getWorldSpaceMatrix(), m_moon->colour());
 
-	m_sun.transform().draw();
-	m_earth.transform().draw();
-	m_moon.transform().draw();
+	m_sun->transform().draw();
+	m_earth->transform().draw();
+	m_moon->transform().draw();
 }
 
 void MyApplication::drawGui()
@@ -174,9 +169,9 @@ void MyApplication::drawGui()
 
 	ImGui::Begin("Debug");
 	{
-		m_sun.transform().drawGui();
-		m_earth.transform().drawGui();
-		m_moon.transform().drawGui();
+		m_sun->transform().drawGui();
+		m_earth->transform().drawGui();
+		m_moon->transform().drawGui();
 	}
 	ImGui::End();
 
@@ -185,6 +180,6 @@ void MyApplication::drawGui()
 
 MyApplication::~MyApplication()
 {
-	for (auto shape : m_shapes)
+	for (auto shape : *m_shapes)
 		delete shape;
 }

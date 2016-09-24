@@ -54,7 +54,7 @@ void Shape::drawModel()
 	matUniform = glGetUniformLocation(m_shader.programID(), "NormalMatrix");
 	glUniformMatrix4fv(matUniform, 1, GL_TRUE, &normalMatrix[0][0]);
 
-	auto lightDirection = Light::s_lights[0]->m_transform.forward();
+	auto lightDirection = (*Light::s_lights)[0]->m_transform->forward();
 	// bind light data (not using structs or uniform block for now)
 	unsigned int lightUniform = glGetUniformLocation(m_shader.programID(), "LightDirection");
 	glUniform3fv(lightUniform, 1, &lightDirection[0]);
@@ -64,11 +64,11 @@ void Shape::drawModel()
 	lightUniform = glGetUniformLocation(m_shader.programID(), "LightAmbient");
 	glUniform3fv(lightUniform, 1, &lightAmbient[0]);
 
-	auto lightDiffuse = Light::s_lights[0]->m_diffuse;
+	auto lightDiffuse = *(*Light::s_lights)[0]->m_diffuse;
 	lightUniform = glGetUniformLocation(m_shader.programID(), "LightDiffuse");
 	glUniform3fv(lightUniform, 1, &lightDiffuse[0]);
 
-	auto lightSpecular = Light::s_lights[0]->m_specular;
+	auto lightSpecular = *(*Light::s_lights)[0]->m_specular;
 	lightUniform = glGetUniformLocation(m_shader.programID(), "LightSpecular");
 	glUniform3fv(lightUniform, 1, &lightSpecular[0]);
 

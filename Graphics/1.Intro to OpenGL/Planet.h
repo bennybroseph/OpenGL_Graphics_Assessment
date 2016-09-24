@@ -7,7 +7,6 @@ class Planet
 {
 public:
 
-	Planet();
 	/// <summary>
 	/// The preferred way to construct a Planet object
 	/// </summary>
@@ -15,7 +14,7 @@ public:
 	/// <param name="radius">The initial radius of the sphere when drawn</param>
 	/// <param name="colour">The initial color of the sphere when drawn</param>
 	/// <param name="speed">The initial rotation speed of the planet</param>
-	explicit Planet(const vec3 &position, const float& radius, const vec4 &colour, const float &speed);
+	Planet(const vec3 &position, const float& radius, const vec4 &colour, const float &speed);
 
 	void update(const float &deltaTime);
 
@@ -41,7 +40,7 @@ public:
 private:
 
 	// The planet's transform variable
-	Transform m_transform = Transform();
+	Transform *const m_transform = new Transform();
 
 	// Radius of the sphere when drawn
 	float m_radius = 1.f;
