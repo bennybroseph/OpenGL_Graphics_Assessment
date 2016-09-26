@@ -3,10 +3,12 @@
 layout(location = 0) in vec4 inPosition;
 layout(location = 1) in vec4 inColour;
 layout(location = 2) in vec4 inNormal;
+layout(location = 3) in vec2 inTextureUV;
 
-out vec4 fragPosition;
-out vec4 fragColour;
-out vec4 fragNormal;
+out vec4 vPosition;
+out vec4 vColour;
+out vec4 vNormal;
+out vec2 vTextureUV;
 
 uniform mat4 ModelMatrix;
 uniform mat4 NormalMatrix;
@@ -15,9 +17,10 @@ uniform mat4 ProjectionViewModel;
 
 void main()
 {
-	fragPosition = ModelMatrix * inPosition;
-	fragColour = inColour;
-	fragNormal = NormalMatrix * inNormal;
+	vPosition = ModelMatrix * inPosition;
+	vColour = inColour;
+	vNormal = NormalMatrix * inNormal;
+	vTextureUV = inTextureUV;
 
     gl_Position = ProjectionViewModel * inPosition;
 }

@@ -17,6 +17,7 @@ struct Vertex
 	vec4 position;
 	vec4 colour;
 	vec4 normal;
+	vec2 textureUV;
 };
 
 class Mesh;
@@ -47,6 +48,8 @@ private:
 	GLuint m_VAO = 0;
 	GLuint m_VBO = 0;
 	GLuint m_IBO = 0;
+
+	GLuint m_texture = 0;
 
 };
 

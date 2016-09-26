@@ -55,6 +55,15 @@
     <Filter Include="Source Files\Utility">
       <UniqueIdentifier>{2245d320-d5d8-4e20-9bed-51eeaf68fbb1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Vertex Shader">
+      <UniqueIdentifier>{cab245ae-61de-4a60-8743-8ed462b853f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Fragment Shader">
+      <UniqueIdentifier>{e7869ace-1f16-4fca-8890-5312ee621dd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Geometry Shader">
+      <UniqueIdentifier>{8d048b90-4dcf-4b13-bdd2-8fd6b24b4e07}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -197,16 +206,22 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Default.frag">
-      <Filter>Resource Files</Filter>
+      <Filter>Resource Files\Fragment Shader</Filter>
     </None>
     <None Include="Default.vert">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Positional.vert">
-      <Filter>Resource Files</Filter>
+      <Filter>Resource Files\Vertex Shader</Filter>
     </None>
     <None Include="Phong.frag">
-      <Filter>Resource Files</Filter>
+      <Filter>Resource Files\Fragment Shader</Filter>
+    </None>
+    <None Include="Positional.vert">
+      <Filter>Resource Files\Vertex Shader</Filter>
+    </None>
+    <None Include="Texture.frag">
+      <Filter>Resource Files\Fragment Shader</Filter>
+    </None>
+    <None Include="Texture.vert">
+      <Filter>Resource Files\Vertex Shader</Filter>
     </None>
   </ItemGroup>
 </Project>

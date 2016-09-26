@@ -19,7 +19,7 @@ void Shape::draw()
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		{
 			auto &shader = *m_shader;
-			m_shader = &Shader::defaultShader();
+			m_shader = &Shader::standard();
 
 			auto materialColour = *m_materialColour;
 			*m_materialColour = vec4(1.f, 1.f, 1.f, 1.f);
@@ -97,6 +97,8 @@ void Shape::drawModel()
 
 	glBindVertexArray(m_mesh->m_VAO);
 	glDrawElements(m_drawType, m_mesh->m_indexes->size(), GL_UNSIGNED_INT, nullptr);
+
+	glBindVertexArray(0);
 }
 
 const Shader * Shape::getShader() const

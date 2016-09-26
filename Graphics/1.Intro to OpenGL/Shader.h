@@ -28,13 +28,15 @@ public:
 
 	int addShader(const char *path, ShaderType type) const;
 
-	static const Shader & defaultShader();
-	static const Shader & positionalShader();
-	static const Shader & phongShader();
+	static const Shader & standard();
+	static const Shader & texture();
+	static const Shader & positional();
+	static const Shader & phong();
 
-	static GLuint defaultShaderID();
-	static GLuint positionalShaderID();
-	static GLuint phongShaderID();
+	static GLuint defaultID();
+	static GLuint textureID();
+	static GLuint positionalID();
+	static GLuint phongID();
 
 	GLuint programID() const;
 
@@ -42,7 +44,8 @@ public:
 
 private:
 
-	static ShaderPtrU s_default;
+	static ShaderPtrU s_standard;
+	static ShaderPtrU s_texture;
 	static ShaderPtrU s_positional;
 	static ShaderPtrU s_phong;
 

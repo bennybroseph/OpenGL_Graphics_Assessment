@@ -39,7 +39,7 @@ protected:
 
 	virtual void drawModel();
 
-	const Shader *m_shader = &Shader::defaultShader();
+	const Shader *m_shader = &Shader::standard();
 
 	const vec4PtrU m_materialColour = make_unique<vec4>(vec4(1.f, 1.f, 1.f, 1.f));
 

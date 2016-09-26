@@ -15,7 +15,7 @@ void Sphere::init()
 	glEnable(GL_PRIMITIVE_RESTART);
 	glPrimitiveRestartIndex(0xFFFF);
 
-	auto radius = 1.f;
+	auto radius = 0.5f;
 	auto segments = 30.f;
 
 	s_sphere.reset(new Mesh);
@@ -25,8 +25,6 @@ void Sphere::init()
 
 	s_sphere->genBuffers();
 }
-
-
 
 void Sphere::genVertexes(const float &radius, const float &segments)
 {
@@ -58,7 +56,7 @@ vector<Vertex> Sphere::genHalfCircle(const float &radius, const float &points)
 		vertexes.push_back(
 		{
 			vec4(sin(theta) * radius, cos(theta) * radius, 0.f, 1.f),
-			vec4(1.f, 1.f, 1.f, 1.f)
+			vec4(1.f, 1.f, 1.f, 1.f),
 		});
 	}
 

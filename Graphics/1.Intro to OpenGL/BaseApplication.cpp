@@ -31,7 +31,8 @@ int BaseApplication::createWindow(const char * title, int width, int height)
 	printf("GL: %i.%i\n", major, minor);
 
 	// Enable alpha transparency drawing
-	glEnable(GL_BLEND);
+	glDisable(GL_BLEND);
+	glDepthMask(GL_TRUE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glClearColor(0.25f, 0.25f, 0.25f, 1.f);

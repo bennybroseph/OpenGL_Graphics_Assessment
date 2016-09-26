@@ -1,9 +1,10 @@
 // classic Phong equation
 #version 410
 
-in vec4 fragPosition;
-in vec4 fragColour;
-in vec4 fragNormal;
+in vec4 vPosition;
+in vec4 vColour;
+in vec4 vNormal;
+in vec2 vTextureUV;
 
 out vec4 outColour;
 
@@ -27,11 +28,11 @@ vec3 Specular(vec3 Ks, vec3 Is, vec3 Lm, vec3 N, vec3 cameraPosition, vec3 posit
 
 void main()
 {
-	// Do not normalize 'fragPosition', just convert it to a vec3
-	vec3 position = fragPosition.xyz;
+	// Do not normalize 'vPosition', just convert it to a vec3
+	vec3 position = vPosition.xyz;
 
-	vec3 colour = fragColour.xyz;
-	vec3 normal = normalize(fragNormal.xyz);
+	vec3 colour = vColour.xyz;
+	vec3 normal = normalize(vNormal.xyz);
 
 	// Normalize the light's direction direction
 	vec3 lightDirection = normalize(LightDirection);

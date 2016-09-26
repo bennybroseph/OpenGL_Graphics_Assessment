@@ -6,19 +6,30 @@
 using std::fstream;
 using std::string;
 
-ShaderPtrU Shader::s_default = unique_ptr<Shader>();
+ShaderPtrU Shader::s_standard = unique_ptr<Shader>();
+ShaderPtrU Shader::s_texture = unique_ptr<Shader>();
 ShaderPtrU Shader::s_positional = unique_ptr<Shader>();
 ShaderPtrU Shader::s_phong = unique_ptr<Shader>();
 
 int Shader::init()
 {
-	s_default.reset(new Shader());
-	s_default->m_programID = glCreateProgram();
+	s_standard.reset(new Shader());
+	s_standard->m_programID = glCreateProgram();
 
-	auto returnValue = s_default->addShader("Default.vert", ShaderType::Vertex);
+	auto returnValue = s_standard->addShader("Default.vert", ShaderType::Vertex);
 	if (returnValue != 0)
 		return returnValue;
-	returnValue = s_default->addShader("Default.frag", ShaderType::Fragment);
+	returnValue = s_standard->addShader("Default.frag", ShaderType::Fragment);
+	if (returnValue != 0)
+		return returnValue;
+
+	s_texture.reset(new Shader());
+	s_texture->m_programID = glCreateProgram();
+
+	returnValue = s_texture->addShader("Texture.vert", ShaderType::Vertex);
+	if (returnValue != 0)
+		return returnValue;
+	returnValue = s_texture->addShader("Texture.frag", ShaderType::Fragment);
 	if (returnValue != 0)
 		return returnValue;
 
@@ -47,7 +58,8 @@ int Shader::init()
 
 int Shader::quit()
 {
-	s_default.reset();
+	s_standard.reset();
+	s_texture.reset();
 	s_positional.reset();
 	s_phong.reset();
 
@@ -136,35 +148,39 @@ int Shader::addShader(const char *path, ShaderType type) const
 	return 0;
 }
 
-const Shader & Shader::defaultShader()
+const Shader & Shader::standard()
 {
-	return *s_default;
+	return *s_standard;
 }
-const Shader & Shader::positionalShader()
+const Shader & Shader::texture()
+{
+	return *s_texture;
+}
+const Shader & Shader::positional()
 {
 	return *s_positional;
 }
-
-const Shader & Shader::phongShader()
+const Shader & Shader::phong()
 {
 	return *s_phong;
 }
 
-GLuint Shader::defaultShaderID()
+GLuint Shader::defaultID()
 {
-	return s_default->m_programID;
+	return s_standard->m_programID;
 }
-
-GLuint Shader::positionalShaderID()
+GLuint Shader::textureID()
+{
+	return s_texture->m_programID;
+}
+GLuint Shader::positionalID()
 {
 	return s_positional->m_programID;
 }
-
-GLuint Shader::phongShaderID()
+GLuint Shader::phongID()
 {
 	return s_phong->m_programID;
 }
-
 GLuint Shader::programID() const
 {
 	return m_programID;
