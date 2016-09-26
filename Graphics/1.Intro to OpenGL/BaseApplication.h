@@ -1,5 +1,6 @@
 #ifndef _BASE_APPLICATION_H_
 #define _BASE_APPLICATION_H_
+#pragma once
 
 // ReSharper disable once CppUnusedIncludeDirective
 // OpenGL requires a very specific include order
@@ -19,7 +20,7 @@ public:
 	In particular, you need to know the exact type of what you want to create.
 	Consequently, a "call to a constructor" cannot be virtual.
 	*/
-	virtual ~BaseApplication() {}
+	virtual ~BaseApplication() { }
 
 	void run();
 	// = 0 makes it a pure virtual function so you MUST inherit from this class and implement this function

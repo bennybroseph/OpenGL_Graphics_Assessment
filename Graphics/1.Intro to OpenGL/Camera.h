@@ -1,11 +1,14 @@
 #ifndef _CAMERA_H_
 #define _CAMERA_H_
+#pragma once
 
 #include "Transform.h"
 
-using glm::vec3;
-using glm::vec4;
-using glm::mat4;
+class Camera;
+
+typedef unique_ptr<Camera> CameraPtrU;
+typedef shared_ptr<Camera> CameraPtrS;
+typedef weak_ptr<Camera> CameraPtrW;
 
 class Camera
 {
@@ -13,11 +16,7 @@ public:
 
 	virtual void update(const float &deltaTime) const = 0;
 
-	void setPerspective(
-		const float &fieldOfView,
-		const float &aspectRatio,
-		const float &newNear,
-		const float &newFar) const;
+	void setPerspective(GLfloat fieldOfView, GLfloat aspectRatio, GLfloat newNear, GLfloat newFar) const;
 	void setLookAt(const vec3 &from, const vec3 &to, const vec3 &up) const;
 	void setPosition(const vec3 &position) const;
 
@@ -29,16 +28,18 @@ public:
 
 	virtual ~Camera();
 
-	static Camera& mainCamera();
+	static Camera *& mainCamera();
 
 protected:
 
+	Camera();
+
 	static Camera *s_mainCamera;
 
-	Transform *const m_worldTransform = new Transform();
-	Transform *const m_projectionTransform = new Transform();
+	const TransformPtrU m_worldTransform = make_unique<Transform>();
+	const TransformPtrU m_projectionTransform = make_unique<Transform>();
 
-	vec3 *const m_rotation = new vec3();
+	const vec3PtrU m_rotation = make_unique<vec3>();
 
 };
 

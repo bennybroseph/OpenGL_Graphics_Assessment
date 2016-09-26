@@ -1,6 +1,5 @@
 #include "MyApplication.h"
 
-#include <fstream>
 #include <imgui_impl_glfw_gl3.h>
 
 #include "Math.h"
@@ -23,6 +22,7 @@ int MyApplication::startup()
 	ImGui_ImplGlfwGL3_Init(m_window, true);
 
 	auto &io = ImGui::GetIO();
+
 	io.DisplaySize.x = m_screenSize.x;
 	io.DisplaySize.y = m_screenSize.y;
 
@@ -31,23 +31,26 @@ int MyApplication::startup()
 	Gizmos::init();
 
 	// setup some camera stuff
-	m_camera = new FlyCamera();
+	m_camera = make_unique<FlyCamera>();
 
-	m_light = new DirectionalLight();
+	m_light.reset(new DirectionalLight);
 	m_light->m_transform->setPosition(vec3(0.f, 5.f, 0.f));
 	m_light->m_transform->rotate(45.f, vec3(1.f, 0.f, 0.f));
 	*m_light->m_diffuse = vec3(1.f, 1.f, 1.f);
 
+	m_sun = make_unique<Planet>(vec3(0, 0, 0), 1.5f, vec4(255.f / 255.f, 235.f / 255.f, 59.f / 255.f, 1.f), 3.f);
+	m_earth = make_unique<Planet>(vec3(5, 0, 0), 0.5f, vec4(139 / 255.f, 195 / 255.f, 74 / 255.f, 1.f), 10.f);
 	m_earth->transform().setParent(&m_sun->transform(), false);
+	m_moon = make_unique<Planet>(vec3(2, 0.5f, 0), 0.5f, vec4(0.9f, 0.9f, 0.9f, 1.f), -6.f);
 	m_moon->transform().setParent(&m_earth->transform(), false);
 
 	/*auto newSphere = new Sphere();
-	newSphere->shader() = Shader::phongShader();
+	newSphere->getShader() = Shader::phongShader();
 	newSphere->transform().setLocalPosition(vec3(0.f, 1.5f, 0.f));
 	m_shapes.push_back(newSphere);*/
 
 	/*auto newPlane = new Plane();
-	newPlane->shader() = Shader::phongShader();
+	newPlane->getShader() = Shader::phongShader();
 	newPlane->transform().scale(vec3(5.f, 1.f, 5.f));
 	newPlane->transform().setParent(&m_sun.transform());
 	m_shapes.push_back(newPlane);*/
@@ -65,7 +68,9 @@ int MyApplication::startup()
 void MyApplication::shutdown()
 {
 	Input::quit();
+	Shader::quit();
 	Gizmos::quit();
+
 	ImGui_ImplGlfwGL3_Shutdown();
 
 	destroyWindow();
@@ -131,7 +136,7 @@ void MyApplication::draw()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	if (m_shouldDrawGrid)
-		Gizmos::drawGrid(vec3(0), vec2(1.f, 1.f), vec2(5.f, 5.f), vec4(1.f));
+		Gizmos::drawGrid(vec3(0.f), vec2(1.f, 1.f), vec2(5.f, 5.f));
 
 	for (auto shape : *m_shapes)
 		shape->draw();
@@ -144,7 +149,7 @@ void MyApplication::draw()
 		drawGui();
 }
 
-void MyApplication::drawSolarSystem()
+void MyApplication::drawSolarSystem() const
 {
 	Gizmos::drawSphere(m_sun->transform().getWorldSpaceMatrix(), m_sun->colour());
 	Gizmos::drawSphere(m_earth->transform().getWorldSpaceMatrix(), m_earth->colour());

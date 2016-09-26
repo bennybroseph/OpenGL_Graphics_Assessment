@@ -1,9 +1,8 @@
 #ifndef _MATH_H_
 #define _MATH_H_
+#pragma once
 
-#include <glm/ext.hpp>
-
-using glm::vec3;
+#include "MasterHeader.h"
 
 namespace Math
 {

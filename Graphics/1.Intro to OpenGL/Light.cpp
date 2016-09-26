@@ -1,22 +1,19 @@
 #include "Light.h"
 
-vector<Light*> *const Light::s_lights = new vector<Light*>();
+vectorPtrU<Light *> Light::s_lights = unique_ptr<vector<Light *>>();
 
 Light::Light()
 {
-	s_lights->push_back(this);
+	if (s_lights.get() == nullptr)
+		s_lights.reset(new vector<Light *>());
+
+	s_lights->push_back(this);	// Add itself to the list of lights
 }
 
 Light::~Light()
 {
-	if (m_transform != nullptr)
-		delete m_transform;
+	s_lights->erase(find(s_lights->begin(), s_lights->end(), this));	// Remove itself from the list of lights
 
-	if (m_direction != nullptr)
-		delete m_direction;
-
-	if (m_diffuse != nullptr)
-		delete m_diffuse;
-	if (m_specular != nullptr)
-		delete m_specular;
+	if (s_lights->size() == 0)
+		s_lights.reset();
 }

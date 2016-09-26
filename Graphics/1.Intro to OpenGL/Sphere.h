@@ -1,9 +1,6 @@
 #ifndef _SPHERE_H_
 #define _SPHERE_H_
-
-#define PI glm::pi<float>()
-
-#include <float.h>
+#pragma once
 
 #include "Shape.h"
 
@@ -13,19 +10,19 @@ public:
 
 	Sphere();
 
+	~Sphere();
+
 	static void init();
 
 	static void genVertexes(const float &radius, const float &segments);
-
 	static vector<Vertex> genHalfCircle(const float &radius, const float &segments);
-
 	static void genIndexes(const float &radius, const float &segments);
 
-	~Sphere();
+	static void quit();
 
 private:
 
-	static Mesh* s_sphere;
+	static MeshPtrU s_sphere;
 
 };
 

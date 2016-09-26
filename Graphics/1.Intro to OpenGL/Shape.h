@@ -1,9 +1,16 @@
 #ifndef _SHAPE_H_
 #define _SHAPE_H_
+#pragma once
 
 #include "Shader.h"
 #include "Transform.h"
 #include "Mesh.h"
+
+class Shape;
+
+typedef unique_ptr<Shape> ShapePtrU;
+typedef shared_ptr<Shape> ShapePtrS;
+typedef weak_ptr<Shape> ShapePtrW;
 
 class Shape
 {
@@ -11,17 +18,20 @@ public:
 
 	virtual void draw();
 
-	GLint& drawType();
+	const Shader * getShader() const;
+	void setShader(const Shader *newShader);
 
-	Shader& shader();
+	const vec4 & getMaterialColour() const;
+	void setMaterialColour(const vec4 &newColour);
 
-	vec4& materialColour();
+	Transform * transform();
+	const Transform * transform() const;
 
-	Transform& transform();
+	GLint * drawType() const;
 
-	bool& isEnabled();
-	bool& shouldDrawModel();
-	bool& shouldDrawWireFrame();
+	GLboolean * isEnabled() const;
+	GLboolean * shouldDrawModel() const;
+	GLboolean * shouldDrawWireFrame() const;
 
 	virtual ~Shape();
 
@@ -29,19 +39,19 @@ protected:
 
 	virtual void drawModel();
 
-	GLint m_drawType = GL_TRIANGLES;
+	const Shader *m_shader = &Shader::defaultShader();
 
-	Shader m_shader = Shader::defaultShader();
+	const vec4PtrU m_materialColour = make_unique<vec4>(vec4(1.f, 1.f, 1.f, 1.f));
 
-	vec4 m_materialColour = vec4(1.f, 1.f, 1.f, 1.f);
+	const TransformPtrU m_transform = make_unique<Transform>();
 
-	Transform m_transform;
+	const Mesh *m_mesh = nullptr;
 
-	Mesh *m_model = nullptr;
+	mutable GLint m_drawType = GL_TRIANGLES;
 
-	bool m_isEnabled = true;
-	bool m_shouldDrawModel = true;
-	bool m_shouldDrawWireFrame = false;
+	mutable GLboolean m_isEnabled = true;
+	mutable GLboolean m_shouldDrawModel = true;
+	mutable GLboolean m_shouldDrawWireFrame = false;
 };
 
 #endif // _SHAPE_H_

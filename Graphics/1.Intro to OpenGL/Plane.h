@@ -1,5 +1,6 @@
 #ifndef _PLANE_H_
 #define _PLANE_H_
+#pragma once
 
 #include "Shape.h"
 
@@ -9,16 +10,18 @@ public:
 
 	Plane();
 
+	~Plane();
+
 	static void init();
 
 	static void genVertexes();
 	static void genIndexes();
 
-	~Plane();
+	static void quit();
 
 private:
 
-	static Mesh* s_plane;
+	static MeshPtrU s_plane;
 
 };
 

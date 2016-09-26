@@ -1,11 +1,10 @@
 #ifndef _SHADERUTILITY_H_
 #define _SHADERUTILITY_H_
+#pragma once
 
 #include <gl_core_4_4.h>
 
-#include <string>
-
-using std::string;
+#include <MasterHeader.h>
 
 enum class ShaderType
 {
@@ -14,35 +13,40 @@ enum class ShaderType
 	Geometry,
 };
 
+class Shader;
+
+typedef unique_ptr<Shader> ShaderPtrU;
+typedef shared_ptr<Shader> ShaderPtrS;
+typedef weak_ptr<Shader> ShaderPtrW;
+
 class Shader
 {
 public:
 
-	Shader();
 	static int init();
+	static int quit();
 
-	int addShader(string path, ShaderType type) const;
+	int addShader(const char *path, ShaderType type) const;
 
-	static const Shader& defaultShader();
-	static const Shader& positionalShader();
-	static const Shader& phongShader();
+	static const Shader & defaultShader();
+	static const Shader & positionalShader();
+	static const Shader & phongShader();
 
-	static const GLuint& defaultShaderID();
-	static const GLuint& positionalShaderID();
-	static const GLuint& phongShaderID();
+	static GLuint defaultShaderID();
+	static GLuint positionalShaderID();
+	static GLuint phongShaderID();
 
-	const GLuint& programID() const;
+	GLuint programID() const;
 
 	~Shader();
 
 private:
 
-	static Shader s_default;
-	static Shader s_positional;
-	static Shader s_phong;
+	static ShaderPtrU s_default;
+	static ShaderPtrU s_positional;
+	static ShaderPtrU s_phong;
 
-	GLuint m_programID;
-
+	GLuint m_programID = 0;
 };
 
 #endif // _SHADERUTILITY_H_

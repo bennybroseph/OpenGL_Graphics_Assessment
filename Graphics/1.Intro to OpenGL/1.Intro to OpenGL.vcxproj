@@ -162,6 +162,7 @@
     <ClInclude Include="Gizmos.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="MasterHeader.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="MyApplication.h" />
     <ClInclude Include="Plane.h" />
@@ -173,10 +174,18 @@
     <ClInclude Include="Transform.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Default.frag" />
-    <None Include="Default.vert" />
-    <None Include="Phong.frag" />
-    <None Include="Positional.vert" />
+    <None Include="Default.frag">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="Default.vert">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="Phong.frag">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="Positional.vert">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

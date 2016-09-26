@@ -1,11 +1,6 @@
 #include "Mesh.h"
 
-#include "Camera.h"
 
-using std::fstream;
-
-using glm::mat4;
-using glm::vec3;
 
 void Mesh::genBuffers()
 {
@@ -18,11 +13,11 @@ void Mesh::genBuffers()
 
 	//bind and pop VBO
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-	glBufferData(GL_ARRAY_BUFFER, m_vertexes.size() * sizeof(Vertex), m_vertexes.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, m_vertexes->size() * sizeof(Vertex), m_vertexes->data(), GL_STATIC_DRAW);
 
 	//bind and pop IBO
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indexes.size() * sizeof(unsigned int), m_indexes.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indexes->size() * sizeof(GLuint), m_indexes->data(), GL_STATIC_DRAW);
 
 	//setup vertex descriptors
 	glEnableVertexAttribArray(0);
@@ -41,4 +36,10 @@ void Mesh::genBuffers()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-Mesh::~Mesh() { }
+Mesh::~Mesh()
+{
+	glDeleteBuffers(1, &m_VBO);
+	glDeleteBuffers(1, &m_IBO);
+
+	glDeleteVertexArrays(1, &m_VAO);
+}

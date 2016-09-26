@@ -1,7 +1,15 @@
 #ifndef _PLANET_H_
 #define _PLANET_H_
+#pragma once
 
 #include "Transform.h"
+
+class Planet;
+
+typedef unique_ptr<Planet> PlanetPtrU;
+typedef shared_ptr<Planet> PlanetPtrS;
+typedef weak_ptr<Planet> PlanetPtrW;
+
 
 class Planet
 {
@@ -14,9 +22,9 @@ public:
 	/// <param name="radius">The initial radius of the sphere when drawn</param>
 	/// <param name="colour">The initial color of the sphere when drawn</param>
 	/// <param name="speed">The initial rotation speed of the planet</param>
-	Planet(const vec3 &position, const float& radius, const vec4 &colour, const float &speed);
+	Planet(const vec3 &position, float radius, const vec4 &colour, float speed);
 
-	void update(const float &deltaTime);
+	void update(const float &deltaTime) const;
 
 	/// <summary>
 	/// Returns a modifiable reference to the 'm_transform' variable
@@ -40,12 +48,12 @@ public:
 private:
 
 	// The planet's transform variable
-	Transform *const m_transform = new Transform();
+	const TransformPtrU m_transform = make_unique<Transform>();
 
 	// Radius of the sphere when drawn
 	float m_radius = 1.f;
 	// Color of the sphere when drawn
-	vec4 m_colour = vec4(0, 0, 0, 1);
+	const vec4PtrU m_colour = make_unique<vec4>(0, 0, 0, 1);
 
 	// Rotation speed of the planet
 	float m_speed = 0.1f;

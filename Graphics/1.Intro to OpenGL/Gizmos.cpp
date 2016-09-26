@@ -13,29 +13,31 @@ namespace Gizmos
 		return 0;
 	}
 
-	int drawSphere(const mat4 &transform, const vec4 &colour, const bool &drawWireFrame)
+	int drawSphere(const mat4 &transform, const vec4 &colour, GLboolean drawWireFrame)
 	{
-		auto newSphere = Sphere();
+		auto newSphere = new Sphere();
 
-		*newSphere.transform().localSpaceMatrix() = transform;
+		newSphere->transform()->setLocalSpaceMatrix(transform);
 
-		newSphere.materialColour() = colour;
+		newSphere->setMaterialColour(colour);
 
-		newSphere.shouldDrawWireFrame() = drawWireFrame;
+		*newSphere->shouldDrawWireFrame() = drawWireFrame;
 
-		newSphere.draw();
+		newSphere->draw();
+
+		delete newSphere;
 
 		return 0;
 	}
-	// TODO: This function is so expensive...please only buffer once somehow
-	int drawLine(const vec3 & start, const vec3 & end, const vec4 &colour, const GLfloat &width)
+	// TODO: This function is so expensive and needs to be rewritten...please only buffer once somehow
+	int drawLine(const vec3 & start, const vec3 & end, const vec4 &colour, GLfloat width)
 	{
 		vector<Vertex> vertexes =
 		{
 			{vec4(start, 1), colour},
 			{vec4(end, 1), colour}
 		};
-		vector<unsigned int> indexes = { 0, 1 };
+		vector<GLuint> indexes = { 0, 1 };
 
 		GLuint VAO;
 		GLuint VBO;
@@ -51,7 +53,11 @@ namespace Gizmos
 		glBufferData(GL_ARRAY_BUFFER, vertexes.size() * sizeof(Vertex), vertexes.data(), GL_STATIC_DRAW);
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexes.size() * sizeof(unsigned int), indexes.data(), GL_STATIC_DRAW);
+		glBufferData(
+			GL_ELEMENT_ARRAY_BUFFER,
+			indexes.size() * sizeof(GLuint),
+			indexes.data(),
+			GL_STATIC_DRAW);
 
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);
@@ -63,16 +69,16 @@ namespace Gizmos
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 		glUseProgram(Shader::defaultShaderID());
-		unsigned int projectionViewUniform =
+		GLuint projectionViewUniform =
 			glGetUniformLocation(Shader::defaultShaderID(), "ProjectionViewModel");
 
 		glUniformMatrix4fv(
 			projectionViewUniform,
 			1,
 			false,
-			value_ptr(Camera::mainCamera().getProjectionView()));
+			value_ptr(Camera::mainCamera()->getProjectionView()));
 
-		unsigned int materialColor = glGetUniformLocation(Shader::defaultShaderID(), "vMatColor");
+		GLuint materialColor = glGetUniformLocation(Shader::defaultShaderID(), "vMatColor");
 		glUniform4fv(materialColor, 1, value_ptr(colour));
 
 		glBindVertexArray(VAO);
@@ -92,7 +98,7 @@ namespace Gizmos
 		return 0;
 	}
 
-	int drawGrid(const vec3 &center, const vec2 &spacing, const vec2 &segments, const vec4 &colour, const GLfloat &lineWidth)
+	int drawGrid(const vec3 &center, const vec2 &spacing, const vec2 &segments, GLfloat lineWidth)
 	{
 		struct Line
 		{
@@ -150,6 +156,11 @@ namespace Gizmos
 
 	int quit()
 	{
+		Plane::quit();
+		Cube::quit();
+		Sphere::quit();
+
+
 		return 0;
 	}
 }

@@ -1,10 +1,16 @@
 #ifndef _LIGHT_H_
 #define _LIGHT_H_
+#pragma once
 
 #include "Transform.h"
-#include <vector>
 
-using std::vector;
+#include "MasterHeader.h"
+
+class Light;
+
+typedef unique_ptr<Light> LightPtrU;
+typedef shared_ptr<Light> LightPtrS;
+typedef weak_ptr<Light> LightPtrW;
 
 class Light
 {
@@ -17,14 +23,14 @@ public:
 
 	virtual ~Light();
 
-	static vector<Light*> *const s_lights;
+	static vectorPtrU<Light *> s_lights;
 
-	Transform *const m_transform = new Transform();
+	const TransformPtrU m_transform = make_unique<Transform>();
 
-	vec3 *const m_direction = new vec3(0.f);
+	const vec3PtrU m_direction = make_unique<vec3>(0.f);
 
-	vec3 *const m_diffuse = new vec3(1.f);
-	vec3 *const m_specular = new vec3(1.f);
+	const vec3PtrU  m_diffuse = make_unique<vec3>(1.f);
+	const vec3PtrU m_specular = make_unique<vec3>(1.f);
 
 };
 

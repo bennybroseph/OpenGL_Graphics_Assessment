@@ -46,7 +46,4 @@ void DirectionalLight::drawGui(const char *title) const
 	ImGui::End();
 }
 
-DirectionalLight::~DirectionalLight()
-{
-	Light::~Light();
-}
+DirectionalLight::~DirectionalLight() { }

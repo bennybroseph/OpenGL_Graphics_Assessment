@@ -1,12 +1,14 @@
 #include "Sphere.h"
 
-Mesh* Sphere::s_sphere = new Mesh();
+MeshPtrU Sphere::s_sphere = unique_ptr<Mesh>();
 
 Sphere::Sphere()
 {
-	m_model = s_sphere;
+	m_mesh = s_sphere.get();
 	m_drawType = GL_TRIANGLE_STRIP;
 }
+
+Sphere::~Sphere() { }
 
 void Sphere::init()
 {
@@ -14,7 +16,9 @@ void Sphere::init()
 	glPrimitiveRestartIndex(0xFFFF);
 
 	auto radius = 1.f;
-	auto segments = 30;
+	auto segments = 30.f;
+
+	s_sphere.reset(new Mesh);
 
 	genVertexes(radius, segments);
 	genIndexes(segments, segments);
@@ -22,9 +26,11 @@ void Sphere::init()
 	s_sphere->genBuffers();
 }
 
+
+
 void Sphere::genVertexes(const float &radius, const float &segments)
 {
-	s_sphere->m_vertexes.clear();
+	s_sphere->m_vertexes->clear();
 
 	auto halfCircle = genHalfCircle(radius, segments);
 	for (auto i = 0.f; i <= segments; ++i)
@@ -38,7 +44,7 @@ void Sphere::genVertexes(const float &radius, const float &segments)
 					vertex.position.y,
 					vertex.position.x * sin(phi) + vertex.position.z * cos(phi), 1.f);
 			vertex.normal = vertex.position;
-			s_sphere->m_vertexes.push_back(vertex);
+			s_sphere->m_vertexes->push_back(vertex);
 		}
 	}
 }
@@ -61,7 +67,7 @@ vector<Vertex> Sphere::genHalfCircle(const float &radius, const float &points)
 
 void Sphere::genIndexes(const float &segments, const float &points)
 {
-	s_sphere->m_indexes.clear();
+	s_sphere->m_indexes->clear();
 
 	//j=np-1
 	//
@@ -76,11 +82,19 @@ void Sphere::genIndexes(const float &segments, const float &points)
 		{
 			unsigned int botR = start + points + j;
 			unsigned int botL = start + j;
-			s_sphere->m_indexes.push_back(botL);
-			s_sphere->m_indexes.push_back(botR);
+			s_sphere->m_indexes->push_back(botL);
+			s_sphere->m_indexes->push_back(botR);
 		}
-		s_sphere->m_indexes.push_back(0xFFFF);
-	} //we copied the origin whenever we rotated around nm + 1 times so we dont need to get the end again
+		s_sphere->m_indexes->push_back(0xFFFF);
+	} //we copied the origin whenever we rotated around nm + 1 times so we don't need to get the end again
 }
 
-Sphere::~Sphere() { }
+void Sphere::quit()
+{
+	glDeleteBuffers(1, &s_sphere->m_VBO);
+	glDeleteBuffers(1, &s_sphere->m_IBO);
+
+	glDeleteVertexArrays(1, &s_sphere->m_VAO);
+
+	s_sphere.reset();
+}

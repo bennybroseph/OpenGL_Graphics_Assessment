@@ -1,6 +1,7 @@
 // http://blog.coldflake.com/posts/C++-delegates-on-steroids/
 #ifndef _DELEGATE_H_
 #define _DELEGATE_H_
+#pragma once
 
 template<typename TReturnType, typename... TParams>
 class Delegate
@@ -36,19 +37,19 @@ private:
 
 };
 
-template<typename T, typename return_type, typename... params>
+template<typename T, typename TReturnType, typename... TParams>
 struct DelegateMaker
 {
-	template<return_type(T::*foo)(params...)>
-	static return_type methodCaller(void* o, params... xs)
+	template<TReturnType(T::*foo)(TParams...)>
+	static TReturnType methodCaller(void* o, TParams... xs)
 	{
 		return (static_cast<T*>(o)->*foo)(xs...);
 	}
 
-	template<return_type(T::*foo)(params...)>
-	static Delegate<return_type, params...> Bind(T* o)
+	template<TReturnType(T::*foo)(TParams...)>
+	static Delegate<TReturnType, TParams...> Bind(T* o)
 	{
-		return Delegate<return_type, params...>(o, &DelegateMaker::methodCaller<foo>);
+		return Delegate<TReturnType, TParams...>(o, &DelegateMaker::methodCaller<foo>);
 	}
 };
 

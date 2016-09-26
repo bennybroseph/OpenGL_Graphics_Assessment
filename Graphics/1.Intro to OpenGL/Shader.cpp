@@ -1,48 +1,60 @@
 #include "Shader.h"
 
 #include <fstream>
+#include <string>
 
 using std::fstream;
+using std::string;
 
-Shader Shader::s_default = Shader();
-Shader Shader::s_positional = Shader();
-Shader Shader::s_phong = Shader();
-
-Shader::Shader() { }
+ShaderPtrU Shader::s_default = unique_ptr<Shader>();
+ShaderPtrU Shader::s_positional = unique_ptr<Shader>();
+ShaderPtrU Shader::s_phong = unique_ptr<Shader>();
 
 int Shader::init()
 {
-	s_default.m_programID = glCreateProgram();
+	s_default.reset(new Shader());
+	s_default->m_programID = glCreateProgram();
 
-	auto returnValue = s_default.addShader("Default.vert", ShaderType::Vertex);
+	auto returnValue = s_default->addShader("Default.vert", ShaderType::Vertex);
 	if (returnValue != 0)
 		return returnValue;
-	returnValue = s_default.addShader("Default.frag", ShaderType::Fragment);
-	if (returnValue != 0)
-		return returnValue;
-
-	s_positional.m_programID = glCreateProgram();
-
-	returnValue = s_positional.addShader("Positional.vert", ShaderType::Vertex);
-	if (returnValue != 0)
-		return returnValue;
-	returnValue = s_positional.addShader("Default.frag", ShaderType::Fragment);
+	returnValue = s_default->addShader("Default.frag", ShaderType::Fragment);
 	if (returnValue != 0)
 		return returnValue;
 
-	s_phong.m_programID = glCreateProgram();
+	s_positional.reset(new Shader());
+	s_positional->m_programID = glCreateProgram();
 
-	returnValue = s_phong.addShader("Default.vert", ShaderType::Vertex);
+	returnValue = s_positional->addShader("Positional.vert", ShaderType::Vertex);
 	if (returnValue != 0)
 		return returnValue;
-	returnValue = s_phong.addShader("Phong.frag", ShaderType::Fragment);
+	returnValue = s_positional->addShader("Default.frag", ShaderType::Fragment);
+	if (returnValue != 0)
+		return returnValue;
+
+	s_phong.reset(new Shader());
+	s_phong->m_programID = glCreateProgram();
+
+	returnValue = s_phong->addShader("Default.vert", ShaderType::Vertex);
+	if (returnValue != 0)
+		return returnValue;
+	returnValue = s_phong->addShader("Phong.frag", ShaderType::Fragment);
 	if (returnValue != 0)
 		return returnValue;
 
 	return returnValue;
 }
 
-int Shader::addShader(string path, ShaderType type) const
+int Shader::quit()
+{
+	s_default.reset();
+	s_positional.reset();
+	s_phong.reset();
+
+	return 0;
+}
+
+int Shader::addShader(const char *path, ShaderType type) const
 {
 	GLint parsedTypeInt;
 	const char* parsedTypeName;
@@ -91,9 +103,9 @@ int Shader::addShader(string path, ShaderType type) const
 
 		glGetShaderInfoLog(shader, infoLogLength, &infoLogLength, infoLog);
 		printf(
-			"Error: Failed to compile %s shader at path %s!\n",
+			"Error: Failed to compile %s getShader at path %s!\n",
 			parsedTypeName,
-			path.c_str());
+			path);
 		printf("%s\n", infoLog);
 		delete[] infoLog;
 
@@ -112,7 +124,7 @@ int Shader::addShader(string path, ShaderType type) const
 		auto infoLog = new char[infoLogLength];
 
 		glGetProgramInfoLog(m_programID, infoLogLength, nullptr, infoLog);
-		printf("Error: Failed to link shader program!\n");
+		printf("Error: Failed to link getShader program!\n");
 		printf("%s\n", infoLog);
 		delete[] infoLog;
 
@@ -126,34 +138,34 @@ int Shader::addShader(string path, ShaderType type) const
 
 const Shader & Shader::defaultShader()
 {
-	return s_default;
+	return *s_default;
 }
 const Shader & Shader::positionalShader()
 {
-	return s_positional;
+	return *s_positional;
 }
 
 const Shader & Shader::phongShader()
 {
-	return s_phong;
+	return *s_phong;
 }
 
-const GLuint & Shader::defaultShaderID()
+GLuint Shader::defaultShaderID()
 {
-	return s_default.m_programID;
+	return s_default->m_programID;
 }
 
-const GLuint & Shader::positionalShaderID()
+GLuint Shader::positionalShaderID()
 {
-	return s_positional.m_programID;
+	return s_positional->m_programID;
 }
 
-const GLuint & Shader::phongShaderID()
+GLuint Shader::phongShaderID()
 {
-	return s_phong.m_programID;
+	return s_phong->m_programID;
 }
 
-const GLuint & Shader::programID() const
+GLuint Shader::programID() const
 {
 	return m_programID;
 }

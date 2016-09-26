@@ -1,70 +1,48 @@
 #ifndef _INPUT_H_
 #define _INPUT_H_
+#pragma once
 
 #include <GLFW/glfw3.h>
-#include <vector>
-#include <memory>
-#include <map>
 
 #include "Delegate.h"
 
+#include "MasterHeader.h"
+
 #define GLFW_RELEASED -1
 
-using std::unique_ptr;
-using std::make_unique;
+typedef Delegate<void, GLFWwindow *, GLint, GLint, GLint, GLint> OnKeyCallback;
+typedef Delegate<void, GLFWwindow *, GLdouble, GLdouble> OnCursorPosCallback;
+typedef Delegate<void, GLFWwindow *, GLint, GLint, GLint> OnMouseButtonCallback;
+typedef Delegate<void, GLFWwindow *, GLdouble, GLdouble> OnScrollCallback;
+typedef Delegate<void, GLFWwindow *, GLint> OnCursorEnterCallback;
 
-using std::vector;
-using std::map;
-
-typedef Delegate<void, int, int, int, int> OnKeyCallback;
-typedef Delegate<void, double, double> OnCursorPosCallback;
-typedef Delegate<void, int, int, int> OnMouseButtonCallback;
-typedef Delegate<void, double, double> OnScrollCallback;
-typedef Delegate<void, int> OnCursorEnterCallback;
-
-//TODO: Convert to namespace. Static class seems unnecessary without a singleton pattern
+// Static class vs. Namespace
+// This is a static class because I need to hide some member functions from outside users
+// To me, this is the simplest way to do it.
+// Syntax from a namespace and static class are exactly the same, so no big deal
 class Input
 {
 public:
+
 	struct KeyState
 	{
-		int state = GLFW_RELEASED;
-		int mods = 0x0;
+		GLint state = GLFW_RELEASED;
+		GLint mods = 0x0;
 	};
-	struct Position
-	{
-		double x = 0;
-		double y = 0;
-
-		Position operator-(const Position& other) const
-		{
-			Position difference;
-			difference.x = this->x - other.x;
-			difference.y = this->y - other.y;
-
-			return difference;
-		}
-	};
-
-	// Well this is really nice TODO: Implement this unique_ptr's into the project..right?...jesus
-	template <typename T>
-	using vectorPtr = unique_ptr<vector<T>>;
-
-	typedef map<const int, const unique_ptr<KeyState>> KeyStateMap;
-	typedef unique_ptr<map<const int, const unique_ptr<KeyState>>> KeyStateMapPtr;
+	typedef unique_ptr<KeyState> KeyStatePtr;
 
 	static void init();
 
-	static int getKey(const int &key);
-	static int getKey(const int &key, const int &mods);
+	static GLint getKey(GLint key);
+	static GLint getKey(GLint key, GLint mods);
 
-	static const Position & getCursorPosition();
-	static Position deltaCursorPosition();
+	static const glm::dvec2 & getCursorPosition();
+	static glm::dvec2 deltaCursorPosition();
 
-	static int getMouseButton(const int &button);
-	static int getMouseButton(const int &button, const int &mods);
+	static GLint getMouseButton(GLint button);
+	static GLint getMouseButton(GLint button, GLint mods);
 
-	static Position getScrollPosition();
+	static glm::dvec2 getScrollPosition();
 
 	static void addOnKeyCallback(const OnKeyCallback &delegate);
 	static void addOnCursorPosCallback(const OnCursorPosCallback &delegate);
@@ -75,29 +53,37 @@ public:
 	static void lateUpdate();
 
 	static void quit();
+
 private:
 
-	static void onKey(GLFWwindow *window, int key, int scanecode, int action, int mods);
-	static void onCursorPos(GLFWwindow *window, double x, double y);
-	static void onMouseButton(GLFWwindow *window, int button, int action, int mods);
-	static void onScroll(GLFWwindow *window, double x, double y);
-	static void onCursorEnter(GLFWwindow *window, int state);
+	static void onKey(GLFWwindow *window, GLint key, GLint scanecode, GLint action, GLint mods);
+	static void onCursorPos(GLFWwindow *window, GLdouble x, GLdouble y);
+	static void onMouseButton(GLFWwindow *window, GLint button, GLint action, GLint mods);
+	static void onScroll(GLFWwindow *window, GLdouble x, GLdouble y);
+	static void onCursorEnter(GLFWwindow *window, GLint state);
 
-	static vector<OnKeyCallback> *const m_onKeyCallbacks;
-	static const KeyStateMapPtr m_keyStates;
+	Input();
 
-	static vector<OnCursorPosCallback> *const m_onCursorPosCallback;
-	static Position *const m_cursorPos;
-	static Position *const m_prevCursorPos;
+	static vectorPtrU<OnKeyCallback> m_onKeyCallbacks;
+	static vectorPtrU<OnCursorPosCallback> m_onCursorPosCallback;
+	static vectorPtrU<OnMouseButtonCallback> m_onMouseButtonCallbacks;
+	static vectorPtrU<OnScrollCallback> m_onScrollCallback;
+	static vectorPtrU<OnCursorEnterCallback> m_onCursorEnterCallback;
 
-	static vector<OnMouseButtonCallback> *const m_onMouseButtonCallbacks;
-	static const KeyStateMapPtr m_mouseButtonStates;
+	static unique_ptr<Input> self;
 
-	static vector<OnScrollCallback> *const m_onScrollCallback;
-	static Position *const m_scrollPos;
-	static Position *const m_prevScrollPos;
+	// Since this is a singleton allocated on the heap,
+	// there is no need to allocate any members dynamically
+	map<GLint, KeyState> m_keyStates = map<GLint, KeyState>();
 
-	static vector<OnCursorEnterCallback> *const m_onCursorEnterCallback;
+	glm::dvec2 m_cursorPos = glm::dvec2();
+	glm::dvec2 m_prevCursorPos = glm::dvec2();
+
+	map<GLint, KeyState> m_mouseButtonStates = map<GLint, KeyState>();
+
+	glm::dvec2 m_scrollPos = glm::dvec2();
+	glm::dvec2 m_prevScrollPos = glm::dvec2();
+
 };
 
 #endif // INPUT_H_

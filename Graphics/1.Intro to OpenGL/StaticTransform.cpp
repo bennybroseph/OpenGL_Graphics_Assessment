@@ -5,7 +5,7 @@
 #include "Math.h"
 #include "Gizmos.h"
 
-const float Transform::DEFAULT_LINE_WIDTH = 3.f;
+const GLfloat Transform::DEFAULT_LINE_WIDTH = 3.f;
 
 vec3 Transform::forward(const mat4 & matrix)
 {
@@ -38,7 +38,7 @@ vec3 Transform::getPosition(const mat4 &matrix)
 {
 	return vec3(matrix[3].x, matrix[3].y, matrix[3].z);
 }
-void Transform::setPosition(mat4 *const &matrix, const vec3 &newPosition)
+void Transform::setPosition(mat4 *matrix, const vec3 &newPosition)
 {
 	(*matrix)[3] = vec4(newPosition.x, newPosition.y, newPosition.z, 1);
 }
@@ -86,7 +86,7 @@ vec3 Transform::getEulerAngle(const mat4 &matrix)
 
 	auto singular = sy < 1e-6;
 
-	float x, y, z;
+	GLfloat x, y, z;
 	if (!singular)
 	{
 		x = atan2(matrix[1][2], matrix[2][2]);
@@ -105,7 +105,7 @@ vec3 Transform::getEulerAngle(const mat4 &matrix)
 
 	return eulerAngle;
 }
-void Transform::setEulerAngle(mat4 *const & matrix, const vec3 &newEulerAngle)
+void Transform::setEulerAngle(mat4 *matrix, const vec3 &newEulerAngle)
 {
 	// Grab the current rotation and create a new matrix to represent it
 	auto oldEulerAngle = getEulerAngle(*matrix);
@@ -117,7 +117,7 @@ void Transform::setEulerAngle(mat4 *const & matrix, const vec3 &newEulerAngle)
 	*matrix *= eulerRotation(newEulerAngle);
 }
 
-float Transform::getScale(const mat4 &matrix)
+GLfloat Transform::getScale(const mat4 &matrix)
 {
 	// Grab the scale out of the matrix for each axis
 	auto x = length(vec3(matrix[0].x, matrix[1].x, matrix[2].x));
@@ -127,7 +127,7 @@ float Transform::getScale(const mat4 &matrix)
 	// Since we can't deal with non-uniform scaling, get the uniform scale by calculating the average
 	return (x + y + z) / 3.f;
 }
-void Transform::setScale(mat4 *const &matrix, const float &newScale)
+void Transform::setScale(mat4 * matrix, GLfloat newScale)
 {
 	// Get the quotient of the new scale and the current one
 	auto deltaScale = newScale / getScale(*matrix);
@@ -144,7 +144,7 @@ void Transform::setScale(mat4 *const &matrix, const float &newScale)
 	*matrix *= scale;
 }
 
-void Transform::draw(const mat4 &matrix, const GLfloat &lineWidth)
+void Transform::draw(const mat4 &matrix, GLfloat lineWidth)
 {
 	auto endX = matrix * glm::translate(vec3(0.5f, 0.f, 0.f));
 	auto endY = matrix * glm::translate(vec3(0.f, 0.5f, 0.f));
@@ -162,7 +162,7 @@ void Transform::draw(const mat4 &matrix, const GLfloat &lineWidth)
 	glEnable(GL_DEPTH_TEST);
 }
 
-void Transform::drawGui(mat4 *const &matrix)
+void Transform::drawGui(mat4 *matrix)
 {
 	static auto _eulerAngle = vec3();
 	static void* _currentID = nullptr;

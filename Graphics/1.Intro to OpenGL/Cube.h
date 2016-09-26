@@ -1,5 +1,6 @@
 #ifndef _CUBE_H_
 #define _CUBE_H_
+#pragma once
 
 #include "Shape.h"
 
@@ -9,16 +10,18 @@ public:
 
 	Cube();
 
+	~Cube();
+
 	static void init();
 
 	static void genVertexes();
 	static void genIndexes();
 
-	~Cube();
+	static void quit();
 
 private:
 
-	static Mesh* s_cube;
+	static MeshPtrU s_cube;
 
 };
 

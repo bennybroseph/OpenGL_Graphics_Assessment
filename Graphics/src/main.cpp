@@ -2,7 +2,9 @@
 
 int main()
 {
-	BaseApplication * app = new MyApplication();
+	BaseApplication * app;
+
+	app = new MyApplication();
 	if (app->startup())
 		app->run();
 

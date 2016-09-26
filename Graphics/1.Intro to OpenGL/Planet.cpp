@@ -2,18 +2,18 @@
 
 
 
-Planet::Planet(const vec3 &position, const float& radius, const vec4 &colour, const float &speed)
+Planet::Planet(const vec3 &position, float radius, const vec4 &colour, float speed)
 {
 	m_transform->scale(vec3(radius, radius, radius));
 	m_transform->setPosition(position);
 
 	m_radius = radius;
-	m_colour = colour;
+	*m_colour = colour;
 
 	m_speed = speed;
 }
 
-void Planet::update(const float &deltaTime)
+void Planet::update(const float &deltaTime) const
 {
 	m_transform->rotate(m_speed * deltaTime, vec3(0.f, 1.f, 0.f));
 }
@@ -30,7 +30,7 @@ float& Planet::radius()
 
 vec4& Planet::colour()
 {
-	return m_colour;
+	return *m_colour;
 }
 
 Planet::~Planet() { }
