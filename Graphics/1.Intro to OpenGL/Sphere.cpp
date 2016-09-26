@@ -77,10 +77,10 @@ void Sphere::genIndexes(const float &segments, const float &points)
 	//
 	for (unsigned int i = 0; i < segments; i++) //nm = 4
 	{
-		unsigned int start = i * points;
+		unsigned int start = static_cast<unsigned int>(i * points);
 		for (auto j = 0; j < points; j++) //np = 3
 		{
-			unsigned int botR = start + points + j;
+			unsigned int botR = static_cast<unsigned int>(start + points + j);
 			unsigned int botL = start + j;
 			s_sphere->m_indexes->push_back(botL);
 			s_sphere->m_indexes->push_back(botR);

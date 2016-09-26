@@ -16,7 +16,7 @@ const static int GRID_SEPARATOR = 5;
 
 int MyApplication::startup()
 {
-	createWindow("Intro to OpenGL", m_screenSize.x, m_screenSize.y);
+	createWindow("Intro to OpenGL", static_cast<int>(m_screenSize.x), static_cast<int>(m_screenSize.y));
 
 	//Initialize ImGUI
 	ImGui_ImplGlfwGL3_Init(m_window, true);
@@ -45,9 +45,9 @@ int MyApplication::startup()
 	m_moon->transform().setParent(&m_earth->transform(), false);
 
 	/*auto newSphere = new Sphere();
-	newSphere->getShader() = Shader::phongShader();
-	newSphere->transform().setLocalPosition(vec3(0.f, 1.5f, 0.f));
-	m_shapes.push_back(newSphere);*/
+	newSphere->setShader(&Shader::phongShader());
+	newSphere->transform()->setLocalPosition(vec3(0.f, 1.5f, 0.f));
+	m_shapes->push_back(newSphere);*/
 
 	/*auto newPlane = new Plane();
 	newPlane->getShader() = Shader::phongShader();
