@@ -28,10 +28,10 @@ public:
 
 	int addShader(const char *path, ShaderType type) const;
 
-	static const Shader & standard();
-	static const Shader & texture();
-	static const Shader & positional();
-	static const Shader & phong();
+	static const Shader * standard();
+	static const Shader * texture();
+	static const Shader * positional();
+	static const Shader * phong();
 
 	static GLuint standardID();
 	static GLuint textureID();

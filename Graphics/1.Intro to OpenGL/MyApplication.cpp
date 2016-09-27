@@ -46,33 +46,19 @@ int MyApplication::startup()
 	m_moon = make_unique<Planet>(vec3(2, 0.5f, 0), 0.5f, vec4(0.9f, 0.9f, 0.9f, 1.f), -6.f);
 	m_moon->transform().setParent(&m_earth->transform(), false);
 
-	/*auto newSphere = new Sphere();
-	newSphere->model()->setShader(&Shader::phong());
-	newSphere->model()->transform()->setLocalPosition(vec3(0.f, 1.5f, 0.f));
-	m_shapes->push_back(newSphere);*/
+	auto newSphere = Gizmos::Sphere::create();
+	newSphere->setShader(Shader::phong());
+	newSphere->transform()->setLocalPosition(vec3(0.f, 1.5f, 0.f));
+	m_shapes->push_back(move(newSphere));
 
-	auto imageWidth = 0;
-	auto imageHeight = 0;
-	auto imageFormat = 0;
-
-	auto data = stbi_load("data/textures/dirt.tga", &imageWidth, &imageHeight, &imageFormat, STBI_default);
-
-	glGenTextures(1, &m_texture);
-	glBindTexture(GL_TEXTURE_2D, m_texture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imageWidth, imageHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-	stbi_image_free(data);
-	genTexturePlane();
-
-	/*auto newPlane = new Plane();
-	newPlane->model()->setShader(&Shader::standard());
-	newPlane->model()->setMaterialColour(vec4(1));
-	newPlane->model()->transform()->setLocalPosition(vec3(0.f, 1.f, 0.f));
-	newPlane->model()->transform()->scale(vec3(5.f, 1.f, 5.f));
-	newPlane->model()->transform()->setParent(&m_sun->transform());
-	m_shapes->push_back(newPlane);*/
+	auto newPlane = Gizmos::Plane::create();
+	newPlane->setShader(Shader::texture());
+	newPlane->setMaterialColour(vec4(1));
+	newPlane->transform()->setLocalPosition(vec3(0.f, 0.f, 0.f));
+	newPlane->transform()->scale(vec3(5.f, 1.f, 5.f));
+	newPlane->transform()->setParent(&m_sun->transform());
+	newPlane->m_texture.reset(new Texture("data/textures/dirt.tga", FilteringType::Linear));
+	m_shapes->push_back(move(newPlane));
 
 	/*auto newCube = new Cube();
 	newCube->transform().setParent(&m_sun.transform());
@@ -160,71 +146,17 @@ void MyApplication::draw()
 	for (auto &shape : *m_shapes)
 		shape->draw();
 
-	drawTexturePlane();
 	drawSolarSystem();
 
 	if (m_shouldDrawGui)
 		drawGui();
 }
 
-void MyApplication::genTexturePlane()
-{
-	float vertexData[] = {
-		-5, 0, 5, 1, 0, 1,
-		5, 0, 5, 1, 1, 1,
-		5, 0, -5, 1, 1, 0,
-		-5, 0, -5, 1, 0, 0,
-	};
-	unsigned int indexData[] = {
-		0, 1, 2,
-		0, 2, 3,
-	};
-	glGenVertexArrays(1, &m_vao);
-	glBindVertexArray(m_vao);
-	glGenBuffers(1, &m_vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4,
-		vertexData, GL_STATIC_DRAW);
-	glGenBuffers(1, &m_ibo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * 6,
-		indexData, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE,
-		sizeof(float) * 6, nullptr);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE,
-		sizeof(float) * 6, static_cast<char*>(nullptr) + 16);
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-}
-
-void MyApplication::drawTexturePlane()
-{
-	// use our texture program
-	glUseProgram(Shader::textureID());
-	// bind the camera
-	int loc = glGetUniformLocation(Shader::textureID(), "ProjectionViewModel");
-	glUniformMatrix4fv(loc, 1, GL_FALSE,
-		&(m_camera->getProjectionView() * scale(vec3(2.f, 2.f, 2.f)))[0][0]);
-	// set texture slot
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, m_texture);
-	// tell the shader where it is
-	loc = glGetUniformLocation(Shader::textureID(), "diffuseMap");
-	glUniform1i(loc, 0);
-	// draw
-	glBindVertexArray(m_vao);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-	glBindTexture(GL_TEXTURE_2D, 0);
-}
-
 void MyApplication::drawSolarSystem() const
 {
 	Gizmos::drawSphere(m_sun->transform().getWorldSpaceMatrix(), m_sun->colour());
-	//Gizmos::drawSphere(m_earth->transform().getWorldSpaceMatrix(), m_earth->colour());
-	//Gizmos::drawSphere(m_moon->transform().getWorldSpaceMatrix(), m_moon->colour());
+	Gizmos::drawSphere(m_earth->transform().getWorldSpaceMatrix(), m_earth->colour());
+	Gizmos::drawSphere(m_moon->transform().getWorldSpaceMatrix(), m_moon->colour());
 }
 
 void MyApplication::drawGui()
@@ -256,8 +188,4 @@ void MyApplication::drawGui()
 	ImGui::Render();
 }
 
-MyApplication::~MyApplication()
-{
-	for (auto shape : *m_shapes)
-		delete shape;
-}
+MyApplication::~MyApplication() { }

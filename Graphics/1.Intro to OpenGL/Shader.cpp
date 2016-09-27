@@ -153,21 +153,21 @@ int Shader::addShader(const char *path, ShaderType type) const
 	return 0;
 }
 
-const Shader & Shader::standard()
+const Shader * Shader::standard()
 {
-	return *s_standard;
+	return s_standard.get();
 }
-const Shader & Shader::texture()
+const Shader * Shader::texture()
 {
-	return *s_texture;
+	return s_texture.get();
 }
-const Shader & Shader::positional()
+const Shader * Shader::positional()
 {
-	return *s_positional;
+	return s_positional.get();
 }
-const Shader & Shader::phong()
+const Shader * Shader::phong()
 {
-	return *s_phong;
+	return s_phong.get();
 }
 
 GLuint Shader::standardID()
@@ -186,6 +186,7 @@ GLuint Shader::phongID()
 {
 	return s_phong->m_programID;
 }
+
 GLuint Shader::programID() const
 {
 	return m_programID;

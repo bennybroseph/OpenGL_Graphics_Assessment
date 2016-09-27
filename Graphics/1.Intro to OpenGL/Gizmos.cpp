@@ -15,17 +15,15 @@ namespace Gizmos
 
 	int drawSphere(const mat4 &transform, const vec4 &colour, GLboolean drawWireFrame)
 	{
-		auto newSphere = new Sphere();
+		auto newSphere = Sphere::create();
 
-		newSphere->model()->transform()->setLocalSpaceMatrix(transform);
+		newSphere->transform()->setLocalSpaceMatrix(transform);
 
-		newSphere->model()->setMaterialColour(colour);
+		newSphere->setMaterialColour(colour);
 
-		newSphere->model()->m_shouldDrawWireFrame = drawWireFrame;
+		newSphere->m_shouldDrawWireFrame = drawWireFrame;
 
 		newSphere->draw();
-
-		delete newSphere;
 
 		return 0;
 	}

@@ -4,6 +4,7 @@
 
 #include "Shader.h"
 #include "Transform.h"
+#include "Texture.h"
 #include "Mesh.h"
 
 class Model;
@@ -29,7 +30,8 @@ public:
 
 	~Model();
 
-	Mesh m_mesh;
+	MeshPtrU m_mesh = make_unique<Mesh>();
+	TexturePtrU m_texture = make_unique<Texture>();
 
 	mutable GLint m_drawType = GL_TRIANGLES;
 
@@ -41,7 +43,7 @@ private:
 
 	void drawModel() const;
 
-	mutable const Shader *m_shader = &Shader::standard();
+	mutable const Shader *m_shader = Shader::standard();
 
 	vec4PtrU m_materialColour = make_unique<vec4>(vec4(1.f, 1.f, 1.f, 1.f));
 

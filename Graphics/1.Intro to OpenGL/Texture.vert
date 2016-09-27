@@ -1,7 +1,7 @@
 #version 410
 
 layout(location=0) in vec4 inPosition;
-layout(location=1) in vec2 inTextureUV;
+layout(location=3) in vec2 inTextureUV;
 
 out vec2 vTextureUV;
 

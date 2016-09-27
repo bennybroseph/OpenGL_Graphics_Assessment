@@ -1,75 +1,81 @@
 #include "Plane.h"
 
-MeshPtrS Plane::s_plane = shared_ptr<Mesh>();
-
-Plane::Plane()
+namespace Gizmos
 {
-	m_model->m_mesh = *s_plane;
-	m_model->m_drawType = GL_TRIANGLES;
-}
+	vectorPtrU<Vertex> Plane::m_vertexes = unique_ptr<vector<Vertex>>();
+	vectorPtrU<GLuint> Plane::m_indexes = unique_ptr<vector<GLuint>>();
 
-Plane::~Plane() { }
-
-void Plane::init()
-{
-	s_plane.reset(new Mesh);
-
-	genVertexes();
-	genIndexes();
-
-	s_plane->genBuffers();
-}
-
-void Plane::genVertexes()
-{
-	s_plane->m_vertexes->clear();
-
-	s_plane->m_vertexes->push_back(
+	void Plane::init()
 	{
-		vec4(-1.f, 0.f, -1.f, 1.f),
-		vec4(1.f, 1.f, 1.f, 1.f),
-		vec4(0.f, 1.f, 0.f, 0.f),
-		vec2(0.f, 1.f),
-	});
-	s_plane->m_vertexes->push_back(
+		m_vertexes.reset(new vector<Vertex>);
+		m_indexes.reset(new vector<GLuint>);
+
+		genVertexes();
+		genIndexes();
+	}
+
+	ModelPtrU Plane::create()
 	{
-		vec4(-1.f, 0.f, 1.f, 1.f),
-		vec4(1.f, 1.f, 1.f, 1.f),
-		vec4(0.f, 1.f, 0.f, 0.f),
-		vec2(1.f, 1.f),
-	});
-	s_plane->m_vertexes->push_back(
+		auto newModel = make_unique<Model>();
+
+		newModel->m_mesh->m_vertexes = m_vertexes.get();
+		newModel->m_mesh->m_indexes = m_indexes.get();
+		newModel->m_mesh->genBuffers();
+
+		newModel->m_drawType = GL_TRIANGLES;
+
+		return newModel;
+	}
+
+	void Plane::genVertexes()
 	{
-		vec4(1.f, 0.f, -1.f, 1.f),
-		vec4(1.f, 1.f, 1.f, 1.f),
-		vec4(0.f, 1.f, 0.f, 0.f),
-		vec2(1.f, 1.f),
-	});
-	s_plane->m_vertexes->push_back(
+		m_vertexes->clear();
+
+		m_vertexes->push_back(
+		{
+			vec4(-1.f, 0.f, 1.f, 1.f),
+			vec4(1.f, 1.f, 1.f, 1.f),
+			vec4(0.f, 1.f, 0.f, 0.f),
+			vec2(0.f, 1.f),
+		});
+		m_vertexes->push_back(
+		{
+			vec4(1.f, 0.f, 1.f, 1.f),
+			vec4(1.f, 1.f, 1.f, 1.f),
+			vec4(0.f, 1.f, 0.f, 0.f),
+			vec2(1.f, 1.f),
+		});
+		m_vertexes->push_back(
+		{
+			vec4(1.f, 0.f, -1.f, 1.f),
+			vec4(1.f, 1.f, 1.f, 1.f),
+			vec4(0.f, 1.f, 0.f, 0.f),
+			vec2(1.f, 0.f),
+		});
+		m_vertexes->push_back(
+		{
+			vec4(-1.f, 0.f, -1.f, 1.f),
+			vec4(1.f, 1.f, 1.f, 1.f),
+			vec4(0.f, 1.f, 0.f, 0.f),
+			vec2(0.f, 0.f),
+		});
+	}
+
+	void Plane::genIndexes()
 	{
-		vec4(1.f, 0.f, 1.f, 1.f),
-		vec4(1.f, 1.f, 1.f, 1.f),
-		vec4(0.f, 1.f, 0.f, 0.f),
-		vec2(1.f, 1.f),
-	});
-}
+		m_indexes->clear();
 
-void Plane::genIndexes()
-{
-	s_plane->m_indexes->clear();
+		m_indexes->push_back(0);
+		m_indexes->push_back(1);
+		m_indexes->push_back(2);
+		m_indexes->push_back(0);
+		m_indexes->push_back(2);
+		m_indexes->push_back(3);
+	}
 
-	s_plane->m_indexes->push_back(0);
-	s_plane->m_indexes->push_back(1);
-	s_plane->m_indexes->push_back(2);
-	s_plane->m_indexes->push_back(3);
-}
-
-void Plane::quit()
-{
-	glDeleteBuffers(1, &s_plane->m_vbo);
-	glDeleteBuffers(1, &s_plane->m_ibo);
-
-	glDeleteVertexArrays(1, &s_plane->m_vao);
-
-	s_plane.reset();
+	void Plane::quit()
+	{
+		m_vertexes.reset();
+		m_indexes.reset();
+	}
 }

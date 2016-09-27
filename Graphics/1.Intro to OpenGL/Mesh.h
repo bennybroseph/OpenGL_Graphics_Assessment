@@ -2,7 +2,9 @@
 #define _MESH_H_
 #pragma once
 
-#include "Texture.h"
+#include "gl_core_4_4.h"
+
+#include "MasterHeader.h"
 
 struct Vertex;
 
@@ -32,15 +34,12 @@ public:
 
 	~Mesh();
 
-	vectorPtrS<Vertex> m_vertexes = make_shared<vector<Vertex>>();
-	vectorPtrS<GLuint> m_indexes = make_shared<vector<GLuint>>();
+	const vector<Vertex> *m_vertexes = nullptr;
+	const vector<GLuint> *m_indexes = nullptr;
 
 	GLuint m_vao = 0;
 	GLuint m_vbo = 0;
 	GLuint m_ibo = 0;
-
-	TexturePtrS m_texture = make_shared<Texture>();
-
 };
 
 #endif // _MESH_H_

@@ -25,10 +25,7 @@ private:
 	void update() override;
 	void lateUpdate() override;
 	void draw() override;
-
-	void genTexturePlane();
-	void drawTexturePlane();
-
+	
 	void drawSolarSystem() const;
 	void drawGui();
 
@@ -43,13 +40,8 @@ private:
 	PlanetPtrU m_earth = nullptr;
 	PlanetPtrU m_moon = nullptr;
 
-	const vectorPtrU<Shape *> m_shapes = make_unique<vector<Shape *>>();
-
-	unsigned int m_texture = 0;
-	unsigned int m_vao;
-	unsigned int m_vbo;
-	unsigned int m_ibo;
-
+	const vectorPtrU<ModelPtrU> m_shapes = make_unique<vector<ModelPtrU>>();
+	
 	bool m_shouldDrawGrid = true;
 	bool m_shouldDrawGui = true;
 

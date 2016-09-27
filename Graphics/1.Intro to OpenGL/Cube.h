@@ -4,25 +4,27 @@
 
 #include "Shape.h"
 
-class Cube : public Shape
+namespace Gizmos
 {
-public:
+	class Cube
+	{
+	public:
 
-	Cube();
+		static void init();
 
-	~Cube();
+		static ModelPtrU create();
 
-	static void init();
+		static void quit();
 
-	static void genVertexes();
-	static void genIndexes();
+	private:
 
-	static void quit();
+		static void genVertexes();
+		static void genIndexes();
 
-private:
+		static vectorPtrU<Vertex> m_vertexes;
+		static vectorPtrU<GLuint> m_indexes;
 
-	static MeshPtrS s_cube;
-
-};
+	};
+}
 
 #endif // _CUBE_H_

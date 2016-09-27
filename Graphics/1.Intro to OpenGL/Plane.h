@@ -4,25 +4,27 @@
 
 #include "Shape.h"
 
-class Plane : public Shape
+namespace Gizmos
 {
-public:
+	class Plane
+	{
+	public:
 
-	Plane();
+		static void init();
 
-	~Plane();
+		static ModelPtrU create();
 
-	static void init();
+		static void quit();
 
-	static void genVertexes();
-	static void genIndexes();
+	private:
 
-	static void quit();
+		static void genVertexes();
+		static void genIndexes();
 
-private:
+		static vectorPtrU<Vertex> m_vertexes;
+		static vectorPtrU<GLuint> m_indexes;
 
-	static MeshPtrS s_plane;
-
-};
+	};
+}
 
 #endif // _PLANE_H_

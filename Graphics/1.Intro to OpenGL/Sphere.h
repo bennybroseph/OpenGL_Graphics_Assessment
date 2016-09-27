@@ -4,26 +4,28 @@
 
 #include "Shape.h"
 
-class Sphere : public Shape
+namespace Gizmos
 {
-public:
+	class Sphere
+	{
+	public:
 
-	Sphere();
+		static void init();
 
-	~Sphere();
+		static ModelPtrU create();
 
-	static void init();
+		static void quit();
 
-	static void genVertexes(const float &radius, const float &segments);
-	static vector<Vertex> genHalfCircle(const float &radius, const float &segments);
-	static void genIndexes(const float &radius, const float &segments);
+	private:
 
-	static void quit();
+		static void genVertexes(const float &radius, const float &segments);
+		static vector<Vertex> genHalfCircle(const float &radius, const float &segments);
+		static void genIndexes(const float &radius, const float &segments);
 
-private:
+		static vectorPtrU<Vertex> m_vertexes;
+		static vectorPtrU<GLuint> m_indexes;
 
-	static MeshPtrS s_sphere;
-
-};
+	};
+}
 
 #endif // _SPHERE_H_

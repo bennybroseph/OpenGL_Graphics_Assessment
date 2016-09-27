@@ -19,7 +19,7 @@ void Model::draw() const
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		{
 			auto &shader = *m_shader;
-			m_shader = &Shader::standard();
+			m_shader = Shader::standard();
 
 			auto materialColour = *m_materialColour;
 			*m_materialColour = vec4(1.f, 1.f, 1.f, 1.f);
@@ -95,8 +95,14 @@ void Model::drawModel() const
 	unsigned int materialColor = glGetUniformLocation(m_shader->programID(), "vMatColor");
 	glUniform4fv(materialColor, 1, value_ptr(*m_materialColour));
 
-	glBindVertexArray(m_mesh.m_vao);
-	glDrawElements(m_drawType, m_mesh.m_indexes->size(), GL_UNSIGNED_INT, nullptr);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, m_texture->getHandle());
+	// tell the shader where it is
+	auto loc = glGetUniformLocation(m_shader->programID(), "diffuseMap");
+	glUniform1i(loc, 0);
+
+	glBindVertexArray(m_mesh->m_vao);
+	glDrawElements(m_drawType, m_mesh->m_indexes->size(), GL_UNSIGNED_INT, nullptr);
 
 	glBindVertexArray(0);
 }
@@ -106,7 +112,7 @@ const Shader * Model::getShader() const
 	return m_shader;
 }
 // ReSharper disable once CppMemberFunctionMayBeConst
-void Model::setShader(const Shader* newShader)
+void Model::setShader(const Shader *newShader)
 {
 	m_shader = newShader;
 }
@@ -130,6 +136,4 @@ const Transform * Model::transform() const
 	return m_transform.get();
 }
 
-Model::~Model()
-{
-}
+Model::~Model() { }

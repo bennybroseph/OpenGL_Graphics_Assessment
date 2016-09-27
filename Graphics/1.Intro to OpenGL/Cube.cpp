@@ -1,97 +1,101 @@
 #include "Cube.h"
 
-MeshPtrS Cube::s_cube = shared_ptr<Mesh>();
-
-Cube::Cube()
+namespace Gizmos
 {
-	m_model->m_mesh = *s_cube;
-	m_model->m_drawType = GL_TRIANGLE_STRIP;
-}
+	vectorPtrU<Vertex> Cube::m_vertexes = unique_ptr<vector<Vertex>>();
+	vectorPtrU<GLuint> Cube::m_indexes = unique_ptr<vector<GLuint>>();
 
-Cube::~Cube() { }
-
-void Cube::init()
-{
-	s_cube.reset(new Mesh);
-
-	genVertexes();
-	genIndexes();
-
-	s_cube->genBuffers();
-}
-
-void Cube::genVertexes()
-{
-	s_cube->m_vertexes->clear();
-
-	s_cube->m_vertexes->push_back(
+	void Cube::init()
 	{
-		vec4(-0.5f, -0.5f, 0.5f, 1.f),		// Front-Bottom-Left
-		vec4(1.f, 1.f, 1.f, 1.f)
-	});
-	s_cube->m_vertexes->push_back(
-	{
-		vec4(0.5f, -0.5f, 0.5f, 1.f),		// Front-Bottom-Right
-		vec4(1.f, 1.f, 1.f, 1.f)
-	});
-	s_cube->m_vertexes->push_back(
-	{
-		vec4(-0.5f, 0.5f, 0.5f, 1.f),		// Front-Top-Left
-		vec4(1.f, 1.f, 1.f, 1.f)
-	});
-	s_cube->m_vertexes->push_back(
-	{
-		vec4(0.5f, 0.5f, 0.5f, 1.f),		// Front-Top-Right
-		vec4(1.f, 1.f, 1.f, 1.f)
-	});
-	s_cube->m_vertexes->push_back(
-	{
-		vec4(-0.5f, -0.5f, -0.5f, 1.f),		// Back-Bottom-Left
-		vec4(1.f, 1.f, 1.f, 1.f)
-	});
-	s_cube->m_vertexes->push_back(
-	{
-		vec4(0.5f, -0.5f, -0.5f, 1.f),		// Back-Bottom-Right
-		vec4(1.f, 1.f, 1.f, 1.f)
-	});
-	s_cube->m_vertexes->push_back(
-	{
-		vec4(-0.5f, 0.5f, -0.5f, 1.f),		// Back-Top-Left
-		vec4(1.f, 1.f, 1.f, 1.f)
-	});
-	s_cube->m_vertexes->push_back(
-	{
-		vec4(0.5f, 0.5f, -0.5f, 1.f),		// Back-Top-Right
-		vec4(1.f, 1.f, 1.f, 1.f)
-	});
-}
+		m_vertexes.reset(new vector<Vertex>);
+		m_indexes.reset(new vector<GLuint>);
 
-void Cube::genIndexes()
-{
-	s_cube->m_indexes->clear();
+		genVertexes();
+		genIndexes();
+	}
 
-	s_cube->m_indexes->push_back(7);
-	s_cube->m_indexes->push_back(6);
-	s_cube->m_indexes->push_back(3);
-	s_cube->m_indexes->push_back(2);
-	s_cube->m_indexes->push_back(0);
-	s_cube->m_indexes->push_back(6);
-	s_cube->m_indexes->push_back(4);
-	s_cube->m_indexes->push_back(7);
-	s_cube->m_indexes->push_back(5);
-	s_cube->m_indexes->push_back(3);
-	s_cube->m_indexes->push_back(1);
-	s_cube->m_indexes->push_back(0);
-	s_cube->m_indexes->push_back(5);
-	s_cube->m_indexes->push_back(4);
-}
+	ModelPtrU Cube::create()
+	{
+		auto newModel = make_unique<Model>();
 
-void Cube::quit()
-{
-	glDeleteBuffers(1, &s_cube->m_vbo);
-	glDeleteBuffers(1, &s_cube->m_ibo);
+		newModel->m_mesh->m_vertexes = m_vertexes.get();
+		newModel->m_mesh->m_indexes = m_indexes.get();
+		newModel->m_mesh->genBuffers();
 
-	glDeleteVertexArrays(1, &s_cube->m_vao);
+		newModel->m_drawType = GL_TRIANGLE_STRIP;
 
-	s_cube.reset();
+		return newModel;
+	}
+
+	void Cube::genVertexes()
+	{
+		m_vertexes->clear();
+
+		m_vertexes->push_back(
+		{
+			vec4(-0.5f, -0.5f, 0.5f, 1.f),		// Front-Bottom-Left
+			vec4(1.f, 1.f, 1.f, 1.f)
+		});
+		m_vertexes->push_back(
+		{
+			vec4(0.5f, -0.5f, 0.5f, 1.f),		// Front-Bottom-Right
+			vec4(1.f, 1.f, 1.f, 1.f)
+		});
+		m_vertexes->push_back(
+		{
+			vec4(-0.5f, 0.5f, 0.5f, 1.f),		// Front-Top-Left
+			vec4(1.f, 1.f, 1.f, 1.f)
+		});
+		m_vertexes->push_back(
+		{
+			vec4(0.5f, 0.5f, 0.5f, 1.f),		// Front-Top-Right
+			vec4(1.f, 1.f, 1.f, 1.f)
+		});
+		m_vertexes->push_back(
+		{
+			vec4(-0.5f, -0.5f, -0.5f, 1.f),		// Back-Bottom-Left
+			vec4(1.f, 1.f, 1.f, 1.f)
+		});
+		m_vertexes->push_back(
+		{
+			vec4(0.5f, -0.5f, -0.5f, 1.f),		// Back-Bottom-Right
+			vec4(1.f, 1.f, 1.f, 1.f)
+		});
+		m_vertexes->push_back(
+		{
+			vec4(-0.5f, 0.5f, -0.5f, 1.f),		// Back-Top-Left
+			vec4(1.f, 1.f, 1.f, 1.f)
+		});
+		m_vertexes->push_back(
+		{
+			vec4(0.5f, 0.5f, -0.5f, 1.f),		// Back-Top-Right
+			vec4(1.f, 1.f, 1.f, 1.f)
+		});
+	}
+
+	void Cube::genIndexes()
+	{
+		m_indexes->clear();
+
+		m_indexes->push_back(7);
+		m_indexes->push_back(6);
+		m_indexes->push_back(3);
+		m_indexes->push_back(2);
+		m_indexes->push_back(0);
+		m_indexes->push_back(6);
+		m_indexes->push_back(4);
+		m_indexes->push_back(7);
+		m_indexes->push_back(5);
+		m_indexes->push_back(3);
+		m_indexes->push_back(1);
+		m_indexes->push_back(0);
+		m_indexes->push_back(5);
+		m_indexes->push_back(4);
+	}
+
+	void Cube::quit()
+	{
+		m_vertexes.reset();
+		m_indexes.reset();
+	}
 }
