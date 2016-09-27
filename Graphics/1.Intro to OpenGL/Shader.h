@@ -33,7 +33,7 @@ public:
 	static const Shader & positional();
 	static const Shader & phong();
 
-	static GLuint defaultID();
+	static GLuint standardID();
 	static GLuint textureID();
 	static GLuint positionalID();
 	static GLuint phongID();

@@ -22,7 +22,7 @@ public:
 
 private:
 
-	static MeshPtrU s_sphere;
+	static MeshPtrS s_sphere;
 
 };
 

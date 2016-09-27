@@ -21,7 +21,7 @@ public:
 
 private:
 
-	static MeshPtrU s_cube;
+	static MeshPtrS s_cube;
 
 };
 

@@ -17,11 +17,11 @@ namespace Gizmos
 	{
 		auto newSphere = new Sphere();
 
-		newSphere->transform()->setLocalSpaceMatrix(transform);
+		newSphere->model()->transform()->setLocalSpaceMatrix(transform);
 
-		newSphere->setMaterialColour(colour);
+		newSphere->model()->setMaterialColour(colour);
 
-		*newSphere->shouldDrawWireFrame() = drawWireFrame;
+		newSphere->model()->m_shouldDrawWireFrame = drawWireFrame;
 
 		newSphere->draw();
 
@@ -68,9 +68,9 @@ namespace Gizmos
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-		glUseProgram(Shader::defaultID());
+		glUseProgram(Shader::standardID());
 		GLuint projectionViewUniform =
-			glGetUniformLocation(Shader::defaultID(), "ProjectionViewModel");
+			glGetUniformLocation(Shader::standardID(), "ProjectionViewModel");
 
 		glUniformMatrix4fv(
 			projectionViewUniform,
@@ -78,7 +78,10 @@ namespace Gizmos
 			false,
 			value_ptr(Camera::mainCamera()->getProjectionView()));
 
-		GLuint materialColor = glGetUniformLocation(Shader::defaultID(), "vMatColor");
+		GLuint materialColor = glGetUniformLocation(Shader::standardID(), "MaterialAmbient");
+		glUniform4fv(materialColor, 1, value_ptr(colour));
+
+		materialColor = glGetUniformLocation(Shader::standardID(), "LightAmbient");
 		glUniform4fv(materialColor, 1, value_ptr(colour));
 
 		glBindVertexArray(VAO);

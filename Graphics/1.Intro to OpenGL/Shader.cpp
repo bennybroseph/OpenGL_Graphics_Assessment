@@ -58,6 +58,11 @@ int Shader::init()
 
 int Shader::quit()
 {
+	glDeleteProgram(s_standard->m_programID);
+	glDeleteProgram(s_texture->m_programID);
+	glDeleteProgram(s_positional->m_programID);
+	glDeleteProgram(s_phong->m_programID);
+
 	s_standard.reset();
 	s_texture.reset();
 	s_positional.reset();
@@ -165,7 +170,7 @@ const Shader & Shader::phong()
 	return *s_phong;
 }
 
-GLuint Shader::defaultID()
+GLuint Shader::standardID()
 {
 	return s_standard->m_programID;
 }

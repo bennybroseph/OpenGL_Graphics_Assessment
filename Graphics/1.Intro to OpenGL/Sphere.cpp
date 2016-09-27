@@ -1,11 +1,11 @@
 #include "Sphere.h"
 
-MeshPtrU Sphere::s_sphere = unique_ptr<Mesh>();
+MeshPtrS Sphere::s_sphere = shared_ptr<Mesh>();
 
 Sphere::Sphere()
 {
-	m_mesh = s_sphere.get();
-	m_drawType = GL_TRIANGLE_STRIP;
+	m_model->m_mesh = *s_sphere;
+	m_model->m_drawType = GL_TRIANGLE_STRIP;
 }
 
 Sphere::~Sphere() { }
@@ -89,10 +89,10 @@ void Sphere::genIndexes(const float &segments, const float &points)
 
 void Sphere::quit()
 {
-	glDeleteBuffers(1, &s_sphere->m_VBO);
-	glDeleteBuffers(1, &s_sphere->m_IBO);
+	glDeleteBuffers(1, &s_sphere->m_vbo);
+	glDeleteBuffers(1, &s_sphere->m_ibo);
 
-	glDeleteVertexArrays(1, &s_sphere->m_VAO);
+	glDeleteVertexArrays(1, &s_sphere->m_vao);
 
 	s_sphere.reset();
 }

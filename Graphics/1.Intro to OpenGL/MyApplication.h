@@ -6,7 +6,7 @@
 #include "Camera.h"
 
 #include "Planet.h"
-#include "Mesh.h"
+#include "Shape.h"
 #include "Light.h"
 
 class MyApplication : public BaseApplication

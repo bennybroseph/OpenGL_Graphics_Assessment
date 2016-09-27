@@ -1,11 +1,11 @@
 #include "Plane.h"
 
-MeshPtrU Plane::s_plane = unique_ptr<Mesh>();
+MeshPtrS Plane::s_plane = shared_ptr<Mesh>();
 
 Plane::Plane()
 {
-	m_mesh = s_plane.get();
-	m_drawType = GL_TRIANGLE_STRIP;
+	m_model->m_mesh = *s_plane;
+	m_model->m_drawType = GL_TRIANGLES;
 }
 
 Plane::~Plane() { }
@@ -66,10 +66,10 @@ void Plane::genIndexes()
 
 void Plane::quit()
 {
-	glDeleteBuffers(1, &s_plane->m_VBO);
-	glDeleteBuffers(1, &s_plane->m_IBO);
+	glDeleteBuffers(1, &s_plane->m_vbo);
+	glDeleteBuffers(1, &s_plane->m_ibo);
 
-	glDeleteVertexArrays(1, &s_plane->m_VAO);
+	glDeleteVertexArrays(1, &s_plane->m_vao);
 
 	s_plane.reset();
 }

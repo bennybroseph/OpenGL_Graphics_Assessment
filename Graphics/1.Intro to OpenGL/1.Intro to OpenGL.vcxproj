@@ -139,6 +139,7 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="Math.cpp" />
+    <ClCompile Include="Model.cpp" />
     <ClCompile Include="MyApplication.cpp" />
     <ClCompile Include="Plane.cpp" />
     <ClCompile Include="Planet.cpp" />
@@ -147,6 +148,7 @@
     <ClCompile Include="Shape.cpp" />
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="StaticTransform.cpp" />
+    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -164,6 +166,7 @@
     <ClInclude Include="Light.h" />
     <ClInclude Include="MasterHeader.h" />
     <ClInclude Include="Math.h" />
+    <ClInclude Include="Model.h" />
     <ClInclude Include="MyApplication.h" />
     <ClInclude Include="Plane.h" />
     <ClInclude Include="Planet.h" />
@@ -171,6 +174,7 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Shape.h" />
     <ClInclude Include="Sphere.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="Transform.h" />
   </ItemGroup>
   <ItemGroup>

@@ -2,9 +2,7 @@
 #define _MESH_H_
 #pragma once
 
-#include <gl_core_4_4.h>
-
-#include "MasterHeader.h"
+#include "Texture.h"
 
 struct Vertex;
 
@@ -28,28 +26,20 @@ typedef weak_ptr<Mesh> MeshPtrW;
 
 class Mesh
 {
-
-	friend class Shape;
-	friend class Plane;
-	friend class Cube;
-	friend class Sphere;
-
 public:
-
-	~Mesh();
-
-private:
 
 	void genBuffers();
 
-	const vectorPtrU<Vertex> m_vertexes = make_unique<vector<Vertex>>();
-	const vectorPtrU<GLuint> m_indexes = make_unique<vector<GLuint>>();
+	~Mesh();
 
-	GLuint m_VAO = 0;
-	GLuint m_VBO = 0;
-	GLuint m_IBO = 0;
+	vectorPtrS<Vertex> m_vertexes = make_shared<vector<Vertex>>();
+	vectorPtrS<GLuint> m_indexes = make_shared<vector<GLuint>>();
 
-	GLuint m_texture = 0;
+	GLuint m_vao = 0;
+	GLuint m_vbo = 0;
+	GLuint m_ibo = 0;
+
+	TexturePtrS m_texture = make_shared<Texture>();
 
 };
 

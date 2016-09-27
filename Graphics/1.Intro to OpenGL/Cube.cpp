@@ -1,11 +1,11 @@
 #include "Cube.h"
 
-MeshPtrU Cube::s_cube = unique_ptr<Mesh>();
+MeshPtrS Cube::s_cube = shared_ptr<Mesh>();
 
 Cube::Cube()
 {
-	m_mesh = s_cube.get();
-	m_drawType = GL_TRIANGLE_STRIP;
+	m_model->m_mesh = *s_cube;
+	m_model->m_drawType = GL_TRIANGLE_STRIP;
 }
 
 Cube::~Cube() { }
@@ -88,10 +88,10 @@ void Cube::genIndexes()
 
 void Cube::quit()
 {
-	glDeleteBuffers(1, &s_cube->m_VBO);
-	glDeleteBuffers(1, &s_cube->m_IBO);
+	glDeleteBuffers(1, &s_cube->m_vbo);
+	glDeleteBuffers(1, &s_cube->m_ibo);
 
-	glDeleteVertexArrays(1, &s_cube->m_VAO);
+	glDeleteVertexArrays(1, &s_cube->m_vao);
 
 	s_cube.reset();
 }

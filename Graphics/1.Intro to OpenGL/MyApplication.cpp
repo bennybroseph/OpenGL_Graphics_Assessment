@@ -47,8 +47,8 @@ int MyApplication::startup()
 	m_moon->transform().setParent(&m_earth->transform(), false);
 
 	/*auto newSphere = new Sphere();
-	newSphere->setShader(&Shader::phongShader());
-	newSphere->transform()->setLocalPosition(vec3(0.f, 1.5f, 0.f));
+	newSphere->model()->setShader(&Shader::phong());
+	newSphere->model()->transform()->setLocalPosition(vec3(0.f, 1.5f, 0.f));
 	m_shapes->push_back(newSphere);*/
 
 	auto imageWidth = 0;
@@ -67,9 +67,11 @@ int MyApplication::startup()
 	genTexturePlane();
 
 	/*auto newPlane = new Plane();
-	newPlane->setShader(&Shader::texture());
-	newPlane->transform()->scale(vec3(5.f, 1.f, 5.f));
-	newPlane->transform()->setParent(&m_sun->transform());
+	newPlane->model()->setShader(&Shader::standard());
+	newPlane->model()->setMaterialColour(vec4(1));
+	newPlane->model()->transform()->setLocalPosition(vec3(0.f, 1.f, 0.f));
+	newPlane->model()->transform()->scale(vec3(5.f, 1.f, 5.f));
+	newPlane->model()->transform()->setParent(&m_sun->transform());
 	m_shapes->push_back(newPlane);*/
 
 	/*auto newCube = new Cube();
@@ -155,7 +157,7 @@ void MyApplication::draw()
 	if (m_shouldDrawGrid)
 		Gizmos::drawGrid(vec3(0.f), vec2(1.f, 1.f), vec2(5.f, 5.f));
 
-	for (auto shape : *m_shapes)
+	for (auto &shape : *m_shapes)
 		shape->draw();
 
 	drawTexturePlane();
@@ -221,8 +223,8 @@ void MyApplication::drawTexturePlane()
 void MyApplication::drawSolarSystem() const
 {
 	Gizmos::drawSphere(m_sun->transform().getWorldSpaceMatrix(), m_sun->colour());
-	Gizmos::drawSphere(m_earth->transform().getWorldSpaceMatrix(), m_earth->colour());
-	Gizmos::drawSphere(m_moon->transform().getWorldSpaceMatrix(), m_moon->colour());
+	//Gizmos::drawSphere(m_earth->transform().getWorldSpaceMatrix(), m_earth->colour());
+	//Gizmos::drawSphere(m_moon->transform().getWorldSpaceMatrix(), m_moon->colour());
 }
 
 void MyApplication::drawGui()

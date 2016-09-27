@@ -21,7 +21,7 @@ public:
 
 private:
 
-	static MeshPtrU s_plane;
+	static MeshPtrS s_plane;
 
 };
 
