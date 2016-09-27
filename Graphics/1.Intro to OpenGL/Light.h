@@ -25,7 +25,7 @@ public:
 
 	static vectorPtrU<Light *> s_lights;
 
-	const TransformPtrU m_transform = make_unique<Transform>();
+	const TransformPtrU m_transform = make_unique<Transform>(nullptr);
 
 	const vec3PtrU m_direction = make_unique<vec3>(0.f);
 

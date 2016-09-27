@@ -16,7 +16,7 @@ namespace Gizmos
 
 	ModelPtrU Plane::create()
 	{
-		auto newModel = make_unique<Model>();
+		auto newModel = make_unique<Model>(nullptr);
 
 		newModel->m_mesh->m_vertexes = m_vertexes.get();
 		newModel->m_mesh->m_indexes = m_indexes.get();
@@ -36,6 +36,7 @@ namespace Gizmos
 			vec4(-1.f, 0.f, 1.f, 1.f),
 			vec4(1.f, 1.f, 1.f, 1.f),
 			vec4(0.f, 1.f, 0.f, 0.f),
+			vec4(1.f, 0.f, 0.f, 0.f),
 			vec2(0.f, 1.f),
 		});
 		m_vertexes->push_back(
@@ -43,6 +44,7 @@ namespace Gizmos
 			vec4(1.f, 0.f, 1.f, 1.f),
 			vec4(1.f, 1.f, 1.f, 1.f),
 			vec4(0.f, 1.f, 0.f, 0.f),
+			vec4(1.f, 0.f, 0.f, 0.f),
 			vec2(1.f, 1.f),
 		});
 		m_vertexes->push_back(
@@ -50,6 +52,7 @@ namespace Gizmos
 			vec4(1.f, 0.f, -1.f, 1.f),
 			vec4(1.f, 1.f, 1.f, 1.f),
 			vec4(0.f, 1.f, 0.f, 0.f),
+			vec4(1.f, 0.f, 0.f, 0.f),
 			vec2(1.f, 0.f),
 		});
 		m_vertexes->push_back(
@@ -57,6 +60,7 @@ namespace Gizmos
 			vec4(-1.f, 0.f, -1.f, 1.f),
 			vec4(1.f, 1.f, 1.f, 1.f),
 			vec4(0.f, 1.f, 0.f, 0.f),
+			vec4(1.f, 0.f, 0.f, 0.f),
 			vec2(0.f, 0.f),
 		});
 	}

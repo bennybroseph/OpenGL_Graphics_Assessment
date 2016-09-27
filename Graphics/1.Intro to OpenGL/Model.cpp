@@ -1,5 +1,7 @@
 #include "Model.h"
 
+#include "Transform.h"
+#include "GameObject.h"
 #include "Camera.h"
 #include "Light.h"
 
@@ -42,13 +44,13 @@ void Model::drawModel() const
 		matUniform,
 		1,
 		false,
-		value_ptr(Camera::mainCamera()->getProjectionView() * m_transform->getWorldSpaceMatrix()));
+		value_ptr(Camera::mainCamera()->getProjectionView() * m_gameObject->transform()->getWorldSpaceMatrix()));
 
 	// bind the model matrix
 	matUniform = glGetUniformLocation(m_shader->programID(), "ModelMatrix");
-	glUniformMatrix4fv(matUniform, 1, GL_FALSE, &m_transform->getWorldSpaceMatrix()[0][0]);
+	glUniformMatrix4fv(matUniform, 1, GL_FALSE, &m_gameObject->transform()->getWorldSpaceMatrix()[0][0]);
 
-	auto normalMatrix = inverse(m_transform->getWorldSpaceMatrix());
+	auto normalMatrix = inverse(m_gameObject->transform()->getWorldSpaceMatrix());
 	// bind the normal matrix (make it transposed)
 	matUniform = glGetUniformLocation(m_shader->programID(), "NormalMatrix");
 	glUniformMatrix4fv(matUniform, 1, GL_TRUE, &normalMatrix[0][0]);
@@ -95,16 +97,49 @@ void Model::drawModel() const
 	unsigned int materialColor = glGetUniformLocation(m_shader->programID(), "vMatColor");
 	glUniform4fv(materialColor, 1, value_ptr(*m_materialColour));
 
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, m_texture->getHandle());
-	// tell the shader where it is
-	auto loc = glGetUniformLocation(m_shader->programID(), "diffuseMap");
-	glUniform1i(loc, 0);
+	auto textureCount = glGetUniformLocation(m_shader->programID(), "textureCount");
+	glUniform1i(textureCount, m_textures->size());
+
+	auto i = 0;
+	for (auto &texture : *m_textures)
+	{
+		glActiveTexture(GL_TEXTURE0 + i);
+		glBindTexture(GL_TEXTURE_2D, texture->getHandle());
+
+		// I could include <string> but...whatever
+		char variableName[31] = "textures[";
+		char buffer[3];
+		_itoa(i, buffer, 3);
+		strcat_s(variableName, 31, buffer);
+		strcat_s(variableName, 31, "]");
+
+		// tell the shader where it is
+		auto loc = glGetUniformLocation(m_shader->programID(), variableName);
+		glUniform1i(loc, i);
+		i++;
+	}
+
+	if (m_diffuseTexture.get())
+	{
+		glActiveTexture(GL_TEXTURE30);
+		glBindTexture(GL_TEXTURE_2D, m_diffuseTexture->getHandle());
+
+		auto loc = glGetUniformLocation(m_shader->programID(), "diffuseMap");
+		glUniform1i(loc, 30);
+	}
+	if (m_normalTexture.get())
+	{
+		glActiveTexture(GL_TEXTURE31);
+		glBindTexture(GL_TEXTURE_2D, m_normalTexture->getHandle());
+
+		auto loc = glGetUniformLocation(m_shader->programID(), "normalMap");
+		glUniform1i(loc, 31);	}
 
 	glBindVertexArray(m_mesh->m_vao);
 	glDrawElements(m_drawType, m_mesh->m_indexes->size(), GL_UNSIGNED_INT, nullptr);
 
 	glBindVertexArray(0);
+	//glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 const Shader * Model::getShader() const
@@ -127,13 +162,55 @@ void Model::setMaterialColour(const vec4& newColour)
 	*m_materialColour = newColour;
 }
 
-Transform * Model::transform()
+// ReSharper disable once CppMemberFunctionMayBeConst
+int Model::addTexture(const GLchar *path, FilteringType filteringType)
 {
-	return m_transform.get();
+	m_textures->push_back(make_unique<Texture>(path, filteringType));
+
+	return 0;
 }
-const Transform * Model::transform() const
+// ReSharper disable once CppMemberFunctionMayBeConst
+int Model::removeTexture(GLint index)
 {
-	return m_transform.get();
+	if (index >= m_textures->size())
+		return -1;
+
+	m_textures->erase(m_textures->begin() + index);
+
+	return 0;
+}
+// ReSharper disable once CppMemberFunctionMayBeConst
+int Model::removeTexture(GLuint handle)
+{
+	auto i = 0;
+	for (auto &texture : *m_textures)
+	{
+		if (texture->getHandle() == handle)
+			return removeTexture(i);
+
+		i++;
+	}
+
+	return -1;
+}
+
+int Model::setNormalTexture(const GLchar *path, FilteringType filteringType)
+{
+	m_normalTexture.reset(new Texture(path, filteringType));
+
+	return 0;
+}
+int Model::setDiffuseTexture(const GLchar *path, FilteringType filteringType)
+{
+	m_diffuseTexture.reset(new Texture(path, filteringType));
+
+	return 0;
+}
+int Model::setSpecularTexture(const GLchar *path, FilteringType filteringType)
+{
+	m_specularTexture.reset(new Texture(path, filteringType));
+
+	return 0;
 }
 
 Model::~Model() { }

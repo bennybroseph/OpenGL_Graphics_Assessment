@@ -40,6 +40,7 @@ private:
 
 	GLuint m_handle = 0;
 
+	const GLchar *m_path = "";
 	FilteringType m_filtering = FilteringType::Nearest;
 
 };

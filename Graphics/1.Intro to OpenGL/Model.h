@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Shader.h"
-#include "Transform.h"
+#include "Component.h"
 #include "Texture.h"
 #include "Mesh.h"
 
@@ -13,9 +13,11 @@ typedef unique_ptr<Model> ModelPtrU;
 typedef shared_ptr<Model> ModelPtrS;
 typedef weak_ptr<Model> ModelPtrW;
 
-class Model
+class Model : public Component
 {
 public:
+
+	explicit Model(GameObject * parent) : Component(parent) { }
 
 	void draw() const;
 
@@ -25,13 +27,18 @@ public:
 	const vec4 & getMaterialColour() const;
 	void setMaterialColour(const vec4 &newColour);
 
-	Transform * transform();
-	const Transform * transform() const;
+	int addTexture(const GLchar *path, FilteringType filteringType);
+	int removeTexture(GLint index);
+	int removeTexture(GLuint handle);
+
+	int setNormalTexture(const GLchar *path, FilteringType filteringType);
+	int setDiffuseTexture(const GLchar *path, FilteringType filteringType);
+	int setSpecularTexture(const GLchar *path, FilteringType filteringType);
+
 
 	~Model();
 
 	MeshPtrU m_mesh = make_unique<Mesh>();
-	TexturePtrU m_texture = make_unique<Texture>();
 
 	mutable GLint m_drawType = GL_TRIANGLES;
 
@@ -47,8 +54,11 @@ private:
 
 	vec4PtrU m_materialColour = make_unique<vec4>(vec4(1.f, 1.f, 1.f, 1.f));
 
-	TransformPtrU m_transform = make_unique<Transform>();
+	vectorPtrU<TexturePtrU> m_textures = make_unique<vector<TexturePtrU>>();
 
+	TexturePtrU m_normalTexture = make_unique<Texture>();
+	TexturePtrU m_diffuseTexture = make_unique<Texture>();
+	TexturePtrU m_specularTexture = make_unique<Texture>();
 };
 
 

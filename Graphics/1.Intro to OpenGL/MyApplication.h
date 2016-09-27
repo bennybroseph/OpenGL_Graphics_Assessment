@@ -6,8 +6,9 @@
 #include "Camera.h"
 
 #include "Planet.h"
-#include "Shape.h"
+#include "Model.h"
 #include "Light.h"
+#include "GameObject.h"
 
 class MyApplication : public BaseApplication
 {
@@ -25,7 +26,7 @@ private:
 	void update() override;
 	void lateUpdate() override;
 	void draw() override;
-	
+
 	void drawSolarSystem() const;
 	void drawGui();
 
@@ -36,12 +37,12 @@ private:
 	CameraPtrU m_camera = nullptr;
 	LightPtrU m_light = nullptr;
 
-	PlanetPtrU m_sun = nullptr;
-	PlanetPtrU m_earth = nullptr;
-	PlanetPtrU m_moon = nullptr;
+	GameObjectPtrU m_sun = nullptr;
+	GameObjectPtrU m_earth = nullptr;
+	GameObjectPtrU m_moon = nullptr;
 
-	const vectorPtrU<ModelPtrU> m_shapes = make_unique<vector<ModelPtrU>>();
-	
+	const vectorPtrU<GameObjectPtrU> m_shapes = make_unique<vector<GameObjectPtrU>>();
+
 	bool m_shouldDrawGrid = true;
 	bool m_shouldDrawGui = true;
 

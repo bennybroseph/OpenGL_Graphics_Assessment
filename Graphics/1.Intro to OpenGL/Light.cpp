@@ -1,6 +1,6 @@
 #include "Light.h"
 
-vectorPtrU<Light *> Light::s_lights = unique_ptr<vector<Light *>>();
+vectorPtrU<Light *> Light::s_lights = make_unique<vector<Light *>>();
 
 Light::Light()
 {

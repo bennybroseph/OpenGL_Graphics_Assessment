@@ -4,6 +4,8 @@
 
 #include <gl_core_4_4.h>
 
+#include "Component.h"
+
 #include "MasterHeader.h"
 
 class Transform;	// Forward declare class for typedef organization
@@ -12,12 +14,14 @@ typedef unique_ptr<Transform> TransformPtrU;
 typedef shared_ptr<Transform> TransformPtrS;
 typedef weak_ptr<Transform> TransformPtrW;
 
-class Transform
+class Transform : public Component
 {
 
 	const static GLfloat DEFAULT_LINE_WIDTH;	// Used when drawing the transform axis lines
 
 public:
+
+	explicit Transform(GameObject * parent) : Component(parent) { }
 
 	void translate(const vec3 &translation);
 	/// <summary>
@@ -129,7 +133,7 @@ public:
 	void setLocalSpaceMatrix(const mat4 &newLocalSpaceMatrix);
 
 	void draw(GLfloat lineWidth = DEFAULT_LINE_WIDTH) const;
-	void drawGui() const;
+	void drawGui() const override;
 
 	~Transform();
 

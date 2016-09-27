@@ -13,5 +13,5 @@ uniform sampler2D diffuseMap;
 
 void main()
 {
-	outColour = vColour * (vec4(LightAmbient * MaterialAmbient, 1) + texture(diffuseMap, vTextureUV));
+	outColour = vColour * (vec4(LightAmbient * MaterialAmbient, 1));
 }

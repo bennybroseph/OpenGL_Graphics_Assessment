@@ -2,7 +2,7 @@
 #define _PLANE_H_
 #pragma once
 
-#include "Shape.h"
+#include "Model.h"
 
 namespace Gizmos
 {

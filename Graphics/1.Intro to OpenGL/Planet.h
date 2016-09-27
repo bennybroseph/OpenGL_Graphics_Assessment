@@ -48,7 +48,7 @@ public:
 private:
 
 	// The planet's transform variable
-	const TransformPtrU m_transform = make_unique<Transform>();
+	const TransformPtrU m_transform = make_unique<Transform>(nullptr);
 
 	// Radius of the sphere when drawn
 	float m_radius = 1.f;

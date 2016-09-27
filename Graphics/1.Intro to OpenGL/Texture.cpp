@@ -29,10 +29,24 @@ int Texture::setTexture(const GLchar* path)
 		return -1;
 	}
 
+	GLuint format;
+	switch (imageFormat)
+	{
+	case 3:
+		format = GL_RGB;
+		break;
+	case 4:
+		format = GL_RGBA;
+		break;
+
+	default:
+		return -1;
+	}
+
 	glGenTextures(1, &m_handle);
 	glBindTexture(GL_TEXTURE_2D, m_handle);
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imageWidth, imageHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(GL_TEXTURE_2D, 0, format, imageWidth, imageHeight, 0, format, GL_UNSIGNED_BYTE, data);
 	}
 	glBindTexture(GL_TEXTURE_2D, 0);	// Unbind
 

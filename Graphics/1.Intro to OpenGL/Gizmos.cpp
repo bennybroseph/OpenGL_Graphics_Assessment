@@ -17,13 +17,13 @@ namespace Gizmos
 	{
 		auto newSphere = Sphere::create();
 
-		newSphere->transform()->setLocalSpaceMatrix(transform);
+		//newSphere->transform()->setLocalSpaceMatrix(transform);
 
 		newSphere->setMaterialColour(colour);
 
 		newSphere->m_shouldDrawWireFrame = drawWireFrame;
 
-		newSphere->draw();
+		//newSphere->draw();
 
 		return 0;
 	}

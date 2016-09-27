@@ -22,7 +22,7 @@ namespace Gizmos
 
 	ModelPtrU Sphere::create()
 	{
-		auto newModel = make_unique<Model>();
+		auto newModel = make_unique<Model>(nullptr);
 
 		newModel->m_mesh->m_vertexes = m_vertexes.get();
 		newModel->m_mesh->m_indexes = m_indexes.get();
@@ -49,6 +49,11 @@ namespace Gizmos
 						vertex.position.y,
 						vertex.position.x * sin(phi) + vertex.position.z * cos(phi), 1.f);
 				vertex.normal = vertex.position;
+
+				// Calculate uvs
+				auto d = normalize(vertex.position);
+				vertex.textureUV.x = 0.5f + atan2(d.z, d.x) / (2 * PI);
+				vertex.textureUV.y = 0.5f - asin(d.y) / PI;
 
 				m_vertexes->push_back(vertex);
 			}

@@ -40,24 +40,37 @@ int MyApplication::startup()
 	m_light->m_transform->rotate(45.f, vec3(1.f, 0.f, 0.f));
 	*m_light->m_diffuse = vec3(1.f, 1.f, 1.f);
 
-	m_sun = make_unique<Planet>(vec3(0, 0, 0), 1.5f, vec4(255.f / 255.f, 235.f / 255.f, 59.f / 255.f, 1.f), 3.f);
-	m_earth = make_unique<Planet>(vec3(5, 0, 0), 0.5f, vec4(139 / 255.f, 195 / 255.f, 74 / 255.f, 1.f), 10.f);
-	m_earth->transform().setParent(&m_sun->transform(), false);
-	m_moon = make_unique<Planet>(vec3(2, 0.5f, 0), 0.5f, vec4(0.9f, 0.9f, 0.9f, 1.f), -6.f);
-	m_moon->transform().setParent(&m_earth->transform(), false);
+	m_sun = make_unique<GameObject>();
+	m_sun->setName("Sun");
+	m_earth = make_unique<GameObject>();
+	m_earth->transform()->setParent(m_sun->transform(), false);
+	m_moon = make_unique<GameObject>();
+	m_moon->transform()->setParent(m_earth->transform(), false);
 
-	auto newSphere = Gizmos::Sphere::create();
-	newSphere->setShader(Shader::phong());
+	m_sun->addComponent(Gizmos::Plane::create());
+	auto model = m_sun->getComponent<Model>();
+	model->setShader(Shader::texture());
+	//model->addTexture("data/textures/crate.png", FilteringType::Nearest);
+	model->setDiffuseTexture("data/textures/four_diffuse.tga", FilteringType::Linear);
+	model->setNormalTexture("data/textures/four_normal.tga", FilteringType::Linear);
+	model->setSpecularTexture("data/textures/four_specular.tga", FilteringType::Linear);
+
+	/*auto newSphere = Gizmos::Sphere::create();
+	newSphere->setShader(Shader::texture());
 	newSphere->transform()->setLocalPosition(vec3(0.f, 1.5f, 0.f));
-	m_shapes->push_back(move(newSphere));
+	newSphere->addTexture("data/textures/planets/earth_diffuse.jpg", FilteringType::Linear);
+	m_shapes->push_back(move(newSphere));*/
 
-	auto newPlane = Gizmos::Plane::create();
-	newPlane->setShader(Shader::texture());
-	newPlane->setMaterialColour(vec4(1));
-	newPlane->transform()->setLocalPosition(vec3(0.f, 0.f, 0.f));
-	newPlane->transform()->scale(vec3(5.f, 1.f, 5.f));
-	newPlane->transform()->setParent(&m_sun->transform());
-	newPlane->m_texture.reset(new Texture("data/textures/dirt.tga", FilteringType::Linear));
+	auto newPlane = make_unique<GameObject>();
+
+	auto plane = Gizmos::Sphere::create();
+	plane->setShader(Shader::phong());
+	plane->setMaterialColour(vec4(1));
+
+	newPlane->addComponent(move(plane));
+
+	newPlane->transform()->setLocalPosition(vec3(2.f, 0.f, 0.f));
+	newPlane->transform()->setParent(m_sun->transform());
 	m_shapes->push_back(move(newPlane));
 
 	/*auto newCube = new Cube();
@@ -96,36 +109,32 @@ void MyApplication::parseInput()
 		m_shouldDrawGui = !m_shouldDrawGui;
 
 	if (Input::getKey(GLFW_KEY_1) >= GLFW_PRESS)
-		m_sun->transform().translate(vec3(0.f, 1.f * m_deltaTime, 0.f));
+		m_sun->transform()->translate(vec3(0.f, 1.f * m_deltaTime, 0.f));
 
 	if (Input::getKey(GLFW_KEY_2) >= GLFW_PRESS)
-		m_earth->transform().setPosition(
+		m_earth->transform()->setPosition(
 			vec3(
-				m_earth->transform().getPosition().x,
-				m_earth->transform().getPosition().y + 1.f * m_deltaTime,
-				m_earth->transform().getPosition().z));
+				m_earth->transform()->getPosition().x,
+				m_earth->transform()->getPosition().y + 1.f * m_deltaTime,
+				m_earth->transform()->getPosition().z));
 
 	if (Input::getKey(GLFW_KEY_3) >= GLFW_PRESS)
 	{
-		m_moon->transform().setPosition(vec3(5.f, 2.5f, -5.5f));
-		m_moon->transform().setEulerAngle(vec3(90.f, 0, 0));
-		m_moon->transform().setScale(5.f);
+		m_moon->transform()->setPosition(vec3(5.f, 2.5f, -5.5f));
+		m_moon->transform()->setEulerAngle(vec3(90.f, 0, 0));
+		m_moon->transform()->setScale(5.f);
 	}
 
 	if (Input::getKey(GLFW_KEY_PERIOD, GLFW_MOD_SHIFT) >= GLFW_PRESS)
-		m_sun->transform().scale(vec3(1.f + m_deltaTime, 1.f + m_deltaTime, 1.f + m_deltaTime));
+		m_sun->transform()->scale(vec3(1.f + m_deltaTime, 1.f + m_deltaTime, 1.f + m_deltaTime));
 
 	if (Input::getKey(GLFW_KEY_COMMA, GLFW_MOD_SHIFT) >= GLFW_PRESS)
-		m_sun->transform().scale(vec3(1.f - m_deltaTime, 1.f - m_deltaTime, 1.f - m_deltaTime));
+		m_sun->transform()->scale(vec3(1.f - m_deltaTime, 1.f - m_deltaTime, 1.f - m_deltaTime));
 }
 
 void MyApplication::update()
 {
 	//m_light->m_transform.rotate(15.f * m_deltaTime, vec3(0.f, 1.f, -1.f));
-
-	m_sun->update(m_deltaTime);
-	m_earth->update(m_deltaTime);
-	m_moon->update(m_deltaTime);
 
 	m_camera->update(m_deltaTime);
 }
@@ -154,18 +163,18 @@ void MyApplication::draw()
 
 void MyApplication::drawSolarSystem() const
 {
-	Gizmos::drawSphere(m_sun->transform().getWorldSpaceMatrix(), m_sun->colour());
-	Gizmos::drawSphere(m_earth->transform().getWorldSpaceMatrix(), m_earth->colour());
-	Gizmos::drawSphere(m_moon->transform().getWorldSpaceMatrix(), m_moon->colour());
+	m_sun->draw();
+	m_earth->draw();
+	m_moon->draw();
 }
 
 void MyApplication::drawGui()
 {
 	m_light->draw();
 
-	m_sun->transform().draw();
-	m_earth->transform().draw();
-	m_moon->transform().draw();
+	m_sun->transform()->draw();
+	m_earth->transform()->draw();
+	m_moon->transform()->draw();
 
 	ImGui::Begin("Test Values");
 	{
@@ -179,9 +188,9 @@ void MyApplication::drawGui()
 
 	ImGui::Begin("Debug");
 	{
-		m_sun->transform().drawGui();
-		m_earth->transform().drawGui();
-		m_moon->transform().drawGui();
+		m_sun->drawGui();
+		m_earth->drawGui();
+		m_moon->drawGui();
 	}
 	ImGui::End();
 
