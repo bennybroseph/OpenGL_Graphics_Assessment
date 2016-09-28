@@ -1,16 +1,20 @@
 #include "Camera.h"
 
+#include "GameObject.h"
+
 Camera *Camera::s_mainCamera = nullptr;
 
-Camera::Camera()
+Camera::Camera() : Component()
 {
 	if (s_mainCamera == nullptr)
 		s_mainCamera = this;
+
+	setName("Camera");
 }
 
 void Camera::setPerspective(GLfloat fieldOfView, GLfloat aspectRatio, GLfloat newNear, GLfloat newFar) const
 {
-	m_projectionTransform->setLocalSpaceMatrix(glm::perspective(fieldOfView, aspectRatio, newNear, newFar));
+	*m_projectionTransform = glm::perspective(fieldOfView, aspectRatio, newNear, newFar);
 }
 void Camera::setLookAt(const vec3 &from, const vec3 &to, const vec3 &up) const
 {
@@ -32,30 +36,30 @@ void Camera::setLookAt(const vec3 &from, const vec3 &to, const vec3 &up) const
 			0, 0, 1, 0,
 			-from.x, -from.y, -from.z, 1);
 
-	m_worldTransform->setLocalSpaceMatrix(inverse(orientation * translation));
-	*m_rotation = m_worldTransform->getEulerAngle();
+	m_gameObject->transform()->setLocalSpaceMatrix(inverse(orientation * translation));
+	*m_rotation = m_gameObject->transform()->getEulerAngle();
 }
 void Camera::setPosition(const vec3& position) const
 {
-	m_worldTransform->setLocalPosition(position);
+	m_gameObject->transform()->setLocalPosition(position);
 }
 
 const Transform& Camera::getWorldPosition() const
 {
-	return *m_worldTransform;
+	return *m_gameObject->transform();
 }
 mat4 Camera::getView() const
 {
-	return inverse(m_worldTransform->getLocalSpaceMatrix());
+	return inverse(m_gameObject->transform()->getLocalSpaceMatrix());
 }
-const Transform& Camera::getProjection() const
+const mat4 & Camera::getProjection() const
 {
 	return *m_projectionTransform;
 }
 
 mat4 Camera::getProjectionView() const
 {
-	return m_projectionTransform->getLocalSpaceMatrix() * getView();
+	return *m_projectionTransform * getView();
 }
 
 Camera::~Camera()

@@ -1,7 +1,7 @@
 #include "Inspector.h"
 
 #include <imgui_impl_glfw_gl3.h>
-#include <stack>
+#include <queue>
 
 namespace Editor
 {
@@ -18,7 +18,7 @@ namespace Editor
 		{
 			ImGui::Begin("Inspector");
 			{
-				s_selected->draw();
+				s_selected->drawGizmos();
 				s_selected->drawGui();
 			}
 			ImGui::End();
@@ -26,51 +26,106 @@ namespace Editor
 
 		ImGui::Begin("Hierarchy");
 		{
+			static GameObject *draggedObject = nullptr;
+			static auto dragging = false;
+			static GameObject *hoveringObject = nullptr;
+
+			ImGui::LabelText(
+				"", "%s, %s",
+				draggedObject ? draggedObject->getName() : "",
+				hoveringObject ? hoveringObject->getName() : "");
+
+			auto indentLevel = 0;
 			for (auto &gameObject : Object::findObjectsOfType<GameObject>())
 			{
 				if (!gameObject->transform()->getParent())
 				{
-					auto collapsed = ImGui::CollapsingHeader(gameObject->getName(), nullptr, false);
+					auto gameObjectStacks = std::queue<std::queue<GameObject *>*>();
+					auto gameObjectStack = std::queue<GameObject *>();
+					gameObjectStack.push(gameObject);
 
-					if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(1))
-						s_selected = gameObject;
+					gameObjectStacks.push(&gameObjectStack);
 
-					if(collapsed)
+					auto currentStack = gameObjectStacks.front();
+					auto currentObject = gameObjectStack.front();
+
+					while (gameObjectStacks.size() > 0)
 					{
-						auto gameObjects = std::stack<GameObject *>();
-						gameObjects.push(gameObject);
-
-						auto currentObject = gameObjects.top();
-						auto indentCount = 0;
-						while (gameObjects.size() > 0)
+						while (currentStack->size() > 0)
 						{
-							indentCount++;
-							ImGui::Indent();
-							for (
-								auto iter = currentObject->transform()->getChildren()->rbegin();
-								iter != currentObject->transform()->getChildren()->rend(); ++iter)
+							auto collapsed = ImGui::CollapsingHeader(
+								currentObject->getName(),
+								nullptr,
+								s_selected == currentObject ? true : false);
+
+							if (ImGui::IsItemHovered())
+								hoveringObject = currentObject;
+
+							if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(1))
+								s_selected = currentObject;
+
+							if (ImGui::IsItemHovered() && ImGui::IsMouseDragging() && draggedObject == nullptr)
+								draggedObject = currentObject;
+
+							if (collapsed && currentObject->transform()->getChildren()->size() > 0)
 							{
-								auto childCollapsed =
-									ImGui::CollapsingHeader((*iter)->gameObject()->getName(), nullptr, false);
+								ImGui::Indent();
+								indentLevel++;
 
-								if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(1))
-									s_selected = (*iter)->gameObject();
+								currentStack->pop();
+								auto tempStack = new std::queue<GameObject *>();
+								for (auto &child : *currentObject->transform()->getChildren())
+									tempStack->push(child->gameObject());
+								gameObjectStacks.push(tempStack);
 
-								if (childCollapsed)
-									continue;
-
-								gameObjects.push((*iter)->gameObject());
+								currentStack = tempStack;
+								currentObject = tempStack->front();
 							}
+							else
+							{
+								if (indentLevel > 0 &&
+									collapsed
+									&& currentObject->transform()->getChildren()->size() <= 0)
+								{
+									ImGui::Unindent();
+									indentLevel--;
+								}
 
-							currentObject = gameObjects.top();
-							gameObjects.pop();
+								currentStack->pop();
+								if (currentStack->size() > 0)
+									currentObject = currentStack->front();
+							}
 						}
-
-						for (auto i = 0; i < indentCount; ++i)
-							ImGui::Unindent();
+						gameObjectStacks.pop();
+						if (gameObjectStacks.size() > 0)
+						{
+							currentStack = gameObjectStacks.front();
+							if (currentStack->size() > 0)
+								currentObject = currentStack->front();
+						}
 					}
 				}
+				for (auto i = 0; i < indentLevel; ++i, --indentLevel)
+					ImGui::Unindent();
 			}
+
+			if (draggedObject)
+			{
+				dragging = true;
+				ImGui::SetTooltip("%s", draggedObject->getName());
+
+				if (ImGui::IsMouseReleased(0) && draggedObject != hoveringObject)
+				{
+					draggedObject->transform()->setParent(hoveringObject ? hoveringObject->transform() : nullptr);
+					ImGui::SetWindowFocus("Debug");
+					dragging = false;
+				}
+			}
+			else
+				ImGui::SetTooltip("");
+
+			if (!dragging)
+				draggedObject = nullptr;
 		}
 		ImGui::End();
 	}

@@ -22,6 +22,7 @@ public:
 	Object();
 
 	virtual void draw() const { }
+	virtual void drawGizmos() const { }
 	virtual void drawGui() const { }
 
 	const GLchar * getName() const;

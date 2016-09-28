@@ -12,20 +12,15 @@ typedef unique_ptr<Light> LightPtrU;
 typedef shared_ptr<Light> LightPtrS;
 typedef weak_ptr<Light> LightPtrW;
 
-class Light
+class Light : public Component
 {
 public:
 
 	Light();
 
-	virtual void draw() const = 0;
-	virtual void drawGui(const char *title = "Light") const = 0;
-
 	virtual ~Light();
 
 	static vectorPtrU<Light *> s_lights;
-
-	const TransformPtrU m_transform = make_unique<Transform>();
 
 	const vec3PtrU m_direction = make_unique<vec3>(0.f);
 

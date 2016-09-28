@@ -10,7 +10,7 @@ typedef unique_ptr<Camera> CameraPtrU;
 typedef shared_ptr<Camera> CameraPtrS;
 typedef weak_ptr<Camera> CameraPtrW;
 
-class Camera
+class Camera : public Component
 {
 public:
 
@@ -22,7 +22,7 @@ public:
 
 	const Transform& getWorldPosition() const;
 	mat4 getView() const;
-	const Transform& getProjection() const;
+	const mat4 & getProjection() const;
 
 	mat4 getProjectionView() const;
 
@@ -36,8 +36,7 @@ protected:
 
 	static Camera *s_mainCamera;
 
-	const TransformPtrU m_worldTransform = make_unique<Transform>();
-	const TransformPtrU m_projectionTransform = make_unique<Transform>();
+	const mat4PtrU m_projectionTransform = make_unique<mat4>();
 
 	const vec3PtrU m_rotation = make_unique<vec3>();
 

@@ -16,6 +16,7 @@ public:
 
 	FlyCamera();
 
+	void init() override;
 	void update(const float &deltaTime) const override;
 
 	~FlyCamera();

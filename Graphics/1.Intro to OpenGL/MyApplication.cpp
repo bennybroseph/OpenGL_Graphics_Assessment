@@ -37,12 +37,15 @@ int MyApplication::startup()
 	Inspector::init();
 
 	// setup some camera stuff
-	m_camera = make_unique<FlyCamera>();
+	m_camera = make_unique<GameObject>();
+	m_camera->setName("Main Camera");
+	m_camera->addComponent<FlyCamera>();
 
-	m_light.reset(new DirectionalLight);
-	m_light->m_transform->setPosition(vec3(0.f, 5.f, 0.f));
-	m_light->m_transform->rotate(45.f, vec3(1.f, 0.f, 0.f));
-	*m_light->m_diffuse = vec3(1.f, 1.f, 1.f);
+	m_light = make_unique<GameObject>();
+	m_light->setName("Directional Light");
+	m_light->addComponent<DirectionalLight>();
+	m_light->transform()->setPosition(vec3(0.f, 5.f, 0.f));
+	m_light->transform()->rotate(45.f, vec3(1.f, 0.f, 0.f));
 
 	m_sun = make_unique<GameObject>();
 	m_sun->setName("Sun");
@@ -150,7 +153,7 @@ void MyApplication::update()
 {
 	//m_light->m_transform.rotate(15.f * m_deltaTime, vec3(0.f, 1.f, -1.f));
 
-	m_camera->update(m_deltaTime);
+	m_camera->getComponent<FlyCamera>()->update(m_deltaTime);
 }
 
 void MyApplication::lateUpdate()
@@ -180,27 +183,22 @@ void MyApplication::drawSolarSystem() const
 	m_sun->draw();
 	m_earth->draw();
 	m_moon->draw();
+
+	m_light->draw();
 }
 
 void MyApplication::drawGui()
 {
-	m_light->draw();
-
-	m_sun->transform()->draw();
-	m_earth->transform()->draw();
-	m_moon->transform()->draw();
-
 	Inspector::drawGui();
 
 	ImGui::Begin("Test Values");
 	{
 		if (ImGui::ColorEdit3("Clear Colour", value_ptr(m_clearColour)))
 			glClearColor(m_clearColour.r, m_clearColour.g, m_clearColour.b, m_clearColour.a);
+
 		ImGui::Checkbox("Draw Grid", &m_shouldDrawGrid);
 	}
 	ImGui::End();
-
-	m_light->drawGui();
 
 	ImGui::Begin("Debug");
 	{

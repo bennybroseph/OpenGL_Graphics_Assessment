@@ -26,17 +26,19 @@ public:
 	static int init();
 	static int quit();
 
+	Shader();
+
 	int addShader(const char *path, ShaderType type) const;
+
+	const GLchar * getName() const;
+	void setName(const GLchar *newName);
 
 	static const Shader * standard();
 	static const Shader * texture();
 	static const Shader * positional();
 	static const Shader * phong();
 
-	static GLuint standardID();
-	static GLuint textureID();
-	static GLuint positionalID();
-	static GLuint phongID();
+	static const vector<Shader *> * getShaders();
 
 	GLuint programID() const;
 
@@ -49,7 +51,10 @@ private:
 	static ShaderPtrU s_positional;
 	static ShaderPtrU s_phong;
 
+	static vectorPtrU<Shader *> s_shaders;
+
 	GLuint m_programID = 0;
+	unique_ptr<GLchar> m_name = unique_ptr<GLchar>(new GLchar[255]);
 };
 
 #endif // _SHADERUTILITY_H_

@@ -66,9 +66,9 @@ namespace Gizmos
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-		glUseProgram(Shader::standardID());
+		glUseProgram(Shader::standard()->programID());
 		GLuint projectionViewUniform =
-			glGetUniformLocation(Shader::standardID(), "ProjectionViewModel");
+			glGetUniformLocation(Shader::standard()->programID(), "ProjectionViewModel");
 
 		glUniformMatrix4fv(
 			projectionViewUniform,
@@ -76,10 +76,10 @@ namespace Gizmos
 			false,
 			value_ptr(Camera::mainCamera()->getProjectionView()));
 
-		GLuint materialColor = glGetUniformLocation(Shader::standardID(), "MaterialAmbient");
+		GLuint materialColor = glGetUniformLocation(Shader::standard()->programID(), "MaterialAmbient");
 		glUniform4fv(materialColor, 1, value_ptr(colour));
 
-		materialColor = glGetUniformLocation(Shader::standardID(), "LightAmbient");
+		materialColor = glGetUniformLocation(Shader::standard()->programID(), "LightAmbient");
 		glUniform4fv(materialColor, 1, value_ptr(colour));
 
 		glBindVertexArray(VAO);

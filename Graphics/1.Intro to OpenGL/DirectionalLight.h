@@ -14,8 +14,10 @@ class DirectionalLight : public Light
 {
 public:
 
+	DirectionalLight();
+
 	void draw() const override;
-	void drawGui(const char *title = "Directional Light") const override;
+	void drawGui() const override;
 
 	~DirectionalLight();
 

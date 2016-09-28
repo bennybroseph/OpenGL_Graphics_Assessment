@@ -21,7 +21,7 @@ class Transform : public Component
 
 public:
 
-	Transform() : Component() { }
+	Transform();
 
 	void translate(const vec3 &translation);
 	/// <summary>
@@ -134,7 +134,7 @@ public:
 	const mat4 & getLocalSpaceMatrix() const;
 	void setLocalSpaceMatrix(const mat4 &newLocalSpaceMatrix);
 
-	void draw(GLfloat lineWidth = DEFAULT_LINE_WIDTH) const;
+	void drawGizmos() const override;
 	void drawGui() const override;
 
 	~Transform();
@@ -166,7 +166,7 @@ public:
 	static float getScale(const mat4 &matrix);
 	static void setScale(mat4 * matrix, GLfloat newScale);
 
-	static void draw(const mat4 &matrix, GLfloat lineWidth = DEFAULT_LINE_WIDTH);
+	static void drawGizmos(const mat4 &matrix, GLfloat lineWidth = DEFAULT_LINE_WIDTH);
 	static void drawGui(mat4 * matrix);
 
 #pragma endregion

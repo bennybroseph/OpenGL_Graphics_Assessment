@@ -28,6 +28,8 @@ public:
 
 protected:
 
+	virtual void init() { }
+
 	GameObject *m_gameObject = nullptr;
 
 };

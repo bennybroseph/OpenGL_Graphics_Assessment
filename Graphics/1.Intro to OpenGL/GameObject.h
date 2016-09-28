@@ -17,6 +17,7 @@ public:
 	GameObject();
 
 	void draw() const override;
+	void drawGizmos() const override;
 	void drawGui() const override;
 
 	template<typename T>
@@ -35,6 +36,7 @@ public:
 		if (dynamic_cast<Component *>(componentPtr.get()))
 		{
 			componentPtr->m_gameObject = this;
+			componentPtr->init();
 			m_components->push_back(std::move(componentPtr));
 			return 0;
 		}

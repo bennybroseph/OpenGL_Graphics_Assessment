@@ -1,6 +1,10 @@
 #include "Transform.h"
 
 
+Transform::Transform() : Component()
+{
+	setName("Transform");
+}
 
 // ReSharper disable once CppMemberFunctionMayBeConst
 void Transform::translate(const vec3& translation)
@@ -213,9 +217,9 @@ void Transform::setLocalSpaceMatrix(const mat4& newLocalSpaceMatrix)
 	*m_matrix = newLocalSpaceMatrix;
 }
 
-void Transform::draw(GLfloat lineWidth) const
+void Transform::drawGizmos() const
 {
-	draw(getWorldSpaceMatrix(), lineWidth);
+	drawGizmos(getWorldSpaceMatrix());
 }
 
 void Transform::drawGui() const

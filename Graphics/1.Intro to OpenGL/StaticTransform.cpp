@@ -144,7 +144,7 @@ void Transform::setScale(mat4 * matrix, GLfloat newScale)
 	*matrix *= scale;
 }
 
-void Transform::draw(const mat4 &matrix, GLfloat lineWidth)
+void Transform::drawGizmos(const mat4 &matrix, GLfloat lineWidth)
 {
 	auto endX = matrix * glm::translate(vec3(0.5f, 0.f, 0.f));
 	auto endY = matrix * glm::translate(vec3(0.f, 0.5f, 0.f));
@@ -174,10 +174,6 @@ void Transform::drawGui(mat4 *matrix)
 	auto eulerAngle = getEulerAngle(*matrix);
 	auto scale = getScale(*matrix);
 
-	ImGui::PushID(matrix);
-	{
-		if (ImGui::CollapsingHeader("Transform", nullptr, true, true))
-		{
 			if (ImGui::DragFloat3("Position", value_ptr(position), 0.01f))
 				setPosition(matrix, position);
 
@@ -198,7 +194,4 @@ void Transform::drawGui(mat4 *matrix)
 
 			if (ImGui::DragFloat("Scale", &scale, 0.01f, 0.01f, 50.f))
 				setScale(matrix, scale);
-		}
-	}
-	ImGui::PopID();
 }

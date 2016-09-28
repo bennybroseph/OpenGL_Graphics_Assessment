@@ -11,10 +11,12 @@ ShaderPtrU Shader::s_texture = unique_ptr<Shader>();
 ShaderPtrU Shader::s_positional = unique_ptr<Shader>();
 ShaderPtrU Shader::s_phong = unique_ptr<Shader>();
 
+vectorPtrU<Shader *> Shader::s_shaders = unique_ptr<vector<Shader *>>();
+
 int Shader::init()
 {
 	s_standard.reset(new Shader());
-	s_standard->m_programID = glCreateProgram();
+	s_standard->setName("Standard");
 
 	auto returnValue = s_standard->addShader("Default.vert", ShaderType::Vertex);
 	if (returnValue != 0)
@@ -24,7 +26,7 @@ int Shader::init()
 		return returnValue;
 
 	s_texture.reset(new Shader());
-	s_texture->m_programID = glCreateProgram();
+	s_texture->setName("Texture");
 
 	returnValue = s_texture->addShader("Texture.vert", ShaderType::Vertex);
 	if (returnValue != 0)
@@ -34,7 +36,7 @@ int Shader::init()
 		return returnValue;
 
 	s_positional.reset(new Shader());
-	s_positional->m_programID = glCreateProgram();
+	s_positional->setName("Positional");
 
 	returnValue = s_positional->addShader("Positional.vert", ShaderType::Vertex);
 	if (returnValue != 0)
@@ -44,7 +46,7 @@ int Shader::init()
 		return returnValue;
 
 	s_phong.reset(new Shader());
-	s_phong->m_programID = glCreateProgram();
+	s_phong->setName("Phong");
 
 	returnValue = s_phong->addShader("Default.vert", ShaderType::Vertex);
 	if (returnValue != 0)
@@ -58,17 +60,22 @@ int Shader::init()
 
 int Shader::quit()
 {
-	glDeleteProgram(s_standard->m_programID);
-	glDeleteProgram(s_texture->m_programID);
-	glDeleteProgram(s_positional->m_programID);
-	glDeleteProgram(s_phong->m_programID);
-
 	s_standard.reset();
 	s_texture.reset();
 	s_positional.reset();
 	s_phong.reset();
 
 	return 0;
+}
+
+Shader::Shader()
+{
+	if (s_shaders.get() == nullptr)
+		s_shaders.reset(new vector<Shader *>);
+
+	s_shaders->push_back(this);	// Add itself to the list of objects
+
+	m_programID = glCreateProgram();
 }
 
 int Shader::addShader(const char *path, ShaderType type) const
@@ -153,6 +160,15 @@ int Shader::addShader(const char *path, ShaderType type) const
 	return 0;
 }
 
+const GLchar * Shader::getName() const
+{
+	return m_name.get();
+}
+void Shader::setName(const GLchar *newName)
+{
+	_memccpy(m_name.get(), newName, 0, 255);
+}
+
 const Shader * Shader::standard()
 {
 	return s_standard.get();
@@ -170,21 +186,9 @@ const Shader * Shader::phong()
 	return s_phong.get();
 }
 
-GLuint Shader::standardID()
+const vector<Shader *> * Shader::getShaders()
 {
-	return s_standard->m_programID;
-}
-GLuint Shader::textureID()
-{
-	return s_texture->m_programID;
-}
-GLuint Shader::positionalID()
-{
-	return s_positional->m_programID;
-}
-GLuint Shader::phongID()
-{
-	return s_phong->m_programID;
+	return s_shaders.get();
 }
 
 GLuint Shader::programID() const
@@ -192,4 +196,12 @@ GLuint Shader::programID() const
 	return m_programID;
 }
 
-Shader::~Shader() { }
+Shader::~Shader()
+{
+	glDeleteProgram(m_programID);
+
+	s_shaders->erase(find(s_shaders->begin(), s_shaders->end(), this));	// Remove itself from the list of objects
+
+	if (s_shaders->size() == 0)
+		s_shaders.reset();
+}

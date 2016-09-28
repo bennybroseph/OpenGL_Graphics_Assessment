@@ -32,8 +32,8 @@ private:
 
 	vec2 m_screenSize = vec2(1600, 900);
 
-	CameraPtrU m_camera = nullptr;
-	LightPtrU m_light = nullptr;
+	GameObjectPtrU m_camera = nullptr;
+	GameObjectPtrU m_light = nullptr;
 
 	GameObjectPtrU m_sun = nullptr;
 	GameObjectPtrU m_earth = nullptr;

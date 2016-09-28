@@ -17,9 +17,11 @@ class Model : public Component
 {
 public:
 
-	Model() : Component() { }
+	Model();
 
 	void draw() const override;
+	void drawGizmos() const override;
+	void drawGui() const override;
 
 	const Shader * getShader() const;
 	void setShader(const Shader *newShader);

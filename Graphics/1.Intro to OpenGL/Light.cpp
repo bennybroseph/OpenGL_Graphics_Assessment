@@ -8,6 +8,8 @@ Light::Light()
 		s_lights.reset(new vector<Light *>());
 
 	s_lights->push_back(this);	// Add itself to the list of lights
+
+	setName("Light");
 }
 
 Light::~Light()

@@ -11,7 +11,7 @@ namespace Gizmos
 		glPrimitiveRestartIndex(0xFFFF);
 
 		auto radius = 0.5f;
-		auto segments = 30.f;
+		auto segments = 20.f;
 
 		m_vertexes.reset(new vector<Vertex>);
 		m_indexes.reset(new vector<GLuint>);
