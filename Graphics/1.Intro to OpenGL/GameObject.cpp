@@ -17,20 +17,14 @@ void GameObject::draw() const
 void GameObject::drawGui() const
 {
 	ImGui::PushID(this);
-	ImGui::BeginChild(m_name->c_str());
+	ImGui::BeginGroup();
 	{
-		GLchar newName[255];
-		_memccpy(newName, m_name->c_str(), 0, 255);
-
-		ImGui::InputText("Name", newName, 255, ImGuiInputTextFlags_EnterReturnsTrue);
-
-		if (ImGui::IsItemActive())
-			*m_name = newName + '\0';
+		ImGui::InputText("Name", m_name.get(), 255, ImGuiInputTextFlags_EnterReturnsTrue);
 
 		for (auto &component : *m_components)
 			component->drawGui();
 	}
-	ImGui::EndChild();
+	ImGui::EndGroup();
 	ImGui::PopID();
 }
 

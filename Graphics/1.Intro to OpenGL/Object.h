@@ -25,7 +25,7 @@ public:
 	virtual void drawGui() const { }
 
 	const GLchar * getName() const;
-	void setName(const string &newName);
+	void setName(const GLchar *newName);
 
 	GLuint getID() const;
 
@@ -58,7 +58,7 @@ public:
 
 protected:
 
-	stringPtrU m_name = make_unique<string>();
+	unique_ptr<GLchar> m_name = unique_ptr<GLchar>(new GLchar[255]);
 	const GLuint m_id = genID();
 
 private:
