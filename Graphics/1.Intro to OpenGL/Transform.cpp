@@ -18,13 +18,31 @@ void Transform::scale(const vec3 &scale)
 	*m_matrix *= glm::scale(scale);
 }
 
-Transform& Transform::getParent() const
+Transform * Transform::getParent() const
 {
-	return *m_parent;
+	return m_parent;
 }
 void Transform::setParent(Transform * newParent, GLboolean keepWorldTransformation)
 {
+	if (m_parent != nullptr)
+	{
+		auto i = 0;
+		for (auto &child : *m_parent->m_children)
+		{
+			if (child->getID() == getID())
+			{
+				m_parent->m_children->erase(m_parent->m_children->begin() + i);
+				break;
+			}
+
+			i++;
+		}
+	}
+
 	m_parent = newParent;
+
+	if (m_parent != nullptr)
+		m_parent->m_children->push_back(this);
 
 	// Makes sure the world space position, rotation and scale of the object before being parented is kept
 	if (keepWorldTransformation)
@@ -33,6 +51,11 @@ void Transform::setParent(Transform * newParent, GLboolean keepWorldTransformati
 		setEulerAngle(getLocalEulerAngle());
 		setScale(getLocalScale());
 	}
+}
+
+vector<Transform*>* Transform::getChildren() const
+{
+	return m_children.get();
 }
 
 vec3 Transform::forward() const

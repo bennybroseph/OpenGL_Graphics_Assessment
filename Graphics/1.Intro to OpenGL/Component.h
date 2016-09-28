@@ -19,15 +19,12 @@ class Component : public Object
 
 public:
 
-	explicit Component(GameObject * parent);
-
-	virtual void draw() const { }
-	virtual void drawGui() const { }
+	Component() : Object() { }
 
 	GameObject * gameObject();
 	const GameObject * gameObject() const;
 
-	virtual ~Component();
+	virtual ~Component() { }
 
 protected:
 

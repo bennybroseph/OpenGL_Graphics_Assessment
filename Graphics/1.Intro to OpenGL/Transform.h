@@ -21,7 +21,7 @@ class Transform : public Component
 
 public:
 
-	explicit Transform(GameObject * parent) : Component(parent) { }
+	Transform() : Component() { }
 
 	void translate(const vec3 &translation);
 	/// <summary>
@@ -36,13 +36,15 @@ public:
 	/// Returns a modifiable reference to the parent transform
 	/// </summary>
 	/// <returns>Modifiable reference to the parent transform</returns>
-	Transform& getParent() const;
+	Transform * getParent() const;
 	/// <summary>
 	/// Sets the parent of the transform
 	/// </summary>
 	/// <param name="newParent">The new transform to parent to</param>
 	/// <param name="keepWorldPosition">Whether or not to keep the transform's previous world space position after</param>
 	void setParent(Transform *newParent, GLboolean keepWorldPosition = true);
+
+	vector<Transform *> * getChildren() const;
 
 	vec3 forward() const;
 	vec3 back() const;
@@ -171,8 +173,10 @@ public:
 
 private:
 
-	// A pointer to the transform's parent transform pointer
-	Transform * m_parent = nullptr;
+	// A pointer to the transform's immediate parent transform
+	Transform *m_parent = nullptr;
+	// A vector which contains all of the transform's children for caching purposes
+	const vectorPtrU<Transform *> m_children = make_unique<vector<Transform *>>();
 
 	// The transform's local space matrix
 	const mat4PtrU m_matrix = make_unique<mat4>(mat4(1));

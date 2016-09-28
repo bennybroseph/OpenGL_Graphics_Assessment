@@ -36,8 +36,8 @@ protected:
 
 	static Camera *s_mainCamera;
 
-	const TransformPtrU m_worldTransform = make_unique<Transform>(nullptr);
-	const TransformPtrU m_projectionTransform = make_unique<Transform>(nullptr);
+	const TransformPtrU m_worldTransform = make_unique<Transform>();
+	const TransformPtrU m_projectionTransform = make_unique<Transform>();
 
 	const vec3PtrU m_rotation = make_unique<vec3>();
 

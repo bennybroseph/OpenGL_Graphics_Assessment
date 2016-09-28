@@ -16,13 +16,13 @@ public:
 
 	GameObject();
 
-	void draw();
-	void drawGui();
+	void draw() const override;
+	void drawGui() const override;
 
 	template<typename T>
 	int addComponent()
 	{
-		return addComponent(new T(this));
+		return addComponent(new T());
 	}
 	template<typename T>
 	int addComponent(T *component)

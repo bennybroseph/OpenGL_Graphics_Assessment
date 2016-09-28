@@ -133,7 +133,8 @@ void Model::drawModel() const
 		glBindTexture(GL_TEXTURE_2D, m_normalTexture->getHandle());
 
 		auto loc = glGetUniformLocation(m_shader->programID(), "normalMap");
-		glUniform1i(loc, 31);	}
+		glUniform1i(loc, 31);
+	}
 
 	glBindVertexArray(m_mesh->m_vao);
 	glDrawElements(m_drawType, m_mesh->m_indexes->size(), GL_UNSIGNED_INT, nullptr);
@@ -170,7 +171,7 @@ int Model::addTexture(const GLchar *path, FilteringType filteringType)
 	return 0;
 }
 // ReSharper disable once CppMemberFunctionMayBeConst
-int Model::removeTexture(GLint index)
+int Model::removeTextureAt(GLuint index)
 {
 	if (index >= m_textures->size())
 		return -1;
@@ -186,7 +187,7 @@ int Model::removeTexture(GLuint handle)
 	for (auto &texture : *m_textures)
 	{
 		if (texture->getHandle() == handle)
-			return removeTexture(i);
+			return removeTextureAt(i);
 
 		i++;
 	}

@@ -12,11 +12,11 @@ Object::Object()
 
 const GLchar * Object::getName() const
 {
-	return m_name;
+	return m_name->c_str();
 }
-void Object::setName(const GLchar *newName)
+void Object::setName(const string &newName)
 {
-	m_name = newName;
+	*m_name = newName;
 }
 
 GLuint Object::getID() const

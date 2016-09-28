@@ -16,7 +16,7 @@ namespace Gizmos
 
 	ModelPtrU Cube::create()
 	{
-		auto newModel = make_unique<Model>(nullptr);
+		auto newModel = make_unique<Model>();
 
 		newModel->m_mesh->m_vertexes = m_vertexes.get();
 		newModel->m_mesh->m_indexes = m_indexes.get();

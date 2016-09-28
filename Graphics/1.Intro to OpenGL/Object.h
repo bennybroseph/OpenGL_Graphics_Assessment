@@ -6,6 +6,12 @@
 
 #include "MasterHeader.h"
 
+class Object;
+
+typedef unique_ptr<Object> ObjectPtrU;
+typedef shared_ptr<Object> ObjectPtrS;
+typedef weak_ptr<Object> ObjectPtrW;
+
 class Object
 {
 
@@ -15,8 +21,11 @@ public:
 
 	Object();
 
+	virtual void draw() const { }
+	virtual void drawGui() const { }
+
 	const GLchar * getName() const;
-	void setName(const GLchar *newName);
+	void setName(const string &newName);
 
 	GLuint getID() const;
 
@@ -38,15 +47,18 @@ public:
 		auto objects = vector<T *>();
 
 		for (auto &object : *s_objects)
-			if (dynamic_cast<T *>(object))
-				objects.push_back(object);
+		{
+			auto returnValue = dynamic_cast<T *>(object);
+			if (returnValue)
+				objects.push_back(returnValue);
+		}
 
 		return objects;
 	}
 
 protected:
 
-	const GLchar *m_name = "";
+	stringPtrU m_name = make_unique<string>();
 	const GLuint m_id = genID();
 
 private:

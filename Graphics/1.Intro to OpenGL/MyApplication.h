@@ -5,8 +5,6 @@
 #include "BaseApplication.h"
 #include "Camera.h"
 
-#include "Planet.h"
-#include "Model.h"
 #include "Light.h"
 #include "GameObject.h"
 

@@ -10,8 +10,11 @@
 #include "Shader.h"
 #include "FlyCamera.h"
 #include "DirectionalLight.h"
+#include "Inspector.h"
 
 using std::fstream;
+
+using Editor::Inspector;
 
 const static int GRID_SIZE = 10;
 const static int GRID_SEPARATOR = 5;
@@ -31,6 +34,7 @@ int MyApplication::startup()
 	Input::init();
 	Shader::init();
 	Gizmos::init();
+	Inspector::init();
 
 	// setup some camera stuff
 	m_camera = make_unique<FlyCamera>();
@@ -42,43 +46,52 @@ int MyApplication::startup()
 
 	m_sun = make_unique<GameObject>();
 	m_sun->setName("Sun");
-	m_earth = make_unique<GameObject>();
-	m_earth->transform()->setParent(m_sun->transform(), false);
-	m_moon = make_unique<GameObject>();
-	m_moon->transform()->setParent(m_earth->transform(), false);
+	m_sun->addComponent(Gizmos::Sphere::create());
 
-	m_sun->addComponent(Gizmos::Plane::create());
 	auto model = m_sun->getComponent<Model>();
+	model->setMaterialColour(vec4(1, 1, 0, 1));
+
+	m_earth = make_unique<GameObject>();
+	m_earth->setName("Earth");
+	m_earth->transform()->setLocalPosition(vec3(2.f, 0.f, 0.f));
+	m_earth->transform()->setParent(m_sun->transform(), false);
+	m_earth->addComponent(Gizmos::Sphere::create());
+
+	model = m_earth->getComponent<Model>();
+	model->setMaterialColour(vec4(0, 1, 0, 1));
+
+	m_moon = make_unique<GameObject>();
+	m_moon->setName("Moon");
+	m_moon->transform()->setLocalPosition(vec3(1.5f, 0.f, 0.f));
+	m_moon->transform()->setParent(m_earth->transform(), false);
+	m_moon->addComponent(Gizmos::Sphere::create());
+
+	model = m_moon->getComponent<Model>();
+	model->setMaterialColour(vec4(1, 1, 1, 1));
+
+	auto newPlane = make_unique<GameObject>();
+	newPlane->setName("Test Plane");
+
+	newPlane->addComponent(Gizmos::Plane::create());
+	model = newPlane->getComponent<Model>();
 	model->setShader(Shader::texture());
 	//model->addTexture("data/textures/crate.png", FilteringType::Nearest);
 	model->setDiffuseTexture("data/textures/four_diffuse.tga", FilteringType::Linear);
 	model->setNormalTexture("data/textures/four_normal.tga", FilteringType::Linear);
 	model->setSpecularTexture("data/textures/four_specular.tga", FilteringType::Linear);
-
-	/*auto newSphere = Gizmos::Sphere::create();
-	newSphere->setShader(Shader::texture());
-	newSphere->transform()->setLocalPosition(vec3(0.f, 1.5f, 0.f));
-	newSphere->addTexture("data/textures/planets/earth_diffuse.jpg", FilteringType::Linear);
-	m_shapes->push_back(move(newSphere));*/
-
-	auto newPlane = make_unique<GameObject>();
-
-	auto plane = Gizmos::Sphere::create();
-	plane->setShader(Shader::phong());
-	plane->setMaterialColour(vec4(1));
-
-	newPlane->addComponent(move(plane));
-
-	newPlane->transform()->setLocalPosition(vec3(2.f, 0.f, 0.f));
-	newPlane->transform()->setParent(m_sun->transform());
 	m_shapes->push_back(move(newPlane));
 
-	/*auto newCube = new Cube();
-	newCube->transform().setParent(&m_sun.transform());
-	newCube->transform().setLocalPosition(vec3(1.f, 0.5f, 0.f));
-	newCube->transform().setLocalEulerAngle(vec3(45.f, 0.f, 45.f));
+	auto newSphere = make_unique<GameObject>();
+	newSphere->setName("Test Sphere");
 
-	m_shapes.push_back(newCube);*/
+	newSphere->addComponent(Gizmos::Sphere::create());
+	model = newSphere->getComponent<Model>();
+	model->setShader(Shader::phong());
+	model->setMaterialColour(vec4(1));
+
+	newSphere->transform()->setLocalPosition(vec3(-2.f, 0.f, 0.f));
+	newSphere->transform()->setParent(m_sun->transform());
+	m_shapes->push_back(move(newSphere));
 
 	return true;
 }
@@ -88,6 +101,7 @@ void MyApplication::shutdown()
 	Input::quit();
 	Shader::quit();
 	Gizmos::quit();
+	Inspector::quit();
 
 	ImGui_ImplGlfwGL3_Shutdown();
 
@@ -176,6 +190,8 @@ void MyApplication::drawGui()
 	m_earth->transform()->draw();
 	m_moon->transform()->draw();
 
+	Inspector::drawGui();
+
 	ImGui::Begin("Test Values");
 	{
 		if (ImGui::ColorEdit3("Clear Colour", value_ptr(m_clearColour)))
@@ -188,9 +204,7 @@ void MyApplication::drawGui()
 
 	ImGui::Begin("Debug");
 	{
-		m_sun->drawGui();
-		m_earth->drawGui();
-		m_moon->drawGui();
+
 	}
 	ImGui::End();
 

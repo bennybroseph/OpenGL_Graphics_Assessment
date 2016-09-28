@@ -17,9 +17,9 @@ class Model : public Component
 {
 public:
 
-	explicit Model(GameObject * parent) : Component(parent) { }
+	Model() : Component() { }
 
-	void draw() const;
+	void draw() const override;
 
 	const Shader * getShader() const;
 	void setShader(const Shader *newShader);
@@ -28,7 +28,7 @@ public:
 	void setMaterialColour(const vec4 &newColour);
 
 	int addTexture(const GLchar *path, FilteringType filteringType);
-	int removeTexture(GLint index);
+	int removeTextureAt(GLuint index);
 	int removeTexture(GLuint handle);
 
 	int setNormalTexture(const GLchar *path, FilteringType filteringType);

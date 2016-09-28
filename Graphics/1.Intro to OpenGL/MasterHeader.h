@@ -8,6 +8,8 @@
 #include <vector>
 #include <map>
 
+#include <string>
+
 #define PI glm::pi<float>()
 
 //#include <memory>
@@ -20,6 +22,21 @@ using std::shared_ptr;
 using std::make_shared;
 
 using std::weak_ptr;
+
+#endif
+
+//#include <string>
+#ifdef _STRING_
+
+using std::string;
+
+#ifdef _MEMORY_
+
+typedef unique_ptr<string> stringPtrU;
+typedef shared_ptr<string> stringPtrS;
+typedef weak_ptr<string> stringPtrW;
+
+#endif
 
 #endif
 
