@@ -45,6 +45,7 @@ public:
 	void setParent(Transform *newParent, GLboolean keepWorldPosition = true);
 
 	vector<Transform *> * getChildren() const;
+	void grabChildrenInOrder(void(*delegate)(Transform *));
 
 	vec3 forward() const;
 	vec3 back() const;

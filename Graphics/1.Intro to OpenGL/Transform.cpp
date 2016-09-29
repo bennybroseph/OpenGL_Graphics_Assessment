@@ -1,4 +1,5 @@
 #include "Transform.h"
+#include <stack>
 
 
 Transform::Transform() : Component()
@@ -26,9 +27,33 @@ Transform * Transform::getParent() const
 {
 	return m_parent;
 }
+
+void Transform::grabChildrenInOrder(void(*delegate)(Transform *))
+{
+	auto transforms = std::stack<Transform *>();
+	transforms.push(this);
+
+	auto currentTransform = transforms.top();
+	auto foundOne = false;
+	while (transforms.size() > 0)
+	{
+		for (auto &child : *currentTransform->m_children)
+		{
+			delegate(child);
+
+			transforms.push(child);
+		}
+
+		currentTransform = transforms.top();
+		transforms.pop();
+	}
+}
 void Transform::setParent(Transform * newParent, GLboolean keepWorldTransformation)
 {
-	if (m_parent != nullptr)
+	if (m_parent == newParent || m_parent == this)
+		return;
+
+	if (m_parent)
 	{
 		auto i = 0;
 		for (auto &child : *m_parent->m_children)
@@ -43,17 +68,63 @@ void Transform::setParent(Transform * newParent, GLboolean keepWorldTransformati
 		}
 	}
 
+	auto parentToChild = false;
+	if (m_children->size() > 0)
+	{
+		auto transforms = std::stack<Transform *>();
+		transforms.push(this);
+
+		auto currentTransform = transforms.top();
+		while (transforms.size() > 0)
+		{
+			for (auto &child : *currentTransform->m_children)
+			{
+				if (child == newParent)
+				{
+					parentToChild = true;
+					break;
+				}
+
+				transforms.push(child);
+			}
+			if (parentToChild)
+				break;
+
+			currentTransform = transforms.top();
+			transforms.pop();
+		}
+	}
+
+	if (parentToChild)
+	{
+		auto tempVector = *m_children;
+		for (auto &child : tempVector)
+			child->setParent(m_parent);
+
+		m_children->clear();
+	}
+
+	vec3 oldPosition;
+	vec3 oldEulerAngle;
+	GLfloat oldScale = 1.f;
+	if (keepWorldTransformation)
+	{
+		oldPosition = getPosition();
+		oldEulerAngle = getEulerAngle();
+		oldScale = getScale();
+	}
+
 	m_parent = newParent;
 
-	if (m_parent != nullptr)
+	if (m_parent)
 		m_parent->m_children->push_back(this);
 
 	// Makes sure the world space position, rotation and scale of the object before being parented is kept
 	if (keepWorldTransformation)
 	{
-		setPosition(getLocalPosition());
-		setEulerAngle(getLocalEulerAngle());
-		setScale(getLocalScale());
+		setPosition(oldPosition);
+		setEulerAngle(oldEulerAngle);
+		setScale(oldScale);
 	}
 }
 

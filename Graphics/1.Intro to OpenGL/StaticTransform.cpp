@@ -153,11 +153,23 @@ void Transform::drawGizmos(const mat4 &matrix, GLfloat lineWidth)
 	glDisable(GL_DEPTH_TEST);
 	{
 		Gizmos::drawLine(
-			getPosition(matrix), vec3(endX[3].x, endX[3].y, endX[3].z), vec4(1.f, 0.f, 0.f, 1.f), lineWidth);
+			getPosition(matrix),
+			vec3(endX[3].x, endX[3].y, endX[3].z),
+			vec4(1.f, 0.f, 0.f, 1.f),
+			vec4(1.f, 0.f, 0.f, 1.f),
+			lineWidth);
 		Gizmos::drawLine(
-			getPosition(matrix), vec3(endY[3].x, endY[3].y, endY[3].z), vec4(0.f, 1.f, 0.f, 1.f), lineWidth);
+			getPosition(matrix),
+			vec3(endY[3].x, endY[3].y, endY[3].z),
+			vec4(0.f, 1.f, 0.f, 1.f),
+			vec4(0.f, 1.f, 0.f, 1.f),
+			lineWidth);
 		Gizmos::drawLine(
-			getPosition(matrix), vec3(endZ[3].x, endZ[3].y, endZ[3].z), vec4(0.f, 0.f, 1.f, 1.f), lineWidth);
+			getPosition(matrix),
+			vec3(endZ[3].x, endZ[3].y, endZ[3].z),
+			vec4(0.f, 0.f, 1.f, 1.f),
+			vec4(0.f, 0.f, 1.f, 1.f),
+			lineWidth);
 	}
 	glEnable(GL_DEPTH_TEST);
 }
@@ -174,24 +186,24 @@ void Transform::drawGui(mat4 *matrix)
 	auto eulerAngle = getEulerAngle(*matrix);
 	auto scale = getScale(*matrix);
 
-			if (ImGui::DragFloat3("Position", value_ptr(position), 0.01f))
-				setPosition(matrix, position);
+	if (ImGui::DragFloat3("Position", value_ptr(position), 0.01f))
+		setPosition(matrix, position);
 
-			if (ImGui::DragFloat3(
-				"Rotation",
-				_currentID == nullptr || _currentID != matrix ?
-				value_ptr(eulerAngle) : value_ptr(_eulerAngle),
-				0.1f))
-			{
-				if (_currentID != matrix)
-				{
-					_currentID = matrix;
-					_eulerAngle = eulerAngle;
-				}
+	if (ImGui::DragFloat3(
+		"Rotation",
+		_currentID == nullptr || _currentID != matrix ?
+		value_ptr(eulerAngle) : value_ptr(_eulerAngle),
+		0.1f))
+	{
+		if (_currentID != matrix)
+		{
+			_currentID = matrix;
+			_eulerAngle = eulerAngle;
+		}
 
-				setEulerAngle(matrix, _eulerAngle);
-			}
+		setEulerAngle(matrix, _eulerAngle);
+	}
 
-			if (ImGui::DragFloat("Scale", &scale, 0.01f, 0.01f, 50.f))
-				setScale(matrix, scale);
+	if (ImGui::DragFloat("Scale", &scale, 0.01f, 0.01f, 50.f))
+		setScale(matrix, scale);
 }

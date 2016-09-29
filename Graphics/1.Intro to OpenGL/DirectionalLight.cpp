@@ -33,10 +33,10 @@ void DirectionalLight::draw() const
 			vec3(newStartMatrix[3].x, newStartMatrix[3].y, newStartMatrix[3].z),
 			vec3(newEndMatrix[3].x, newEndMatrix[3].y, newEndMatrix[3].z)
 		});
-	}	
+	}
 
 	for (auto line : lines)
-		Gizmos::drawLine(line.start, line.end, vec4(*m_diffuse, 1.f));
+		Gizmos::drawLine(line.start, line.end, vec4(*m_diffuse, 1.f), vec4(*m_specular, 1.f));
 }
 
 void DirectionalLight::drawGui() const

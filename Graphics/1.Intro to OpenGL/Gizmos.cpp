@@ -28,12 +28,21 @@ namespace Gizmos
 		return 0;
 	}
 	// TODO: This function is so expensive and needs to be rewritten...please only buffer once somehow
-	int drawLine(const vec3 & start, const vec3 & end, const vec4 &colour, GLfloat width)
+	int drawLine(
+		const vec3 &start,
+		const vec3 &end,
+		const vec4 &colourStart,
+		const vec4 &colourEnd,
+		GLfloat width)
 	{
+		auto parsedEnd = colourEnd;
+		if (parsedEnd == vec4(-1))
+			parsedEnd = colourStart;
+
 		vector<Vertex> vertexes =
 		{
-			{vec4(start, 1), colour},
-			{vec4(end, 1), colour}
+			{vec4(start, 1), colourStart},
+			{vec4(end, 1), parsedEnd }
 		};
 		vector<GLuint> indexes = { 0, 1 };
 
@@ -77,10 +86,10 @@ namespace Gizmos
 			value_ptr(Camera::mainCamera()->getProjectionView()));
 
 		GLuint materialColor = glGetUniformLocation(Shader::standard()->programID(), "MaterialAmbient");
-		glUniform4fv(materialColor, 1, value_ptr(colour));
+		glUniform4fv(materialColor, 1, value_ptr(colourStart));
 
 		materialColor = glGetUniformLocation(Shader::standard()->programID(), "LightAmbient");
-		glUniform4fv(materialColor, 1, value_ptr(colour));
+		glUniform4fv(materialColor, 1, value_ptr(colourStart));
 
 		glBindVertexArray(VAO);
 
