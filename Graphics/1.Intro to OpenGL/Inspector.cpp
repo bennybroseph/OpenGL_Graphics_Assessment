@@ -36,14 +36,16 @@ namespace Editor
 			{
 				if (!gameObject->transform()->getParent())
 				{
-					auto gameObjectStacks = std::stack<std::queue<GameObject *>*>();
-					auto gameObjectStack = std::queue<GameObject *>();
-					gameObjectStack.push(gameObject);
+					auto tempQueue = std::stack<unique_ptr<std::queue<GameObject *>>>();
 
-					gameObjectStacks.push(&gameObjectStack);
+					auto gameObjectStacks = std::stack<std::queue<GameObject *>*>();
+					auto gameObjectQueue = std::queue<GameObject *>();
+					gameObjectQueue.push(gameObject);
+
+					gameObjectStacks.push(&gameObjectQueue);
 
 					auto currentStack = gameObjectStacks.top();
-					auto currentObject = gameObjectStack.front();
+					auto currentObject = gameObjectQueue.front();
 
 					while (gameObjectStacks.size() > 0)
 					{
@@ -69,24 +71,16 @@ namespace Editor
 								indentLevel++;
 
 								currentStack->pop();
-								auto tempStack = new std::queue<GameObject *>();
+								tempQueue.push(make_unique<std::queue<GameObject*>>());
 								for (auto &child : *currentObject->transform()->getChildren())
-									tempStack->push(child->gameObject());
-								gameObjectStacks.push(tempStack);
+									tempQueue.top()->push(child->gameObject());
+								gameObjectStacks.push(tempQueue.top().get());
 
-								currentStack = tempStack;
-								currentObject = tempStack->front();
+								currentStack = tempQueue.top().get();
+								currentObject = tempQueue.top()->front();
 							}
 							else
 							{
-								/*if (indentLevel > 0 &&
-									collapsed &&
-									currentObject->transform()->getChildren()->size() > 0)
-								{
-									ImGui::Unindent();
-									indentLevel--;
-								}*/
-
 								currentStack->pop();
 								if (currentStack->size() > 0)
 									currentObject = currentStack->front();

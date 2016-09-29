@@ -9,6 +9,7 @@ namespace Gizmos
 		Plane::init();
 		Cube::init();
 		Sphere::init();
+		Line::init();
 
 		return 0;
 	}
@@ -35,75 +36,12 @@ namespace Gizmos
 		const vec4 &colourEnd,
 		GLfloat width)
 	{
-		auto parsedEnd = colourEnd;
-		if (parsedEnd == vec4(-1))
-			parsedEnd = colourStart;
+		auto parsedEndColour = colourEnd;
+		if (parsedEndColour == vec4(-1))
+			parsedEndColour = colourStart;
 
-		vector<Vertex> vertexes =
-		{
-			{vec4(start, 1), colourStart},
-			{vec4(end, 1), parsedEnd }
-		};
-		vector<GLuint> indexes = { 0, 1 };
-
-		GLuint VAO;
-		GLuint VBO;
-		GLuint IBO;
-
-		glGenBuffers(1, &VBO);
-		glGenBuffers(1, &IBO);
-
-		glGenVertexArrays(1, &VAO);
-		glBindVertexArray(VAO);
-
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glBufferData(GL_ARRAY_BUFFER, vertexes.size() * sizeof(Vertex), vertexes.data(), GL_STATIC_DRAW);
-
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-		glBufferData(
-			GL_ELEMENT_ARRAY_BUFFER,
-			indexes.size() * sizeof(GLuint),
-			indexes.data(),
-			GL_STATIC_DRAW);
-
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(sizeof(vec4)));
-
-		glBindVertexArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-		glUseProgram(Shader::standard()->programID());
-		GLuint projectionViewUniform =
-			glGetUniformLocation(Shader::standard()->programID(), "ProjectionViewModel");
-
-		glUniformMatrix4fv(
-			projectionViewUniform,
-			1,
-			false,
-			value_ptr(Camera::mainCamera()->getProjectionView()));
-
-		GLuint materialColor = glGetUniformLocation(Shader::standard()->programID(), "MaterialAmbient");
-		glUniform4fv(materialColor, 1, value_ptr(colourStart));
-
-		materialColor = glGetUniformLocation(Shader::standard()->programID(), "LightAmbient");
-		glUniform4fv(materialColor, 1, value_ptr(colourStart));
-
-		glBindVertexArray(VAO);
-
-		glLineWidth(width);
-		{
-			glDrawElements(GL_LINES, indexes.size(), GL_UNSIGNED_INT, nullptr);
-		}
-		glLineWidth(1.f);
-
-		// Don't forget to delete the data
-		glDeleteBuffers(1, &VBO);
-		glDeleteBuffers(1, &IBO);
-
-		glDeleteVertexArrays(1, &VAO);
+		auto newLine = Line::create(start, end, colourStart, parsedEndColour);
+		newLine->drawModel(mat4(1));
 
 		return 0;
 	}
@@ -169,7 +107,7 @@ namespace Gizmos
 		Plane::quit();
 		Cube::quit();
 		Sphere::quit();
-
+		Line::quit();
 
 		return 0;
 	}

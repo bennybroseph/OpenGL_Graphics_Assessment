@@ -23,6 +23,8 @@ public:
 	void drawGizmos() const override;
 	void drawGui() const override;
 
+	void drawModel(const mat4 &matrix) const;
+
 	const Shader * getShader() const;
 	void setShader(const Shader *newShader);
 
@@ -37,10 +39,9 @@ public:
 	int setDiffuseTexture(const GLchar *path, FilteringType filteringType);
 	int setSpecularTexture(const GLchar *path, FilteringType filteringType);
 
-
 	~Model();
 
-	MeshPtrU m_mesh = make_unique<Mesh>();
+	Mesh *m_mesh = nullptr;
 
 	mutable GLint m_drawType = GL_TRIANGLES;
 
@@ -49,8 +50,6 @@ public:
 	mutable GLboolean m_shouldDrawWireFrame = false;
 
 private:
-
-	void drawModel() const;
 
 	mutable const Shader *m_shader = Shader::standard();
 

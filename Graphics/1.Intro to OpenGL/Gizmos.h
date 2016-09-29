@@ -5,6 +5,7 @@
 #include "Plane.h"
 #include "Cube.h"
 #include "Sphere.h"
+#include "Line.h"
 
 namespace Gizmos
 {

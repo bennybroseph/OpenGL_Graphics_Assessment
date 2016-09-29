@@ -12,18 +12,17 @@ namespace Gizmos
 
 		static void init();
 
-		static ModelPtrU create();
+		static ModelPtrU create(float radius = 0.5f, float segments = 20.f);
 
 		static void quit();
 
 	private:
 
-		static void genVertexes(const float &radius, const float &segments);
+		static vectorPtrU<Vertex> genVertexes(const float &radius, const float &segments);
 		static vector<Vertex> genHalfCircle(const float &radius, const float &segments);
-		static void genIndexes(const float &radius, const float &segments);
+		static vectorPtrU<GLuint> genIndexes(const float &radius, const float &segments);
 
-		static vectorPtrU<Vertex> m_vertexes;
-		static vectorPtrU<GLuint> m_indexes;
+		static mapPtrU<string, MeshPtrU> s_meshes;
 
 	};
 }

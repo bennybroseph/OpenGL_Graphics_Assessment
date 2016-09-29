@@ -14,12 +14,12 @@ Model::Model() : Component()
 
 void Model::draw() const
 {
-	if (!m_isEnabled)
+	if (!m_isEnabled || !m_mesh)
 		return;
 
 	if (m_shouldDrawModel)
 	{
-		drawModel();
+		drawModel(gameObject()->transform()->getWorldSpaceMatrix());
 	}
 
 	if (m_shouldDrawWireFrame)
@@ -30,7 +30,7 @@ void Model::draw() const
 			auto &shader = *m_shader;
 			m_shader = Shader::standard();
 
-			drawModel();
+			drawModel(gameObject()->transform()->getWorldSpaceMatrix());
 
 			m_shader = &shader;
 		}
@@ -41,6 +41,9 @@ void Model::draw() const
 
 void Model::drawGizmos() const
 {
+	if (!m_mesh)
+		return;
+
 	glLineWidth(1.f);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	{
@@ -53,7 +56,7 @@ void Model::drawGizmos() const
 			1.f - m_materialColour->y * 1.5f,
 			1.f - m_materialColour->z * 1.5f, 1.f);
 
-		drawModel();
+		drawModel(gameObject()->transform()->getWorldSpaceMatrix());
 
 		m_shader = &shader;
 		*m_materialColour = materialColour;
@@ -100,7 +103,7 @@ void Model::drawGui() const
 		m_shouldDrawWireFrame = shouldDrawWireFrame;
 }
 
-void Model::drawModel() const
+void Model::drawModel(const mat4 &matrix) const
 {
 	glUseProgram(m_shader->programID());
 
@@ -109,13 +112,13 @@ void Model::drawModel() const
 		matUniform,
 		1,
 		false,
-		value_ptr(Camera::mainCamera()->getProjectionView() * m_gameObject->transform()->getWorldSpaceMatrix()));
+		value_ptr(Camera::mainCamera()->getProjectionView() * matrix));
 
 	// bind the model matrix
 	matUniform = glGetUniformLocation(m_shader->programID(), "ModelMatrix");
-	glUniformMatrix4fv(matUniform, 1, GL_FALSE, &m_gameObject->transform()->getWorldSpaceMatrix()[0][0]);
+	glUniformMatrix4fv(matUniform, 1, GL_FALSE, &matrix[0][0]);
 
-	auto normalMatrix = inverse(m_gameObject->transform()->getWorldSpaceMatrix());
+	auto normalMatrix = inverse(matrix);
 	// bind the normal matrix (make it transposed)
 	matUniform = glGetUniformLocation(m_shader->programID(), "NormalMatrix");
 	glUniformMatrix4fv(matUniform, 1, GL_TRUE, &normalMatrix[0][0]);

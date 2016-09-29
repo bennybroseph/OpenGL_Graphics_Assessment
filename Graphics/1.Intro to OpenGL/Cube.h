@@ -21,8 +21,7 @@ namespace Gizmos
 		static void genVertexes();
 		static void genIndexes();
 
-		static vectorPtrU<Vertex> m_vertexes;
-		static vectorPtrU<GLuint> m_indexes;
+		static MeshPtrU s_mesh;
 
 	};
 }

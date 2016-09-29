@@ -49,7 +49,7 @@ int MyApplication::startup()
 
 	m_sun = make_unique<GameObject>();
 	m_sun->setName("Sun");
-	m_sun->addComponent(Gizmos::Sphere::create());
+	m_sun->addComponent(Gizmos::Sphere::create(3.f, 100.f));
 
 	auto model = m_sun->getComponent<Model>();
 	model->setMaterialColour(vec4(1, 1, 0, 1));
@@ -75,7 +75,7 @@ int MyApplication::startup()
 	auto newPlane = make_unique<GameObject>();
 	newPlane->setName("Test Plane");
 
-	newPlane->addComponent(Gizmos::Plane::create());
+	newPlane->addComponent(Gizmos::Plane::createModel());
 	model = newPlane->getComponent<Model>();
 	model->setShader(Shader::texture());
 	//model->addTexture("data/textures/crate.png", FilteringType::Nearest);

@@ -29,6 +29,7 @@ using std::weak_ptr;
 #ifdef _STRING_
 
 using std::string;
+using std::to_string;
 
 #ifdef _MEMORY_
 

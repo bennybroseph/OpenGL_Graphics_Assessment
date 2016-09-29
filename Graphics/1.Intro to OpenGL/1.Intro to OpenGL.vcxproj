@@ -142,6 +142,7 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Inspector.cpp" />
     <ClCompile Include="Light.cpp" />
+    <ClCompile Include="Line.cpp" />
     <ClCompile Include="Math.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="MyApplication.cpp" />
@@ -171,6 +172,7 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="Inspector.h" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="Line.h" />
     <ClInclude Include="MasterHeader.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="Model.h" />
@@ -185,6 +187,8 @@
     <ClInclude Include="Transform.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Basic.frag" />
+    <None Include="Basic.vert" />
     <None Include="Default.frag">
       <DeploymentContent>true</DeploymentContent>
     </None>

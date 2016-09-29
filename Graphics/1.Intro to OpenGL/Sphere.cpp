@@ -2,40 +2,45 @@
 
 namespace Gizmos
 {
-	vectorPtrU<Vertex> Sphere::m_vertexes = unique_ptr<vector<Vertex>>();
-	vectorPtrU<GLuint> Sphere::m_indexes = unique_ptr<vector<GLuint>>();
+	mapPtrU<string, MeshPtrU> Sphere::s_meshes = mapPtrU<string, MeshPtrU>();
 
 	void Sphere::init()
 	{
 		glEnable(GL_PRIMITIVE_RESTART);
 		glPrimitiveRestartIndex(0xFFFF);
 
-		auto radius = 0.5f;
-		auto segments = 20.f;
+		s_meshes.reset(new map <string, MeshPtrU>);
 
-		m_vertexes.reset(new vector<Vertex>);
-		m_indexes.reset(new vector<GLuint>);
-
-		genVertexes(radius, segments);
-		genIndexes(segments, segments);
+		create();
 	}
 
-	ModelPtrU Sphere::create()
+	ModelPtrU Sphere::create(float radius, float segments)
 	{
 		auto newModel = make_unique<Model>();
 
-		newModel->m_mesh->m_vertexes = m_vertexes.get();
-		newModel->m_mesh->m_indexes = m_indexes.get();
-		newModel->m_mesh->genBuffers();
+		auto key = to_string(radius) + ' ' + to_string(segments);
 
+		auto iter = s_meshes->find(key);
+		if (iter == s_meshes->end())
+		{
+			auto lineMesh = new Mesh();
+
+			lineMesh->m_vertexes = genVertexes(radius, segments);
+			lineMesh->m_indexes = genIndexes(segments, segments);
+			lineMesh->genBuffers();
+
+			s_meshes->insert_or_assign(key, MeshPtrU(lineMesh));
+		}
+
+		newModel->m_mesh = (*s_meshes)[key].get();
 		newModel->m_drawType = GL_TRIANGLE_STRIP;
 
 		return newModel;
 	}
 
-	void Sphere::genVertexes(const float &radius, const float &segments)
+	vectorPtrU<Vertex> Sphere::genVertexes(const float &radius, const float &segments)
 	{
-		m_vertexes->clear();
+		auto vertexes = make_unique<vector<Vertex>>();
 
 		auto halfCircle = genHalfCircle(radius, segments);
 		for (auto i = 0.f; i <= segments; ++i)
@@ -55,9 +60,11 @@ namespace Gizmos
 				vertex.textureUV.x = 0.5f + atan2(d.z, d.x) / (2 * PI);
 				vertex.textureUV.y = 0.5f - asin(d.y) / PI;
 
-				m_vertexes->push_back(vertex);
+				vertexes->push_back(vertex);
 			}
 		}
+
+		return vertexes;
 	}
 
 	vector<Vertex> Sphere::genHalfCircle(const float &radius, const float &points)
@@ -76,9 +83,9 @@ namespace Gizmos
 		return vertexes;
 	}
 
-	void Sphere::genIndexes(const float &segments, const float &points)
+	vectorPtrU<GLuint> Sphere::genIndexes(const float &segments, const float &points)
 	{
-		m_indexes->clear();
+		auto indexes = make_unique<vector<GLuint>>();
 
 		//j=np-1
 		//
@@ -93,17 +100,18 @@ namespace Gizmos
 			{
 				auto botR = static_cast<GLuint>(start + points + j);
 				auto botL = start + j;
-				m_indexes->push_back(botL);
-				m_indexes->push_back(botR);
+				indexes->push_back(botL);
+				indexes->push_back(botR);
 			}
 			GLuint restart = 0xFFFF;
-			m_indexes->push_back(restart);
+			indexes->push_back(restart);
 		} //we copied the origin whenever we rotated around nm + 1 times so we don't need to get the end again
+
+		return indexes;
 	}
 
 	void Sphere::quit()
 	{
-		m_vertexes.reset();
-		m_indexes.reset();
+		s_meshes.reset();
 	}
 }

@@ -34,6 +34,7 @@ public:
 	void setName(const GLchar *newName);
 
 	static const Shader * standard();
+	static const Shader * basic();
 	static const Shader * texture();
 	static const Shader * positional();
 	static const Shader * phong();
@@ -47,6 +48,7 @@ public:
 private:
 
 	static ShaderPtrU s_standard;
+	static ShaderPtrU s_basic;
 	static ShaderPtrU s_texture;
 	static ShaderPtrU s_positional;
 	static ShaderPtrU s_phong;

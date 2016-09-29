@@ -35,8 +35,8 @@ public:
 
 	~Mesh();
 
-	const vector<Vertex> *m_vertexes = nullptr;
-	const vector<GLuint> *m_indexes = nullptr;
+	vectorPtrU<Vertex> m_vertexes = vectorPtrU<Vertex>();
+	vectorPtrU<GLuint> m_indexes = vectorPtrU<GLuint>();
 
 	GLuint m_vao = 0;
 	GLuint m_vbo = 0;

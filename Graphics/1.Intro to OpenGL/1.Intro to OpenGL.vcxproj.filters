@@ -153,6 +153,9 @@
     <ClCompile Include="..\dep\imgui\imgui_demo.cpp">
       <Filter>Source Files\Library</Filter>
     </ClCompile>
+    <ClCompile Include="Line.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Transform.h">
@@ -236,6 +239,9 @@
     <ClInclude Include="Inspector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Line.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Default.frag">
@@ -255,6 +261,12 @@
     </None>
     <None Include="Texture.vert">
       <Filter>Resource Files\Vertex Shader</Filter>
+    </None>
+    <None Include="Basic.vert">
+      <Filter>Resource Files\Vertex Shader</Filter>
+    </None>
+    <None Include="Basic.frag">
+      <Filter>Resource Files\Fragment Shader</Filter>
     </None>
   </ItemGroup>
 </Project>

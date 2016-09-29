@@ -7,6 +7,7 @@ using std::fstream;
 using std::string;
 
 ShaderPtrU Shader::s_standard = unique_ptr<Shader>();
+ShaderPtrU Shader::s_basic = unique_ptr<Shader>();
 ShaderPtrU Shader::s_texture = unique_ptr<Shader>();
 ShaderPtrU Shader::s_positional = unique_ptr<Shader>();
 ShaderPtrU Shader::s_phong = unique_ptr<Shader>();
@@ -22,6 +23,16 @@ int Shader::init()
 	if (returnValue != 0)
 		return returnValue;
 	returnValue = s_standard->addShader("Default.frag", ShaderType::Fragment);
+	if (returnValue != 0)
+		return returnValue;
+
+	s_basic.reset(new Shader());
+	s_basic->setName("Basic");
+
+	returnValue = s_basic->addShader("Basic.vert", ShaderType::Vertex);
+	if (returnValue != 0)
+		return returnValue;
+	returnValue = s_basic->addShader("Basic.frag", ShaderType::Fragment);
 	if (returnValue != 0)
 		return returnValue;
 
@@ -172,6 +183,10 @@ void Shader::setName(const GLchar *newName)
 const Shader * Shader::standard()
 {
 	return s_standard.get();
+}
+const Shader * Shader::basic()
+{
+	return s_basic.get();
 }
 const Shader * Shader::texture()
 {

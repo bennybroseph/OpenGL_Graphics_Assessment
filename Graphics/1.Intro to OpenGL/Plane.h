@@ -12,7 +12,8 @@ namespace Gizmos
 
 		static void init();
 
-		static ModelPtrU create();
+		static ModelPtrU createModel();
+		static MeshPtrU createMesh();
 
 		static void quit();
 
@@ -21,8 +22,7 @@ namespace Gizmos
 		static void genVertexes();
 		static void genIndexes();
 
-		static vectorPtrU<Vertex> m_vertexes;
-		static vectorPtrU<GLuint> m_indexes;
+		static MeshPtrU s_mesh;
 
 	};
 }
