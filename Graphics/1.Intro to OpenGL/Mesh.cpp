@@ -3,23 +3,44 @@
 #include "Camera.h"
 
 
-void Mesh::drawMesh(const vec4 &colour, const mat4 &matrix, GLuint shader, GLuint drawType) const
+void Mesh::drawMesh(
+	const mat4 &matrix,
+	const vec4 &colour,
+	GLboolean drawMesh,
+	GLboolean drawWireFrame,
+	GLuint drawType) const
 {
-	glUseProgram(shader);
+	glUseProgram(Shader::basic()->programID());
 
-	unsigned int matUniform = glGetUniformLocation(shader, "ProjectionViewModel");
+	GLuint matUniform = glGetUniformLocation(Shader::basic()->programID(), "ProjectionViewModel");
 	glUniformMatrix4fv(
 		matUniform,
 		1,
 		false,
 		value_ptr(Camera::mainCamera()->getProjectionView() * matrix));
 
-	// bind material
-	unsigned int materialUniform = glGetUniformLocation(shader, "MaterialAmbient");
-	glUniform4fv(materialUniform, 1, &colour[0]);
+	if (drawMesh)
+	{
+		// bind colour
+		GLuint materialUniform = glGetUniformLocation(Shader::basic()->programID(), "MaterialAmbient");
+		glUniform4fv(materialUniform, 1, &colour[0]);
 
-	glBindVertexArray(m_vao);
-	glDrawElements(drawType, m_indexes->size(), GL_UNSIGNED_INT, nullptr);
+		glBindVertexArray(m_vao);
+		glDrawElements(drawType, m_indexes->size(), GL_UNSIGNED_INT, nullptr);
+	}
+	if (drawWireFrame)
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		{
+			// bind colour
+			GLuint materialUniform = glGetUniformLocation(Shader::basic()->programID(), "MaterialAmbient");
+			glUniform4fv(materialUniform, 1, &vec4(1.f, 1.f, 1.f, 1.f)[0]);
+
+			glBindVertexArray(m_vao);
+			glDrawElements(drawType, m_indexes->size(), GL_UNSIGNED_INT, nullptr);
+		}
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
 
 	glBindVertexArray(0);
 }

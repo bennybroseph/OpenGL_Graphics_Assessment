@@ -33,9 +33,10 @@ class Mesh
 public:
 
 	void drawMesh(
+		const mat4 &matrix,
 		const vec4 &colour,
-		const mat4 &matrix = mat4(1),
-		GLuint shader = Shader::basic()->programID(),
+		GLboolean drawMesh = 1,
+		GLboolean drawWireFrame = 1,
 		GLuint drawType = GL_TRIANGLES) const;
 
 	void genBuffers();

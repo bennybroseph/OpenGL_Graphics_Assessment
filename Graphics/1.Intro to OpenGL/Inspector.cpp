@@ -17,7 +17,7 @@ namespace Editor
 	{
 		if (s_selected)
 		{
-			ImGui::Begin("Inspector");
+			ImGui::Begin("Inspector", nullptr, ImGuiWindowFlags_NoMove);
 			{
 				s_selected->drawGizmos();
 				s_selected->drawGui();
@@ -25,11 +25,13 @@ namespace Editor
 			ImGui::End();
 		}
 
-		ImGui::Begin("Hierarchy");
+		ImGui::Begin("Hierarchy", nullptr, ImGuiWindowFlags_NoMove);
 		{
 			static GameObject *draggedObject = nullptr;
 			static auto dragging = false;
 			static GameObject *hoveringObject = nullptr;
+
+			ImGui::Indent();
 
 			auto indentLevel = 0;
 			for (auto &gameObject : Object::findObjectsOfType<GameObject>())
@@ -51,10 +53,26 @@ namespace Editor
 					{
 						while (currentStack->size() > 0)
 						{
-							auto collapsed = ImGui::CollapsingHeader(
-								currentObject->getName(),
-								nullptr,
-								s_selected == currentObject ? true : false);
+							auto collapsed = false;
+							auto selected = s_selected == currentObject;
+
+							ImGui::PushStyleColor(ImGuiCol_HeaderHovered, ImVec4(0.f, 0.f, 0.f, 0.f));
+							ImGui::PushStyleColor(ImGuiCol_HeaderActive, ImVec4(0.f, 0.f, 0.f, 0.f));
+							if (selected)
+								ImGui::PushStyleColor(ImGuiCol_Text, ImColor(143, 143, 200));
+
+							if (currentObject->transform()->getChildren()->size() > 0)
+							{
+								ImGui::Unindent();
+								collapsed = ImGui::CollapsingHeader(currentObject->getName(), nullptr, false);
+								ImGui::Indent();
+							}
+							else
+								ImGui::Text(currentObject->getName());
+
+							if (selected)
+								ImGui::PopStyleColor();
+							ImGui::PopStyleColor(2);
 
 							if (ImGui::IsItemHovered())
 								hoveringObject = currentObject;
@@ -62,7 +80,7 @@ namespace Editor
 							if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(1))
 								s_selected = currentObject;
 
-							if (ImGui::IsItemHovered() && ImGui::IsMouseDragging())
+							if (ImGui::IsItemHovered() && ImGui::IsMouseDragging() && !dragging)
 								draggedObject = currentObject;
 
 							if (collapsed && currentObject->transform()->getChildren()->size() > 0)

@@ -26,22 +26,32 @@ class Texture
 public:
 
 	Texture() = default;
-	Texture(const GLchar *path, FilteringType filteringType);
+	Texture(const GLchar *path, FilteringType filteringType, const GLchar * name);
+
+	void drawGui();
 
 	GLuint getHandle() const;
 	int setTexture(const GLchar *path);
 
+	const GLchar * getName() const;
+	void setName(const GLchar *newName) const;
+
 	FilteringType getFiltering() const;
-	int setFiltering(FilteringType filteringType);
+	int setFiltering(FilteringType filteringType) const;
 
 	~Texture();
 
 private:
 
+	unique_ptr<GLchar[]> m_name = make_unique<GLchar[]>(255);
 	GLuint m_handle = 0;
 
-	const GLchar *m_path = "";
-	FilteringType m_filtering = FilteringType::Nearest;
+	unique_ptr<GLchar[]> m_path = make_unique<GLchar[]>(255);
+	mutable FilteringType m_filtering = FilteringType::Nearest;
+
+	GLint m_imageWidth = 0;
+	GLint m_imageHeight = 0;
+	GLint m_imageFormat = 0;
 
 };
 

@@ -30,7 +30,7 @@ int MyApplication::startup()
 
 	io.DisplaySize.x = m_screenSize.x;
 	io.DisplaySize.y = m_screenSize.y;
-
+	
 	Input::init();
 	Shader::init();
 	Gizmos::init();
@@ -49,7 +49,7 @@ int MyApplication::startup()
 
 	m_sun = make_unique<GameObject>();
 	m_sun->setName("Sun");
-	m_sun->addComponent(Gizmos::Sphere::create(3.f, 100.f));
+	m_sun->addComponent(Gizmos::Sphere::create());
 
 	auto model = m_sun->getComponent<Model>();
 	model->setMaterialColour(vec4(1, 1, 0, 1));
@@ -78,7 +78,7 @@ int MyApplication::startup()
 	newPlane->addComponent(Gizmos::Plane::createModel());
 	model = newPlane->getComponent<Model>();
 	model->setShader(Shader::texture());
-	//model->addTexture("data/textures/crate.png", FilteringType::Nearest);
+	model->addTexture("data/textures/crate.png", FilteringType::Nearest);
 	model->setDiffuseTexture("data/textures/four_diffuse.tga", FilteringType::Linear);
 	model->setNormalTexture("data/textures/four_normal.tga", FilteringType::Linear);
 	model->setSpecularTexture("data/textures/four_specular.tga", FilteringType::Linear);
@@ -151,8 +151,6 @@ void MyApplication::parseInput()
 
 void MyApplication::update()
 {
-	//m_light->m_transform.rotate(15.f * m_deltaTime, vec3(0.f, 1.f, -1.f));
-
 	m_camera->getComponent<FlyCamera>()->update(m_deltaTime);
 }
 
@@ -172,7 +170,6 @@ void MyApplication::draw()
 	for (auto &shape : *m_shapes)
 		shape->draw();
 
-	Gizmos::drawSphere(mat4(1), vec4(1));
 	drawSolarSystem();
 
 	if (m_shouldDrawGui)

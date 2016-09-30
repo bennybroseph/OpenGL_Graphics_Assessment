@@ -1,7 +1,12 @@
 #include "Sphere.h"
 
+
+
 namespace Gizmos
 {
+	const GLfloat Sphere::DEFAULT_RADIUS = 0.5f;
+	const GLfloat Sphere::DEFAULT_SEGMENTS = 25.f;
+
 	mapPtrU<string, MeshPtrU> Sphere::s_meshes = mapPtrU<string, MeshPtrU>();
 
 	void Sphere::init()
@@ -11,7 +16,7 @@ namespace Gizmos
 
 		s_meshes.reset(new map <string, MeshPtrU>);
 
-		create();
+		createMeshIfNeeded();
 	}
 
 	ModelPtrU Sphere::create(float radius, float segments)

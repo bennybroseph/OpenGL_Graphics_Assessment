@@ -44,7 +44,8 @@ namespace Gizmos
 
 	string Line::createKey(const vec3& start, const vec3& end, const vec4& colourStart, const vec4& colourEnd)
 	{
-		return '(' + to_string(start.x) + ", " + to_string(start.y) + ", " + to_string(start.z) + ')' +
+		return
+			'(' + to_string(start.x) + ", " + to_string(start.y) + ", " + to_string(start.z) + ')' +
 			'(' + to_string(end.x) + ", " + to_string(end.y) + ", " + to_string(end.z) + ')' +
 			'(' + to_string(colourStart.r) + ", " + to_string(colourStart.g) + ", "
 			+ to_string(colourStart.b) + ", " + to_string(colourStart.a) + ')' +
@@ -94,7 +95,7 @@ namespace Gizmos
 		});
 		vertexes->push_back(
 		{
-			vec4(end.x, end.x, end.x, 1.f),
+			vec4(end.x, end.y, end.z, 1.f),
 			vec4(colourEnd.r, colourEnd.g, colourEnd.b, colourEnd.a),
 			vec4(0.f, 1.f, 0.f, 0.f),
 			vec4(1.f, 0.f, 0.f, 0.f),

@@ -10,6 +10,10 @@
 Model::Model() : Component()
 {
 	setName("Model");
+
+	m_normalTexture->setName("Normal Map");
+	m_diffuseTexture->setName("Diffuse Texture");
+	m_specularTexture->setName("Specular Map");
 }
 
 void Model::draw() const
@@ -21,18 +25,12 @@ void Model::draw() const
 	{
 		drawModel(gameObject()->transform()->getWorldSpaceMatrix());
 	}
-
 	if (m_shouldDrawWireFrame)
 	{
 		glLineWidth(1.5f);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		{
-			auto &shader = *m_shader;
-			m_shader = Shader::standard();
-
 			drawModel(gameObject()->transform()->getWorldSpaceMatrix());
-
-			m_shader = &shader;
 		}
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glLineWidth(1.f);
@@ -101,6 +99,23 @@ void Model::drawGui() const
 	ImGui::SameLine();
 	if (ImGui::Checkbox("Draw WireFrame", &shouldDrawWireFrame))
 		m_shouldDrawWireFrame = shouldDrawWireFrame;
+
+	if (ImGui::CollapsingHeader("Textures", nullptr, false))
+	{
+		ImGui::Indent();
+		{
+			for (auto &texture : *m_textures)
+				texture->drawGui();
+
+			ImGui::Spacing();
+			ImGui::Spacing();
+
+			m_diffuseTexture->drawGui();
+			m_normalTexture->drawGui();
+			m_specularTexture->drawGui();
+		}
+		ImGui::Unindent();
+	}
 }
 
 void Model::drawModel(const mat4 &matrix) const
@@ -232,9 +247,17 @@ void Model::setMaterialColour(const vec4& newColour)
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst
-int Model::addTexture(const GLchar *path, FilteringType filteringType)
+int Model::addTexture(const GLchar *path, FilteringType filteringType, const GLchar *name)
 {
-	m_textures->push_back(make_unique<Texture>(path, filteringType));
+	auto parsedName = name;
+	string tempString;
+	if (strcmp(parsedName, "") == 0)
+	{
+		tempString = "Texture " + to_string(m_textures->size() + 1);
+		parsedName = tempString.c_str();
+	}
+
+	m_textures->push_back(make_unique<Texture>(path, filteringType, parsedName));
 
 	return 0;
 }
@@ -265,19 +288,22 @@ int Model::removeTexture(GLuint handle)
 
 int Model::setNormalTexture(const GLchar *path, FilteringType filteringType)
 {
-	m_normalTexture.reset(new Texture(path, filteringType));
+	m_normalTexture->setTexture(path);
+	m_normalTexture->setFiltering(filteringType);
 
 	return 0;
 }
 int Model::setDiffuseTexture(const GLchar *path, FilteringType filteringType)
 {
-	m_diffuseTexture.reset(new Texture(path, filteringType));
+	m_diffuseTexture->setTexture(path);
+	m_diffuseTexture->setFiltering(filteringType);
 
 	return 0;
 }
 int Model::setSpecularTexture(const GLchar *path, FilteringType filteringType)
 {
-	m_specularTexture.reset(new Texture(path, filteringType));
+	m_specularTexture->setTexture(path);
+	m_specularTexture->setFiltering(filteringType);
 
 	return 0;
 }

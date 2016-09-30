@@ -11,7 +11,9 @@ namespace Gizmos
 {
 	int init();
 
-	int drawSphere(const mat4 &transform, const vec4 &colour, GLboolean drawWireFrame = false);
+	int drawCube(const mat4 &transform, const vec4 &colour, GLboolean drawWireFrame = true);
+	int drawPlane(const mat4 &transform, const vec4 &colour, GLboolean drawWireFrame = true);
+	int drawSphere(const mat4 &transform, const vec4 &colour, GLboolean drawWireFrame = true);
 	// TODO: This function is so expensive...please only buffer once somehow
 	int drawLine(
 		const vec3 &start,

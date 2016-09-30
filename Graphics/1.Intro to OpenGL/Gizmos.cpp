@@ -14,14 +14,39 @@ namespace Gizmos
 		return 0;
 	}
 
-	int drawSphere(const mat4 &transform, const vec4 &colour, GLboolean drawWireFrame)
+	int drawCube(const mat4 &transform, const vec4 &colour, GLboolean drawWireFrame)
 	{
-		auto newSphere = Sphere::getMesh();
-		newSphere->drawMesh(colour, transform, Shader::basic()->programID(), GL_TRIANGLE_STRIP);
+		auto newCube = Cube::getMesh();
+		if (!newCube)
+			return -1;
+
+		newCube->drawMesh(transform, colour, true, drawWireFrame, GL_TRIANGLE_STRIP);
 
 		return 0;
 	}
-	// TODO: This function is so expensive and needs to be rewritten...please only buffer once somehow
+
+	int drawPlane(const mat4 &transform, const vec4 &colour, GLboolean drawWireFrame)
+	{
+		auto newPlane = Plane::getMesh();
+		if (!newPlane)
+			return -1;
+
+		newPlane->drawMesh(transform, colour, true, drawWireFrame, GL_TRIANGLES);
+
+		return 0;
+	}
+
+	int drawSphere(const mat4 &transform, const vec4 &colour, GLboolean drawWireFrame)
+	{
+		auto newSphere = Sphere::getMesh();
+		if (!newSphere)
+			return -1;
+
+		newSphere->drawMesh(transform, colour, true, drawWireFrame, GL_TRIANGLE_STRIP);
+
+		return 0;
+	}
+	// TODO: This function is so expensive and needs to be rewritten...
 	int drawLine(
 		const vec3 &start,
 		const vec3 &end,
@@ -33,12 +58,19 @@ namespace Gizmos
 		if (parsedEndColour == vec4(-1))
 			parsedEndColour = colourStart;
 
-		auto newLine = Line::create(start, end, colourStart, parsedEndColour);
-		newLine->drawModel(mat4(1));
+		auto newLine = Line::getMesh(start, end, colourStart, parsedEndColour);
+		if (!newLine)
+			return -1;
+
+		glLineWidth(width);
+		{
+			newLine->drawMesh(mat4(1), vec4(1), false, true, GL_LINES);
+		}
+		glLineWidth(1.f);
 
 		return 0;
 	}
-
+	// TODO: This function is so expensive and needs to be rewritten...
 	int drawGrid(const vec3 &center, const vec2 &spacing, const vec2 &segments, GLfloat lineWidth)
 	{
 		struct Line

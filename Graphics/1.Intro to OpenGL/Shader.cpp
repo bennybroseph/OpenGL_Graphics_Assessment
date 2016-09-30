@@ -72,6 +72,7 @@ int Shader::init()
 int Shader::quit()
 {
 	s_standard.reset();
+	s_basic.reset();
 	s_texture.reset();
 	s_positional.reset();
 	s_phong.reset();
@@ -84,9 +85,9 @@ Shader::Shader()
 	if (s_shaders.get() == nullptr)
 		s_shaders.reset(new vector<Shader *>);
 
-	s_shaders->push_back(this);	// Add itself to the list of objects
-
 	m_programID = glCreateProgram();
+
+	s_shaders->push_back(this);	// Add itself to the list of objects
 }
 
 int Shader::addShader(const char *path, ShaderType type) const

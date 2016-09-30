@@ -31,7 +31,7 @@ public:
 	const vec4 & getMaterialColour() const;
 	void setMaterialColour(const vec4 &newColour);
 
-	int addTexture(const GLchar *path, FilteringType filteringType);
+	int addTexture(const GLchar *path, FilteringType filteringType, const GLchar *name = "");
 	int removeTextureAt(GLuint index);
 	int removeTexture(GLuint handle);
 

@@ -14,7 +14,7 @@ const GLchar * Object::getName() const
 {
 	return m_name.get();
 }
-void Object::setName(const GLchar *newName)
+void Object::setName(const GLchar *newName) const
 {
 	_memccpy(m_name.get(), newName, 0, 255);
 }

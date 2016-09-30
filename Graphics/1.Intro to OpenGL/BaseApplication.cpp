@@ -16,7 +16,7 @@ int BaseApplication::createWindow(const char * title, int width, int height)
 	}
 
 	glfwMakeContextCurrent(m_window);
-	glfwSwapInterval(1);
+	glfwSwapInterval(0);
 
 	// the rest of our code goes here!
 	if (ogl_LoadFunctions() == ogl_LOAD_FAILED)
