@@ -1,5 +1,28 @@
 #include "Mesh.h"
 
+#include "Camera.h"
+
+
+void Mesh::drawMesh(const vec4 &colour, const mat4 &matrix, GLuint shader, GLuint drawType) const
+{
+	glUseProgram(shader);
+
+	unsigned int matUniform = glGetUniformLocation(shader, "ProjectionViewModel");
+	glUniformMatrix4fv(
+		matUniform,
+		1,
+		false,
+		value_ptr(Camera::mainCamera()->getProjectionView() * matrix));
+
+	// bind material
+	unsigned int materialUniform = glGetUniformLocation(shader, "MaterialAmbient");
+	glUniform4fv(materialUniform, 1, &colour[0]);
+
+	glBindVertexArray(m_vao);
+	glDrawElements(drawType, m_indexes->size(), GL_UNSIGNED_INT, nullptr);
+
+	glBindVertexArray(0);
+}
 
 void Mesh::genBuffers()
 {

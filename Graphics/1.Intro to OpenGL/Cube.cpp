@@ -24,6 +24,11 @@ namespace Gizmos
 		return newModel;
 	}
 
+	const Mesh* Cube::getMesh()
+	{
+		return s_mesh.get();
+	}
+
 	void Cube::genVertexes()
 	{
 		s_mesh->m_vertexes.reset(new vector<Vertex>);

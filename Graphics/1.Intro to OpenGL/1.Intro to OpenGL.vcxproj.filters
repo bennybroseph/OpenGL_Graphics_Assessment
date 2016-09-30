@@ -154,7 +154,7 @@
       <Filter>Source Files\Library</Filter>
     </ClCompile>
     <ClCompile Include="Line.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Gizmos\Shapes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -240,7 +240,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Line.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Gizmos\Shapes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

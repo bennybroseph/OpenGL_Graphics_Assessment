@@ -13,10 +13,14 @@ namespace Gizmos
 		static void init();
 
 		static ModelPtrU create(float radius = 0.5f, float segments = 20.f);
+		static const Mesh * getMesh(float radius = 0.5f, float segments = 20.f);
 
 		static void quit();
 
 	private:
+
+		static string createKey(float radius, float segments);
+		static bool createMeshIfNeeded(float radius, float segments);
 
 		static vectorPtrU<Vertex> genVertexes(const float &radius, const float &segments);
 		static vector<Vertex> genHalfCircle(const float &radius, const float &segments);

@@ -17,10 +17,26 @@ namespace Gizmos
 			const vec3 &end,
 			const vec4 &colourStart,
 			const vec4 &colourEnd);
+		static const Mesh * getMesh(
+			const vec3 &start,
+			const vec3 &end,
+			const vec4 &colourStart,
+			const vec4 &colourEnd);
 
 		static void quit();
 
 	private:
+
+		static string createKey(
+			const vec3 &start,
+			const vec3 &end,
+			const vec4 &colourStart,
+			const vec4 &colourEnd);
+		static bool createMeshIfNeeded(
+			const vec3 &start,
+			const vec3 &end,
+			const vec4 &colourStart,
+			const vec4 &colourEnd);
 
 		static vectorPtrU<Vertex> genVertexes(
 			const vec3 &start,

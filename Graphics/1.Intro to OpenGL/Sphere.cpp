@@ -18,24 +18,21 @@ namespace Gizmos
 	{
 		auto newModel = make_unique<Model>();
 
-		auto key = to_string(radius) + ' ' + to_string(segments);
-
-		auto iter = s_meshes->find(key);
-		if (iter == s_meshes->end())
-		{
-			auto lineMesh = new Mesh();
-
-			lineMesh->m_vertexes = genVertexes(radius, segments);
-			lineMesh->m_indexes = genIndexes(segments, segments);
-			lineMesh->genBuffers();
-
-			s_meshes->insert_or_assign(key, MeshPtrU(lineMesh));
-		}
+		auto key = createKey(radius, segments);
+		createMeshIfNeeded(radius, segments);
 
 		newModel->m_mesh = (*s_meshes)[key].get();
 		newModel->m_drawType = GL_TRIANGLE_STRIP;
 
 		return newModel;
+	}
+
+	const Mesh * Sphere::getMesh(float radius, float segments)
+	{
+		auto key = createKey(radius, segments);
+		createMeshIfNeeded(radius, segments);
+
+		return (*s_meshes)[key].get();
 	}
 
 	vectorPtrU<Vertex> Sphere::genVertexes(const float &radius, const float &segments)
@@ -113,5 +110,31 @@ namespace Gizmos
 	void Sphere::quit()
 	{
 		s_meshes.reset();
+	}
+
+	string Sphere::createKey(float radius, float segments)
+	{
+		return to_string(radius) + ' ' + to_string(segments);
+	}
+
+	bool Sphere::createMeshIfNeeded(float radius, float segments)
+	{
+		auto key = createKey(radius, segments);
+
+		auto iter = s_meshes->find(key);
+		if (iter == s_meshes->end())
+		{
+			auto lineMesh = new Mesh();
+
+			lineMesh->m_vertexes = genVertexes(radius, segments);
+			lineMesh->m_indexes = genIndexes(segments, segments);
+			lineMesh->genBuffers();
+
+			s_meshes->insert_or_assign(key, MeshPtrU(lineMesh));
+
+			return true;
+		}
+
+		return false;
 	}
 }

@@ -16,15 +16,8 @@ namespace Gizmos
 
 	int drawSphere(const mat4 &transform, const vec4 &colour, GLboolean drawWireFrame)
 	{
-		auto newSphere = Sphere::create();
-
-		//newSphere->transform()->setLocalSpaceMatrix(transform);
-
-		newSphere->setMaterialColour(colour);
-
-		newSphere->m_shouldDrawWireFrame = drawWireFrame;
-
-		//newSphere->draw();
+		auto newSphere = Sphere::getMesh();
+		newSphere->drawMesh(colour, transform, Shader::basic()->programID(), GL_TRIANGLE_STRIP);
 
 		return 0;
 	}

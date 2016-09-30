@@ -41,7 +41,7 @@ public:
 
 	~Model();
 
-	Mesh *m_mesh = nullptr;
+	const Mesh *m_mesh = nullptr;
 
 	mutable GLint m_drawType = GL_TRIANGLES;
 

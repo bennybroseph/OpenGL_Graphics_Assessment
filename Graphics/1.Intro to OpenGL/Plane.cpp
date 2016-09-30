@@ -24,11 +24,9 @@ namespace Gizmos
 		return newModel;
 	}
 
-	MeshPtrU Plane::createMesh()
+	const Mesh * Plane::getMesh()
 	{
-		auto newMesh = make_unique<Mesh>();
-
-		
+		return s_mesh.get();
 	}
 
 	void Plane::genVertexes()

@@ -13,6 +13,7 @@ namespace Gizmos
 		static void init();
 
 		static ModelPtrU create();
+		static const Mesh * getMesh();
 
 		static void quit();
 

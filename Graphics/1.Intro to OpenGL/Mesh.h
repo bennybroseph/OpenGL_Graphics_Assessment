@@ -5,6 +5,7 @@
 #include "gl_core_4_4.h"
 
 #include "MasterHeader.h"
+#include "Shader.h"
 
 struct Vertex;
 
@@ -30,6 +31,12 @@ typedef weak_ptr<Mesh> MeshPtrW;
 class Mesh
 {
 public:
+
+	void drawMesh(
+		const vec4 &colour,
+		const mat4 &matrix = mat4(1),
+		GLuint shader = Shader::basic()->programID(),
+		GLuint drawType = GL_TRIANGLES) const;
 
 	void genBuffers();
 

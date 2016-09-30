@@ -4,9 +4,9 @@ in vec4 vColour;
 
 out vec4 outColour;
 
-uniform vec3 MaterialAmbient;
+uniform vec4 MaterialAmbient;
 
 void main()
 {
-	outColour = vColour * (vec4(MaterialAmbient, 1));
+	outColour = vColour * MaterialAmbient;
 }

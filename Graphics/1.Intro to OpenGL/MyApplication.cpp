@@ -172,6 +172,7 @@ void MyApplication::draw()
 	for (auto &shape : *m_shapes)
 		shape->draw();
 
+	Gizmos::drawSphere(mat4(1), vec4(1));
 	drawSolarSystem();
 
 	if (m_shouldDrawGui)

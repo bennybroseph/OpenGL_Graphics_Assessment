@@ -19,11 +19,45 @@ namespace Gizmos
 	{
 		auto newModel = make_unique<Model>();
 
-		auto key =
-			'(' + to_string(start.x) + ", " + to_string(start.y) + ", " + to_string(start.z) + ')' +
+		auto key = createKey(start, end, colourStart, colourEnd);
+
+		createMeshIfNeeded(start, end, colourStart, colourEnd);
+
+		newModel->m_mesh = (*s_meshes)[key].get();
+		newModel->m_drawType = GL_LINES;
+
+		return newModel;
+	}
+
+	const Mesh* Line::getMesh(const vec3& start, const vec3& end, const vec4& colourStart, const vec4& colourEnd)
+	{
+		auto key = createKey(start, end, colourStart, colourEnd);
+		createMeshIfNeeded(start, end, colourStart, colourEnd);
+
+		return (*s_meshes)[key].get();
+	}
+
+	void Line::quit()
+	{
+		s_meshes.reset();
+	}
+
+	string Line::createKey(const vec3& start, const vec3& end, const vec4& colourStart, const vec4& colourEnd)
+	{
+		return '(' + to_string(start.x) + ", " + to_string(start.y) + ", " + to_string(start.z) + ')' +
 			'(' + to_string(end.x) + ", " + to_string(end.y) + ", " + to_string(end.z) + ')' +
-			'(' + to_string(colourStart.x) + ", " + to_string(colourStart.y) + ", " + to_string(colourStart.z) + ')' +
-			'(' + to_string(colourEnd.x) + ", " + to_string(colourEnd.y) + ", " + to_string(colourEnd.z) + ')';
+			'(' + to_string(colourStart.r) + ", " + to_string(colourStart.g) + ", "
+			+ to_string(colourStart.b) + ", " + to_string(colourStart.a) + ')' +
+			'(' + to_string(colourEnd.r) + ", " + to_string(colourEnd.g) + ", "
+			+ to_string(colourEnd.b) + ", " + to_string(colourEnd.a) + ')';
+	}
+	bool Line::createMeshIfNeeded(
+		const vec3& start,
+		const vec3& end,
+		const vec4& colourStart,
+		const vec4& colourEnd)
+	{
+		auto key = createKey(start, end, colourStart, colourEnd);
 
 		auto iter = s_meshes->find(key);
 		if (iter == s_meshes->end())
@@ -35,12 +69,11 @@ namespace Gizmos
 			lineMesh->genBuffers();
 
 			s_meshes->insert_or_assign(key, MeshPtrU(lineMesh));
+
+			return true;
 		}
 
-		newModel->m_mesh = (*s_meshes)[key].get();
-		newModel->m_drawType = GL_LINES;
-
-		return newModel;
+		return false;
 	}
 
 	vectorPtrU<Vertex>  Line::genVertexes(
@@ -79,10 +112,5 @@ namespace Gizmos
 		indexes->push_back(1);
 
 		return indexes;
-	}
-
-	void Line::quit()
-	{
-		s_meshes.reset();
 	}
 }
