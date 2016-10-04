@@ -262,6 +262,9 @@ vectorPtrU<ShaderVariablePtrU> Shader::getVariables() const
 				variableName.find("=") != string::npos ?
 				variableName.find("=") : variableName.find(";"));
 
+			while (variableName.find(" ") != string::npos)
+				variableName.replace(variableName.find(" "), 1, "");
+
 			if (variableType == "float")
 				tempVector->push_back(
 					make_unique<ShaderVariable>(static_cast<void *>(
