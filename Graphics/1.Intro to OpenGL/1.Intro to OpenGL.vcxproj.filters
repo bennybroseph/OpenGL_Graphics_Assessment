@@ -156,6 +156,9 @@
     <ClCompile Include="Line.cpp">
       <Filter>Source Files\Gizmos\Shapes</Filter>
     </ClCompile>
+    <ClCompile Include="ShaderVariable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Transform.h">
@@ -242,6 +245,9 @@
     <ClInclude Include="Line.h">
       <Filter>Header Files\Gizmos\Shapes</Filter>
     </ClInclude>
+    <ClInclude Include="ShaderVariable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Default.frag">
@@ -267,6 +273,12 @@
     </None>
     <None Include="Basic.frag">
       <Filter>Resource Files\Fragment Shader</Filter>
+    </None>
+    <None Include="Perlin.vert">
+      <Filter>Resource Files\Fragment Shader</Filter>
+    </None>
+    <None Include="Perlin.frag">
+      <Filter>Resource Files\Vertex Shader</Filter>
     </None>
   </ItemGroup>
 </Project>

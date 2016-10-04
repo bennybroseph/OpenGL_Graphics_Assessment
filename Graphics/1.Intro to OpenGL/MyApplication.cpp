@@ -30,7 +30,7 @@ int MyApplication::startup()
 
 	io.DisplaySize.x = m_screenSize.x;
 	io.DisplaySize.y = m_screenSize.y;
-	
+
 	Input::init();
 	Shader::init();
 	Gizmos::init();
@@ -75,9 +75,9 @@ int MyApplication::startup()
 	auto newPlane = make_unique<GameObject>();
 	newPlane->setName("Test Plane");
 
-	newPlane->addComponent(Gizmos::Plane::createModel());
+	newPlane->addComponent(Gizmos::Plane::createModel(32.f));
 	model = newPlane->getComponent<Model>();
-	model->setShader(Shader::texture());
+	model->setShader(Shader::perlin());
 	model->addTexture("data/textures/crate.png", FilteringType::Nearest);
 	model->setDiffuseTexture("data/textures/four_diffuse.tga", FilteringType::Linear);
 	model->setNormalTexture("data/textures/four_normal.tga", FilteringType::Linear);

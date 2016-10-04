@@ -6,11 +6,14 @@
 using std::fstream;
 using std::string;
 
+const string Shader::EDITABLE_IDENTIFIER = "// Editable";
+
 ShaderPtrU Shader::s_standard = unique_ptr<Shader>();
 ShaderPtrU Shader::s_basic = unique_ptr<Shader>();
 ShaderPtrU Shader::s_texture = unique_ptr<Shader>();
 ShaderPtrU Shader::s_positional = unique_ptr<Shader>();
 ShaderPtrU Shader::s_phong = unique_ptr<Shader>();
+ShaderPtrU Shader::s_perlin = unique_ptr<Shader>();
 
 vectorPtrU<Shader *> Shader::s_shaders = unique_ptr<vector<Shader *>>();
 
@@ -66,6 +69,16 @@ int Shader::init()
 	if (returnValue != 0)
 		return returnValue;
 
+	s_perlin.reset(new Shader());
+	s_perlin->setName("Perlin");
+
+	returnValue = s_perlin->addShader("Perlin.vert", ShaderType::Vertex);
+	if (returnValue != 0)
+		return returnValue;
+	returnValue = s_perlin->addShader("Texture.frag", ShaderType::Fragment);
+	if (returnValue != 0)
+		return returnValue;
+
 	return returnValue;
 }
 
@@ -76,6 +89,7 @@ int Shader::quit()
 	s_texture.reset();
 	s_positional.reset();
 	s_phong.reset();
+	s_perlin.reset();
 
 	return 0;
 }
@@ -167,6 +181,8 @@ int Shader::addShader(const char *path, ShaderType type) const
 		return -1;
 	}
 
+	m_shaderPaths->push_back(make_unique<string>(path));
+
 	glDeleteShader(shader);
 
 	return 0;
@@ -202,9 +218,60 @@ const Shader * Shader::phong()
 	return s_phong.get();
 }
 
+const Shader * Shader::perlin()
+{
+	return s_perlin.get();
+}
+
 const vector<Shader *> * Shader::getShaders()
 {
 	return s_shaders.get();
+}
+
+vectorPtrU<ShaderVariablePtrU> Shader::getVariables() const
+{
+	auto tempVector = make_unique<vector<ShaderVariablePtrU>>();
+
+	for (auto &path : *m_shaderPaths)
+	{
+		fstream shaderFile;
+		shaderFile.open(*path, std::ios::in);
+
+		string parsedText = "";
+		string line;
+		while (getline(shaderFile, line))
+			parsedText += line;
+
+		shaderFile.close();
+
+		int editablePosition = parsedText.find(EDITABLE_IDENTIFIER);
+		if (editablePosition != string::npos)
+		{
+			auto subString = parsedText.substr(editablePosition + EDITABLE_IDENTIFIER.length());
+			subString = subString.substr(
+				subString.find("uniform ") != string::npos ? string("uniform ").length() : 0);
+
+			auto variableType = subString.substr(subString.find(" "));
+			int semiColon = variableType.find(";");
+
+			variableType = subString.substr(0, subString.find(" "));
+
+			auto variableName = subString.substr(subString.find(" ") + 1);
+			variableName = variableName.substr(
+				0,
+				variableName.find("=") != string::npos ?
+				variableName.find("=") : variableName.find(";"));
+
+			if (variableType == "float")
+				tempVector->push_back(
+					make_unique<ShaderVariable>(static_cast<void *>(
+						new float(0.f)),
+						variableName.c_str(),
+						VariableType::Float));
+		}
+	}
+
+	return tempVector;
 }
 
 GLuint Shader::programID() const

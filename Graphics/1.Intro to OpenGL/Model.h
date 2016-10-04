@@ -60,6 +60,8 @@ private:
 	TexturePtrU m_normalTexture = make_unique<Texture>();
 	TexturePtrU m_diffuseTexture = make_unique<Texture>();
 	TexturePtrU m_specularTexture = make_unique<Texture>();
+
+	GLuint m_perlin_texture;
 };
 
 

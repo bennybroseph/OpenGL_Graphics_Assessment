@@ -14,6 +14,26 @@ Model::Model() : Component()
 	m_normalTexture->setName("Normal Map");
 	m_diffuseTexture->setName("Diffuse Texture");
 	m_specularTexture->setName("Specular Map");
+
+	auto dims = 64.f;
+	auto perlin_data = new float[dims * dims];
+	auto scale = (1.0f / dims) * 3;
+	for (auto x = 0.f; x < dims; ++x)
+	{
+		for (auto y = 0.f; y < dims; ++y)
+		{
+			perlin_data[static_cast<int>(y * dims + x)] = perlin(vec2(x, y) * scale) * 0.5f + 0.5f;
+		}
+	}
+	glGenTextures(1, &m_perlin_texture);
+	glBindTexture(GL_TEXTURE_2D, m_perlin_texture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, dims, dims, 0, GL_RED, GL_FLOAT, perlin_data);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 }
 
 void Model::draw() const
@@ -79,6 +99,8 @@ void Model::drawGui() const
 
 	if (ImGui::Combo("Shader", &shaderIndex, shaderNames.data(), i))
 		m_shader = (*Shader::getShaders())[shaderIndex];
+
+	m_shader->getVariables();
 
 	auto materialColour = vec3(m_materialColour->x, m_materialColour->y, m_materialColour->z);
 	if (ImGui::ColorEdit3("Material Colour", value_ptr(materialColour)))
@@ -204,20 +226,25 @@ void Model::drawModel(const mat4 &matrix) const
 
 	if (m_diffuseTexture.get())
 	{
-		glActiveTexture(GL_TEXTURE30);
+		glActiveTexture(GL_TEXTURE29);
 		glBindTexture(GL_TEXTURE_2D, m_diffuseTexture->getHandle());
 
 		auto loc = glGetUniformLocation(m_shader->programID(), "diffuseMap");
-		glUniform1i(loc, 30);
+		glUniform1i(loc, 29);
 	}
 	if (m_normalTexture.get())
 	{
-		glActiveTexture(GL_TEXTURE31);
+		glActiveTexture(GL_TEXTURE30);
 		glBindTexture(GL_TEXTURE_2D, m_normalTexture->getHandle());
 
 		auto loc = glGetUniformLocation(m_shader->programID(), "normalMap");
-		glUniform1i(loc, 31);
+		glUniform1i(loc, 30);
 	}
+
+	glActiveTexture(GL_TEXTURE31);
+	glBindTexture(GL_TEXTURE_2D, m_perlin_texture);
+	auto loc = glGetUniformLocation(m_shader->programID(), "perlin_texture");
+	glUniform1i(loc, 31);
 
 	glBindVertexArray(m_mesh->m_vao);
 	glDrawElements(m_drawType, m_mesh->m_indexes->size(), GL_UNSIGNED_INT, nullptr);

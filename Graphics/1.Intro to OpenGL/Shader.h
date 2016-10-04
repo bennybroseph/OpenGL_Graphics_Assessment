@@ -4,7 +4,9 @@
 
 #include <gl_core_4_4.h>
 
-#include <MasterHeader.h>
+#include "ShaderVariable.h"
+
+#include "MasterHeader.h"
 
 enum class ShaderType
 {
@@ -21,6 +23,9 @@ typedef weak_ptr<Shader> ShaderPtrW;
 
 class Shader
 {
+
+	const static string EDITABLE_IDENTIFIER;
+
 public:
 
 	static int init();
@@ -38,10 +43,13 @@ public:
 	static const Shader * texture();
 	static const Shader * positional();
 	static const Shader * phong();
+	static const Shader * perlin();
 
 	static const vector<Shader *> * getShaders();
 
-	GLuint programID() const;
+	vectorPtrU<ShaderVariablePtrU> getVariables() const;
+
+		GLuint programID() const;
 
 	~Shader();
 
@@ -52,11 +60,13 @@ private:
 	static ShaderPtrU s_texture;
 	static ShaderPtrU s_positional;
 	static ShaderPtrU s_phong;
+	static ShaderPtrU s_perlin;
 
 	static vectorPtrU<Shader *> s_shaders;
 
 	GLuint m_programID = 0;
 	unique_ptr<GLchar> m_name = unique_ptr<GLchar>(new GLchar[255]);
+	vectorPtrU<unique_ptr<string>> m_shaderPaths = make_unique<vector<unique_ptr<string>>>();
 };
 
 #endif // _SHADERUTILITY_H_

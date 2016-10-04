@@ -129,13 +129,13 @@ namespace Gizmos
 		auto iter = s_meshes->find(key);
 		if (iter == s_meshes->end())
 		{
-			auto lineMesh = new Mesh();
+			auto sphereMesh = new Mesh();
 
-			lineMesh->m_vertexes = genVertexes(radius, segments);
-			lineMesh->m_indexes = genIndexes(segments, segments);
-			lineMesh->genBuffers();
+			sphereMesh->m_vertexes = genVertexes(radius, segments);
+			sphereMesh->m_indexes = genIndexes(segments, segments);
+			sphereMesh->genBuffers();
 
-			s_meshes->insert_or_assign(key, MeshPtrU(lineMesh));
+			s_meshes->insert_or_assign(key, MeshPtrU(sphereMesh));
 
 			return true;
 		}

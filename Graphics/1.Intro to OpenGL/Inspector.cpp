@@ -31,7 +31,7 @@ namespace Editor
 			static auto dragging = false;
 			static GameObject *hoveringObject = nullptr;
 
-			ImGui::Indent();
+			//ImGui::Indent();
 
 			auto indentLevel = 0;
 			for (auto &gameObject : Object::findObjectsOfType<GameObject>())
@@ -61,27 +61,28 @@ namespace Editor
 							if (selected)
 								ImGui::PushStyleColor(ImGuiCol_Text, ImColor(143, 143, 200));
 
-							if (currentObject->transform()->getChildren()->size() > 0)
-							{
-								ImGui::Unindent();
-								collapsed = ImGui::CollapsingHeader(currentObject->getName(), nullptr, false);
-								ImGui::Indent();
-							}
-							else
-								ImGui::Text(currentObject->getName());
+							collapsed = ImGui::TreeNodeEx(
+								currentObject->getName(),
+								currentObject->transform()->getChildren()->size() > 0 ?
+								ImGuiTreeNodeFlags_OpenOnArrow :
+								ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_OpenOnArrow);
+							if (collapsed)
+								ImGui::TreePop();
 
 							if (selected)
 								ImGui::PopStyleColor();
 							ImGui::PopStyleColor(2);
 
 							if (ImGui::IsItemHovered())
+							{
 								hoveringObject = currentObject;
 
-							if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(1))
-								s_selected = currentObject;
+								if (ImGui::IsMouseClicked(0))
+									s_selected = currentObject;
 
-							if (ImGui::IsItemHovered() && ImGui::IsMouseDragging() && !dragging)
-								draggedObject = currentObject;
+								if (ImGui::IsMouseDragging() && !dragging)
+									draggedObject = currentObject;
+							}
 
 							if (collapsed && currentObject->transform()->getChildren()->size() > 0)
 							{

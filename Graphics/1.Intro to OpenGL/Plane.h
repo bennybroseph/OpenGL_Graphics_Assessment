@@ -8,21 +8,27 @@ namespace Gizmos
 {
 	class Plane
 	{
+
+		const static GLfloat DEFAULT_SEGMENTS;
+
 	public:
 
 		static void init();
 
-		static ModelPtrU createModel();
-		static const Mesh * getMesh();
+		static ModelPtrU createModel(float segments = DEFAULT_SEGMENTS);
+		static const Mesh * getMesh(float segments = DEFAULT_SEGMENTS);
 
 		static void quit();
 
 	private:
 
-		static void genVertexes();
-		static void genIndexes();
+		static string createKey(float segments);
+		static bool createMeshIfNeeded(float segments = DEFAULT_SEGMENTS);
 
-		static MeshPtrU s_mesh;
+		static vectorPtrU<Vertex> genVertexes(float segments);
+		static vectorPtrU<GLuint> genIndexes(float segments);
+
+		static mapPtrU<string, MeshPtrU> s_meshes;
 
 	};
 }
