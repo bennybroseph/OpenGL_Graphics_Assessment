@@ -15,6 +15,8 @@ Model::Model() : Component()
 	m_diffuseTexture->setName("Diffuse Texture");
 	m_specularTexture->setName("Specular Map");
 
+	m_shaderVariables = m_shader->getVariables();
+
 	auto dims = 64.f;
 	auto perlin_data = new float[dims * dims];
 	auto scale = (1.0f / dims) * 3;
@@ -24,7 +26,8 @@ Model::Model() : Component()
 		{
 			perlin_data[static_cast<int>(y * dims + x)] = perlin(vec2(x, y) * scale) * 0.5f + 0.5f;
 		}
-	}
+	}
+
 	glGenTextures(1, &m_perlin_texture);
 	glBindTexture(GL_TEXTURE_2D, m_perlin_texture);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, dims, dims, 0, GL_RED, GL_FLOAT, perlin_data);
@@ -98,9 +101,10 @@ void Model::drawGui() const
 	}
 
 	if (ImGui::Combo("Shader", &shaderIndex, shaderNames.data(), i))
-		m_shader = (*Shader::getShaders())[shaderIndex];
+		setShader((*Shader::getShaders())[shaderIndex]);
 
-	m_shader->getVariables();
+	for (auto &variable : *m_shaderVariables)
+		variable->drawGui();
 
 	auto materialColour = vec3(m_materialColour->x, m_materialColour->y, m_materialColour->z);
 	if (ImGui::ColorEdit3("Material Colour", value_ptr(materialColour)))
@@ -246,6 +250,9 @@ void Model::drawModel(const mat4 &matrix) const
 	auto loc = glGetUniformLocation(m_shader->programID(), "perlin_texture");
 	glUniform1i(loc, 31);
 
+	for (auto &variable : *m_shaderVariables)
+		variable->setUniform();
+
 	glBindVertexArray(m_mesh->m_vao);
 	glDrawElements(m_drawType, m_mesh->m_indexes->size(), GL_UNSIGNED_INT, nullptr);
 
@@ -257,10 +264,10 @@ const Shader * Model::getShader() const
 {
 	return m_shader;
 }
-// ReSharper disable once CppMemberFunctionMayBeConst
-void Model::setShader(const Shader *newShader)
+void Model::setShader(const Shader *newShader) const
 {
 	m_shader = newShader;
+	m_shaderVariables = m_shader->getVariables();
 }
 
 const vec4 & Model::getMaterialColour() const

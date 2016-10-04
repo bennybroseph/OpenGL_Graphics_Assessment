@@ -6,7 +6,7 @@
 using std::fstream;
 using std::string;
 
-const string Shader::EDITABLE_IDENTIFIER = "// Editable";
+const string Shader::EDITABLE_IDENTIFIER = "// Inspector";
 
 ShaderPtrU Shader::s_standard = unique_ptr<Shader>();
 ShaderPtrU Shader::s_basic = unique_ptr<Shader>();
@@ -245,32 +245,150 @@ vectorPtrU<ShaderVariablePtrU> Shader::getVariables() const
 		shaderFile.close();
 
 		int editablePosition = parsedText.find(EDITABLE_IDENTIFIER);
-		if (editablePosition != string::npos)
+		while (editablePosition != string::npos)
 		{
-			auto subString = parsedText.substr(editablePosition + EDITABLE_IDENTIFIER.length());
-			subString = subString.substr(
-				subString.find("uniform ") != string::npos ? string("uniform ").length() : 0);
+			if (editablePosition != string::npos)
+			{
+				auto subString = parsedText.substr(editablePosition + EDITABLE_IDENTIFIER.length());
+				auto parameters = subString.substr(0, subString.find("uniform "));
 
-			auto variableType = subString.substr(subString.find(" "));
-			int semiColon = variableType.find(";");
+				auto t = ShaderVariable();
+				t.parseType(parsedText.substr(editablePosition, parsedText.find(";")));
 
-			variableType = subString.substr(0, subString.find(" "));
+				subString = subString.substr(
+					subString.find("uniform ") != string::npos ? string("uniform ").length() : 0);
 
-			auto variableName = subString.substr(subString.find(" ") + 1);
-			variableName = variableName.substr(
-				0,
-				variableName.find("=") != string::npos ?
-				variableName.find("=") : variableName.find(";"));
+				subString = subString.substr(0, subString.find(";"));
 
-			while (variableName.find(" ") != string::npos)
-				variableName.replace(variableName.find(" "), 1, "");
+				auto variableType = subString.substr(subString.find(" "));
 
-			if (variableType == "float")
-				tempVector->push_back(
-					make_unique<ShaderVariable>(static_cast<void *>(
-						new float(0.f)),
-						variableName.c_str(),
-						VariableType::Float));
+				variableType = subString.substr(0, subString.find(" "));
+
+				int equals = subString.find("=");
+				auto variableName = subString.substr(subString.find(" ") + 1);
+				variableName = variableName.substr(
+					0,
+					variableName.find("=") != string::npos ?
+					variableName.find("=") : variableName.find(";"));
+
+				while (variableName.find(" ") != string::npos)
+					variableName.replace(variableName.find(" "), 1, "");
+
+				auto displayName = variableName;
+				if (displayName[0] >= 97 && displayName[0] <= 122)
+					displayName[0] -= 32;
+
+				for (auto i = 1; i < displayName.length(); ++i)
+				{
+					if (displayName[i] >= 65 && displayName[i] <= 90)
+					{
+						displayName.insert(i, " ");
+						i++;
+					}
+				}
+
+				if (variableType == "float")
+				{
+					auto newFloat = new GLfloat(0.f);
+					if (equals != string::npos)
+						*newFloat = atof(subString.substr(equals + 1, subString.find(";")).c_str());
+
+					/*tempVector->push_back(
+						make_unique<ShaderVariable>(
+							m_programID,
+							newFloat,
+							variableName.c_str(),
+							displayName.c_str(),
+							VariableType::Float));*/
+				}
+
+				if (variableType == "vec2")
+				{
+					auto newVector = new vec2(0.f);
+					if (equals != string::npos)
+					{
+						int currentFind = subString.find("(") + 1;
+
+						GLfloat values[2];
+						for (auto i = 0; i < 2; ++i)
+						{
+							if (subString.find(",") != string::npos)
+								values[i] = atof(subString.substr(currentFind, subString.find(",")).c_str());
+							else
+								values[i] = atof(subString.substr(currentFind, subString.find(")")).c_str());
+							currentFind = subString.find(",", currentFind) + 1;
+						}
+						*newVector = vec2(values[0], values[1]);
+					}
+
+					/*tempVector->push_back(
+						make_unique<ShaderVariable>(
+							m_programID,
+							newVector,
+							variableName.c_str(),
+							displayName.c_str(),
+							VariableType::Vector2));*/
+				}
+
+				if (variableType == "vec3")
+				{
+					auto newVector = new vec3(0.f);
+					if (equals != string::npos)
+					{
+						int currentFind = subString.find("(") + 1;
+
+						GLfloat values[3];
+						for (auto i = 0; i < 3; ++i)
+						{
+							if (subString.find(",") != string::npos)
+								values[i] = atof(subString.substr(currentFind, subString.find(",")).c_str());
+							else
+								values[i] = atof(subString.substr(currentFind, subString.find(")")).c_str());
+							currentFind = subString.find(",", currentFind) + 1;
+						}
+						*newVector = vec3(values[0], values[1], values[2]);
+					}
+
+					/*tempVector->push_back(
+						make_unique<ShaderVariable>(
+							m_programID,
+							newVector,
+							variableName.c_str(),
+							displayName.c_str(),
+							VariableType::Vector3));*/
+				}
+
+				if (variableType == "vec4")
+				{
+					auto newVector = new vec4(0.f);
+					if (equals != string::npos)
+					{
+						int currentFind = subString.find("(") + 1;
+
+						GLfloat values[4];
+						for (auto i = 0; i < 4; ++i)
+						{
+							if (subString.find(",") != string::npos)
+								values[i] = atof(subString.substr(currentFind, subString.find(",")).c_str());
+							else
+								values[i] = atof(subString.substr(currentFind, subString.find(")")).c_str());
+							currentFind = subString.find(",", currentFind) + 1;
+						}
+						*newVector = vec4(values[0], values[1], values[2], values[3]);
+					}
+
+					/*tempVector->push_back(
+						make_unique<ShaderVariable>(
+							m_programID,
+							newVector,
+							variableName.c_str(),
+							displayName.c_str(),
+							VariableType::Vector4));*/
+				}
+			}
+
+			parsedText = parsedText.substr(parsedText.find("uniform ", editablePosition));
+			editablePosition = parsedText.find(EDITABLE_IDENTIFIER);
 		}
 	}
 

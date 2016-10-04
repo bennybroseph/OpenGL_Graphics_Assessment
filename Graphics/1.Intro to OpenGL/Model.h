@@ -26,7 +26,7 @@ public:
 	void drawModel(const mat4 &matrix) const;
 
 	const Shader * getShader() const;
-	void setShader(const Shader *newShader);
+	void setShader(const Shader *newShader) const;
 
 	const vec4 & getMaterialColour() const;
 	void setMaterialColour(const vec4 &newColour);
@@ -52,6 +52,7 @@ public:
 private:
 
 	mutable const Shader *m_shader = Shader::standard();
+	mutable vectorPtrU<ShaderVariablePtrU> m_shaderVariables = make_unique<vector<ShaderVariablePtrU>>();
 
 	vec4PtrU m_materialColour = make_unique<vec4>(vec4(1.f, 1.f, 1.f, 1.f));
 

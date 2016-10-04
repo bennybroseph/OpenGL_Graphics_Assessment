@@ -275,10 +275,10 @@
       <Filter>Resource Files\Fragment Shader</Filter>
     </None>
     <None Include="Perlin.vert">
-      <Filter>Resource Files\Fragment Shader</Filter>
+      <Filter>Resource Files\Vertex Shader</Filter>
     </None>
     <None Include="Perlin.frag">
-      <Filter>Resource Files\Vertex Shader</Filter>
+      <Filter>Resource Files\Fragment Shader</Filter>
     </None>
   </ItemGroup>
 </Project>
