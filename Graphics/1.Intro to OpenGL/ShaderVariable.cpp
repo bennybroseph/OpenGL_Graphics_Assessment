@@ -2,23 +2,38 @@
 
 #include <imgui_impl_glfw_gl3.h>
 
-ShaderVariable::ShaderVariable(
-	GLuint shader,
-	void *data,
-	const char name[],
-	const char displayName[],
-	VariableType type)
+ShaderVariable::ShaderVariable(GLuint shader, const string &text)
 {
 	m_shader = shader;
-	m_data.reset(data);
-	_memccpy(m_name.get(), name, 0, 255);
-	_memccpy(m_displayName.get(), displayName, 0, 255);
-	m_type = type;
+	parseType(text);
 }
 
 
 void ShaderVariable::drawGui() const
 {
+	auto colour = false;
+	auto range = false;
+	auto rangeData = vec2(0.f, 0.f);
+	auto min = 0.f;
+	auto max = 0.f;
+	for (auto &parameter : *m_parameters)
+	{
+		if (parameter->type == ParameterType::Colour)
+			colour = true;
+
+		if (parameter->type == ParameterType::Range)
+		{
+			range = true;
+			rangeData = vec2((*parameter->values)[0], (*parameter->values)[1]);
+		}
+
+		if (parameter->type == ParameterType::Min)
+			min = (*parameter->values)[0];
+		if (parameter->type == ParameterType::Max)
+			max = (*parameter->values)[0];
+
+	}
+
 	switch (m_type)
 	{
 	case VariableType::Float:
@@ -48,8 +63,22 @@ void ShaderVariable::drawGui() const
 	case VariableType::Vector4:
 	{
 		auto tempVector = *static_cast<vec4 *>(m_data.get());
-		if (ImGui::DragFloat4(m_displayName.get(), value_ptr(tempVector), 0.25f))
-			*static_cast<vec4 *>(m_data.get()) = tempVector;
+
+		if (!colour)
+		{
+			if (!range)
+			{
+				if (ImGui::DragFloat4(m_displayName.get(), value_ptr(tempVector), 0.25f, min, max))
+					*static_cast<vec4 *>(m_data.get()) = tempVector;
+			}
+			else if (ImGui::SliderFloat4(m_displayName.get(), value_ptr(tempVector), rangeData[0], rangeData[1]))
+				*static_cast<vec4 *>(m_data.get()) = tempVector;
+		}
+		else
+		{
+			if (ImGui::ColorEdit4(m_displayName.get(), value_ptr(tempVector)))
+				*static_cast<vec4 *>(m_data.get()) = tempVector;
+		}
 	}
 	break;
 
@@ -95,59 +124,134 @@ void ShaderVariable::setUniform() const
 void ShaderVariable::parseType(const string &text)
 {
 	auto parameters = text.substr(text.find(" ") + 1);
+	parseParameters(parameters);
 
-	int nextSpace = parameters.find(" ");
-	int nextUniform = parameters.find("uniform");
-
-	if (nextSpace < nextUniform)
-	{
-		parameters = parameters.substr(parameters.find(" ") + 1);
-		parameters = parameters.substr(0, parameters.find("uniform"));
-
-		auto currentParse = 0;
-		while (currentParse != string::npos)
-		{
-			auto currentParameter = parameters.substr(currentParse, parameters.find(")", currentParse) + 1);
-
-			auto parameterType = currentParameter.substr(0, currentParameter.find("("));
-
-			auto newParameter = new Parameter();
-			if (parameterType == "Colour" || parameterType == "Color")
-			{
-				newParameter->type |= toBit(ParameterType::Colour);
-			}
-			if (parameterType == "Range")
-			{
-				newParameter->type |= toBit(ParameterType::Range);
-			}
-			if (parameterType == "Min")
-			{
-				newParameter->type |= toBit(ParameterType::Min);
-			}
-			if (parameterType == "Max")
-			{
-				newParameter->type |= toBit(ParameterType::Max);
-			}
-
-			currentParse = parameters.find(")", currentParse);
-		}
-	}
-
-	auto currentText = text.substr(text.rfind("uniform"));
+	auto currentText = text.substr(text.find("uniform"));
 
 	currentText = currentText.substr(currentText.find(" ") + 1);
 	auto type = currentText.substr(0, currentText.find(" "));
 
+	currentText = currentText.substr(currentText.find(" ") + 1);
+	parseName(currentText);
+
 	if (type == "float")
+	{
 		m_type = VariableType::Float;
 
+		auto newFloat = new GLfloat(0.f);
+		m_data.reset(newFloat);
+	}
+
 	if (type == "vec2")
+	{
 		m_type = VariableType::Vector2;
+
+		auto newVector2 = new vec2(0.f);
+		m_data.reset(newVector2);
+	}
 	if (type == "vec3")
+	{
 		m_type = VariableType::Vector3;
+
+		auto newVector3 = new vec3(0.f);
+		m_data.reset(newVector3);
+	}
 	if (type == "vec4")
+	{
 		m_type = VariableType::Vector4;
 
-	currentText = currentText.substr(currentText.find(" ") + 1);
+		auto newVector4 = new vec4(0.f);
+		m_data.reset(newVector4);
 
+	}
+
+	currentText = currentText.substr(currentText.find(" ") + 1);
+}
+
+void ShaderVariable::parseParameters(const string &text)
+{
+	if (text.find(" ") >= text.find("uniform"))
+		return;
+
+	auto parameters = text.substr(text.find(" ") + 1);
+	parameters = parameters.substr(0, parameters.find("uniform"));
+
+	auto currentParse = 0;
+	while (currentParse != string::npos)
+	{
+		auto currentParameter = parameters.substr(0, parameters.find(")", currentParse) + 1);
+		while (currentParameter.find(" ") != string::npos)
+			currentParameter.replace(currentParameter.find(" "), 1, "");
+
+		auto parameterType = currentParameter.substr(0, currentParameter.find("("));
+
+		auto newParameter = make_unique<Parameter>();
+		if (parameterType == "Colour" || parameterType == "Color")
+			newParameter->type = ParameterType::Colour;
+
+		if (parameterType == "Range")
+		{
+			newParameter->type = ParameterType::Range;
+
+			auto currentFind = currentParameter.find("(") + 1;
+			for (auto i = 0; i < 2; ++i)
+			{
+				GLfloat value;
+				if (currentParameter.find(",") != string::npos)
+					value = atof(currentParameter.substr(currentFind, currentParameter.find(",")).c_str());
+				else
+					value = atof(currentParameter.substr(currentFind, currentParameter.find(")")).c_str());
+				currentFind = currentParameter.find(",", currentFind) + 1;
+
+				newParameter->values->push_back(value);
+			}
+		}
+
+		if (parameterType == "Min" || parameterType == "Max")
+		{
+			if (parameterType == "Min")
+				newParameter->type = ParameterType::Min;
+
+			if (parameterType == "Max")
+				newParameter->type = ParameterType::Max;
+
+			auto valueParse = currentParameter.substr(currentParameter.find("(") + 1);
+			valueParse = valueParse.substr(0, valueParse.find(")"));
+			auto value = atof(valueParse.c_str());
+
+			newParameter->values->push_back(value);
+		}
+
+		m_parameters->push_back(move(newParameter));
+
+		parameters = parameters.substr(parameters.find(")", currentParse) + 1);
+		currentParse = parameters.find(")", currentParse);
+	}
+}
+
+void ShaderVariable::parseName(const string &text)
+{
+	string name;
+	if (text.find("=") != string::npos)
+		name = text.substr(0, text.find("="));
+	else
+		name = text.substr(0, text.find(";"));
+	while (name.find(" ") != string::npos)
+		name.replace(name.find(" "), 1, "");
+
+	auto displayName = name;
+	if (displayName[0] >= 97 && displayName[0] <= 122)
+		displayName[0] -= 32;
+
+	for (auto i = 1; i < displayName.length(); ++i)
+	{
+		if (displayName[i] >= 65 && displayName[i] <= 90)
+		{
+			displayName.insert(i, " ");
+			i++;
+		}
+	}
+
+	_memccpy(m_name.get(), name.c_str(), 0, 255);
+	_memccpy(m_displayName.get(), displayName.c_str(), 0, 255);
 }

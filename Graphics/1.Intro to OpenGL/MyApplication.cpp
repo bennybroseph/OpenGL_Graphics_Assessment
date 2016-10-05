@@ -77,7 +77,7 @@ int MyApplication::startup()
 
 	newPlane->addComponent(Gizmos::Plane::createModel(32.f));
 	model = newPlane->getComponent<Model>();
-	model->setShader(Shader::perlin());
+	model->setShader(Shader::basic());
 	model->addTexture("data/textures/crate.png", FilteringType::Nearest);
 	model->setDiffuseTexture("data/textures/four_diffuse.tga", FilteringType::Linear);
 	model->setNormalTexture("data/textures/four_normal.tga", FilteringType::Linear);

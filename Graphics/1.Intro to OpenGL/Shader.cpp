@@ -252,8 +252,11 @@ vectorPtrU<ShaderVariablePtrU> Shader::getVariables() const
 				auto subString = parsedText.substr(editablePosition + EDITABLE_IDENTIFIER.length());
 				auto parameters = subString.substr(0, subString.find("uniform "));
 
-				auto t = ShaderVariable();
-				t.parseType(parsedText.substr(editablePosition, parsedText.find(";")));
+				auto currentVariable = parsedText.substr(editablePosition);
+				currentVariable = currentVariable.substr(0, currentVariable.find(";"));
+
+				auto t = make_unique<ShaderVariable>(m_programID, currentVariable);
+				tempVector->push_back(move(t));
 
 				subString = subString.substr(
 					subString.find("uniform ") != string::npos ? string("uniform ").length() : 0);
