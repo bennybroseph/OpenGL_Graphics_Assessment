@@ -167,7 +167,7 @@ public:
 	static float getScale(const mat4 &matrix);
 	static void setScale(mat4 * matrix, GLfloat newScale);
 
-	static void drawGizmos(const mat4 &matrix, GLfloat lineWidth = DEFAULT_LINE_WIDTH);
+	static void drawGizmos(const mat4 &matrix, GLboolean disableDepth = 1, GLfloat lineWidth = DEFAULT_LINE_WIDTH);
 	static void drawGui(mat4 * matrix);
 
 #pragma endregion

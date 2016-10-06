@@ -160,6 +160,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="IntroToOpenGL.cpp">
+      <Filter>Source Files\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderingGeometry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -252,6 +255,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="IntroToOpenGL.h">
+      <Filter>Header Files\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderingGeometry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -285,6 +291,9 @@
     </None>
     <None Include="Perlin.frag">
       <Filter>Resource Files\Fragment Shader</Filter>
+    </None>
+    <None Include="Time.vert">
+      <Filter>Resource Files\Vertex Shader</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -14,6 +14,7 @@ ShaderPtrU Shader::s_texture = unique_ptr<Shader>();
 ShaderPtrU Shader::s_positional = unique_ptr<Shader>();
 ShaderPtrU Shader::s_phong = unique_ptr<Shader>();
 ShaderPtrU Shader::s_perlin = unique_ptr<Shader>();
+ShaderPtrU Shader::s_time = unique_ptr<Shader>();
 
 vectorPtrU<Shader *> Shader::s_shaders = unique_ptr<vector<Shader *>>();
 
@@ -79,6 +80,16 @@ int Shader::init()
 	if (returnValue != 0)
 		return returnValue;
 
+	s_time.reset(new Shader());
+	s_time->setName("Time");
+
+	returnValue = s_time->addShader("Time.vert", ShaderType::Vertex);
+	if (returnValue != 0)
+		return returnValue;
+	returnValue = s_time->addShader("Basic.frag", ShaderType::Fragment);
+	if (returnValue != 0)
+		return returnValue;
+
 	return returnValue;
 }
 
@@ -90,6 +101,7 @@ int Shader::quit()
 	s_positional.reset();
 	s_phong.reset();
 	s_perlin.reset();
+	s_time.reset();
 
 	return 0;
 }
@@ -217,10 +229,13 @@ const Shader * Shader::phong()
 {
 	return s_phong.get();
 }
-
 const Shader * Shader::perlin()
 {
 	return s_perlin.get();
+}
+const Shader * Shader::time()
+{
+	return s_time.get();
 }
 
 const vector<Shader *> * Shader::getShaders()

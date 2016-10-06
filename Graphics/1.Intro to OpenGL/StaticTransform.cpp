@@ -144,13 +144,14 @@ void Transform::setScale(mat4 * matrix, GLfloat newScale)
 	*matrix *= scale;
 }
 
-void Transform::drawGizmos(const mat4 &matrix, GLfloat lineWidth)
+void Transform::drawGizmos(const mat4 &matrix, GLboolean disableDepth, GLfloat lineWidth)
 {
 	auto endX = matrix * glm::translate(vec3(0.5f, 0.f, 0.f));
 	auto endY = matrix * glm::translate(vec3(0.f, 0.5f, 0.f));
 	auto endZ = matrix * glm::translate(vec3(0.f, 0.f, 0.5f));
 
-	glDisable(GL_DEPTH_TEST);
+	if (disableDepth)
+		glDisable(GL_DEPTH_TEST);
 	{
 		Gizmos::drawLine(
 			getPosition(matrix),
@@ -171,7 +172,8 @@ void Transform::drawGizmos(const mat4 &matrix, GLfloat lineWidth)
 			vec4(0.f, 0.f, 1.f, 1.f),
 			lineWidth);
 	}
-	glEnable(GL_DEPTH_TEST);
+	if (disableDepth)
+		glEnable(GL_DEPTH_TEST);
 }
 
 void Transform::drawGui(mat4 *matrix)

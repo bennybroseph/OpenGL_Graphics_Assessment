@@ -6,6 +6,7 @@
 #include "GameObject.h"
 #include "Camera.h"
 #include "Light.h"
+#include <GLFW/glfw3.h>
 
 Model::Model() : Component()
 {
@@ -155,6 +156,9 @@ void Model::drawModel(const mat4 &matrix) const
 		false,
 		value_ptr(Camera::mainCamera()->getProjectionView() * matrix));
 
+	auto time = glGetUniformLocation(m_shader->programID(), "time");
+	glUniform1f(time, glfwGetTime());
+
 	// bind the model matrix
 	matUniform = glGetUniformLocation(m_shader->programID(), "ModelMatrix");
 	glUniformMatrix4fv(matUniform, 1, GL_FALSE, &matrix[0][0]);
@@ -164,23 +168,26 @@ void Model::drawModel(const mat4 &matrix) const
 	matUniform = glGetUniformLocation(m_shader->programID(), "NormalMatrix");
 	glUniformMatrix4fv(matUniform, 1, GL_TRUE, &normalMatrix[0][0]);
 
-	auto lightDirection = (*Light::s_lights)[0]->gameObject()->transform()->forward();
-	// bind light data (not using structs or uniform block for now)
-	unsigned int lightUniform = glGetUniformLocation(m_shader->programID(), "LightDirection");
-	glUniform3fv(lightUniform, 1, &lightDirection[0]);
+	if (Light::s_lights->size() > 0)
+	{
+		auto lightDirection = (*Light::s_lights)[0]->gameObject()->transform()->forward();
+		// bind light data (not using structs or uniform block for now)
+		unsigned int lightUniform = glGetUniformLocation(m_shader->programID(), "LightDirection");
+		glUniform3fv(lightUniform, 1, &lightDirection[0]);
 
-	auto lightAmbient = vec4(0.8f);
-	// bind ambient light
-	lightUniform = glGetUniformLocation(m_shader->programID(), "LightAmbient");
-	glUniform3fv(lightUniform, 1, &lightAmbient[0]);
+		auto lightAmbient = vec4(0.8f);
+		// bind ambient light
+		lightUniform = glGetUniformLocation(m_shader->programID(), "LightAmbient");
+		glUniform3fv(lightUniform, 1, &lightAmbient[0]);
 
-	auto lightDiffuse = *(*Light::s_lights)[0]->m_diffuse;
-	lightUniform = glGetUniformLocation(m_shader->programID(), "LightDiffuse");
-	glUniform3fv(lightUniform, 1, &lightDiffuse[0]);
+		auto lightDiffuse = *(*Light::s_lights)[0]->m_diffuse;
+		lightUniform = glGetUniformLocation(m_shader->programID(), "LightDiffuse");
+		glUniform3fv(lightUniform, 1, &lightDiffuse[0]);
 
-	auto lightSpecular = *(*Light::s_lights)[0]->m_specular;
-	lightUniform = glGetUniformLocation(m_shader->programID(), "LightSpecular");
-	glUniform3fv(lightUniform, 1, &lightSpecular[0]);
+		auto lightSpecular = *(*Light::s_lights)[0]->m_specular;
+		lightUniform = glGetUniformLocation(m_shader->programID(), "LightSpecular");
+		glUniform3fv(lightUniform, 1, &lightSpecular[0]);
+	}
 
 	auto materialAmbient = *m_materialColour;
 	// bind material
@@ -250,8 +257,8 @@ void Model::drawModel(const mat4 &matrix) const
 	auto loc = glGetUniformLocation(m_shader->programID(), "perlin_texture");
 	glUniform1i(loc, 31);
 
-	for (auto &variable : *m_shaderVariables)
-		variable->setUniform();
+	/*for (auto &variable : *m_shaderVariables)
+		variable->setUniform();*/
 
 	glBindVertexArray(m_mesh->m_vao);
 	glDrawElements(m_drawType, m_mesh->m_indexes->size(), GL_UNSIGNED_INT, nullptr);

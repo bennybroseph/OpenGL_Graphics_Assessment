@@ -44,12 +44,13 @@ public:
 	static const Shader * positional();
 	static const Shader * phong();
 	static const Shader * perlin();
+	static const Shader * time();
 
 	static const vector<Shader *> * getShaders();
 
 	vectorPtrU<ShaderVariablePtrU> getVariables() const;
 
-		GLuint programID() const;
+	GLuint programID() const;
 
 	~Shader();
 
@@ -61,6 +62,7 @@ private:
 	static ShaderPtrU s_positional;
 	static ShaderPtrU s_phong;
 	static ShaderPtrU s_perlin;
+	static ShaderPtrU s_time;
 
 	static vectorPtrU<Shader *> s_shaders;
 
