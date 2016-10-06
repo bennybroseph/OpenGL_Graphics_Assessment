@@ -6,7 +6,8 @@ Each is implemented as an application class derived from <b>BaseApplication</b>.
 
 Current working examples are:
 
-- <b>IntroToOpenGL</b> [Read Me](https://docs.google.com/document/d/1IJtbUiv4CHTNCCFirTcbIrJLG3M_SDe69oCyLwc9VXA/edit?usp=sharing) (Demostrates setting up and OpenGL context window using GLFW as the wrangler)
+- <b>IntroToOpenGL</b> [ReadMe](https://docs.google.com/document/d/1IJtbUiv4CHTNCCFirTcbIrJLG3M_SDe69oCyLwc9VXA/edit?usp=sharing) (Demonstrates setting up and OpenGL context window using GLFW as the wrangler)
+- <b>RenderingGeometry</b> [ReadMe](https://docs.google.com/document/d/1CiJHh5O7DcQRhr8fZIBz0Rn27rjLUC5KNMHLDtJHbd0/edit?usp=sharing)(Demonstrates drawing a plane using a custom vertex and fragment shader)
 - <b>SolarSystemApplication</b> (uses Gizmos to demonstrate matrix parenting)
 - <b>RenderingGeomApplication</b> (rendered quad using GL VAO, VBO, IBO and hard-coded shader program)
 - <b>TexturingApplication</b> (texture applied across a quad using GL VAO, VBO and IBO)
