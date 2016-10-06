@@ -159,6 +159,9 @@
     <ClCompile Include="ShaderVariable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="IntroToOpenGL.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Transform.h">
@@ -246,6 +249,9 @@
       <Filter>Header Files\Gizmos\Shapes</Filter>
     </ClInclude>
     <ClInclude Include="ShaderVariable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IntroToOpenGL.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

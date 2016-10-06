@@ -16,9 +16,6 @@ using std::fstream;
 
 using Editor::Inspector;
 
-const static int GRID_SIZE = 10;
-const static int GRID_SEPARATOR = 5;
-
 int MyApplication::startup()
 {
 	createWindow("Intro to OpenGL", static_cast<int>(m_screenSize.x), static_cast<int>(m_screenSize.y));

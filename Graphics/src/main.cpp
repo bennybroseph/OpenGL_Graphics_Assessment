@@ -1,10 +1,11 @@
 #include <MyApplication.h>
+#include <IntroToOpenGL.h>
 
 int main()
 {
 	BaseApplication * app;
 
-	app = new MyApplication();
+	app = new IntroToOpenGL();
 	if (app->startup())
 		app->run();
 
