@@ -5,9 +5,6 @@
 #include <gl_core_4_4.h>
 
 #include "MasterHeader.h"
-#include <bitset>
-
-using std::bitset;
 
 class ShaderVariable;
 
@@ -32,6 +29,7 @@ class ShaderVariable
 		Range,
 		Min,
 		Max,
+		Step,
 	};
 
 	struct Parameter;
@@ -56,6 +54,18 @@ public:
 	void parseType(const string &text);
 	void parseParameters(const string &text);
 	void parseName(const string &text);
+
+	template<typename T>
+	/// <summary>
+	/// This is very dangerous as there is no way to type check.
+	/// Sets the value of the void pointer to whatever value is passed in.
+	/// A copy of the value is made in order to complete this action
+	/// </summary>
+	/// <param name="newValue">The new value to be used for this variable</param>
+	void setVariable(T newValue)
+	{
+		*m_data = newValue;
+	}
 
 private:
 

@@ -14,11 +14,15 @@ uniform vec3 LightAmbient;
 uniform vec3 LightDiffuse;
 uniform vec3 LightSpecular;
 
-uniform vec3 MaterialAmbient;
-uniform vec3 MaterialDiffuse;
-uniform vec3 MaterialSpecular;
+// Inspector Color()
+uniform vec3 MaterialAmbient = vec3(1.f, 1.f, 1.f);
+// Inspector Color()
+uniform vec3 MaterialDiffuse = vec3(1.f, 1.f, 1.f);
+// Inspector Color()
+uniform vec3 MaterialSpecular = vec3(1.f, 1.f, 1.f);
 
-uniform float SpecularPower;
+// Inspector Min(1.f) Max(500.f)
+uniform float SpecularPower = 5.f;
 
 uniform vec3 CameraPosition;
 

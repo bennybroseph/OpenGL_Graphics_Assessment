@@ -8,12 +8,12 @@ ShaderVariable::ShaderVariable(GLuint shader, const string &text)
 	parseType(text);
 }
 
-
 void ShaderVariable::drawGui() const
 {
 	auto colour = false;
 	auto range = false;
 	auto rangeData = vec2(0.f, 0.f);
+	auto step = 1.f;
 	auto min = 0.f;
 	auto max = 0.f;
 	for (auto &parameter : *m_parameters)
@@ -32,6 +32,9 @@ void ShaderVariable::drawGui() const
 		if (parameter->type == ParameterType::Max)
 			max = (*parameter->values)[0];
 
+		if (parameter->type == ParameterType::Step)
+			step = (*parameter->values)[0];
+
 	}
 
 	switch (m_type)
@@ -39,7 +42,12 @@ void ShaderVariable::drawGui() const
 	case VariableType::Float:
 	{
 		auto tempFloat = *static_cast<GLfloat *>(m_data.get());
-		if (ImGui::DragFloat(m_displayName.get(), &tempFloat, 0.25f))
+		if (!range)
+		{
+			if (ImGui::DragFloat(m_displayName.get(), &tempFloat, step, min, max))
+				*static_cast<GLfloat *>(m_data.get()) = tempFloat;
+		}
+		else if (ImGui::SliderFloat(m_displayName.get(), &tempFloat, rangeData[0], rangeData[1]))
 			*static_cast<GLfloat *>(m_data.get()) = tempFloat;
 	}
 	break;
@@ -47,7 +55,12 @@ void ShaderVariable::drawGui() const
 	case VariableType::Vector2:
 	{
 		auto tempVector = *static_cast<vec2 *>(m_data.get());
-		if (ImGui::DragFloat2(m_displayName.get(), value_ptr(tempVector), 0.25f))
+		if (!range)
+		{
+			if (ImGui::DragFloat2(m_displayName.get(), value_ptr(tempVector), step, min, max))
+				*static_cast<vec2 *>(m_data.get()) = tempVector;
+		}
+		else if (ImGui::SliderFloat2(m_displayName.get(), value_ptr(tempVector), rangeData[0], rangeData[1]))
 			*static_cast<vec2 *>(m_data.get()) = tempVector;
 	}
 	break;
@@ -55,8 +68,21 @@ void ShaderVariable::drawGui() const
 	case VariableType::Vector3:
 	{
 		auto tempVector = *static_cast<vec3 *>(m_data.get());
-		if (ImGui::DragFloat3(m_displayName.get(), value_ptr(tempVector), 0.25f))
-			*static_cast<vec3 *>(m_data.get()) = tempVector;
+		if (!colour)
+		{
+			if (!range)
+			{
+				if (ImGui::DragFloat3(m_displayName.get(), value_ptr(tempVector), step, min, max))
+					*static_cast<vec3 *>(m_data.get()) = tempVector;
+			}
+			else if (ImGui::SliderFloat3(m_displayName.get(), value_ptr(tempVector), rangeData[0], rangeData[1]))
+				*static_cast<vec3 *>(m_data.get()) = tempVector;
+		}
+		else
+		{
+			if (ImGui::ColorEdit3(m_displayName.get(), value_ptr(tempVector)))
+				*static_cast<vec3 *>(m_data.get()) = tempVector;
+		}
 	}
 	break;
 
@@ -68,7 +94,7 @@ void ShaderVariable::drawGui() const
 		{
 			if (!range)
 			{
-				if (ImGui::DragFloat4(m_displayName.get(), value_ptr(tempVector), 0.25f, min, max))
+				if (ImGui::DragFloat4(m_displayName.get(), value_ptr(tempVector), step, min, max))
 					*static_cast<vec4 *>(m_data.get()) = tempVector;
 			}
 			else if (ImGui::SliderFloat4(m_displayName.get(), value_ptr(tempVector), rangeData[0], rangeData[1]))
@@ -134,11 +160,15 @@ void ShaderVariable::parseType(const string &text)
 	currentText = currentText.substr(currentText.find(" ") + 1);
 	parseName(currentText);
 
+	auto equals = currentText.find("=");
 	if (type == "float")
 	{
 		m_type = VariableType::Float;
 
 		auto newFloat = new GLfloat(0.f);
+		if (equals != string::npos)
+			*newFloat = atof(currentText.substr(equals + 1, currentText.find(";")).c_str());
+
 		m_data.reset(newFloat);
 	}
 
@@ -147,6 +177,22 @@ void ShaderVariable::parseType(const string &text)
 		m_type = VariableType::Vector2;
 
 		auto newVector2 = new vec2(0.f);
+		if (equals != string::npos)
+		{
+			int currentFind = currentText.find("(") + 1;
+
+			GLfloat values[2];
+			for (auto i = 0; i < 2; ++i)
+			{
+				if (currentText.find(",") != string::npos)
+					values[i] = atof(currentText.substr(currentFind, currentText.find(",")).c_str());
+				else
+					values[i] = atof(currentText.substr(currentFind, currentText.find(")")).c_str());
+				currentFind = currentText.find(",", currentFind) + 1;
+			}
+			*newVector2 = vec2(values[0], values[1]);
+		}
+
 		m_data.reset(newVector2);
 	}
 	if (type == "vec3")
@@ -154,6 +200,21 @@ void ShaderVariable::parseType(const string &text)
 		m_type = VariableType::Vector3;
 
 		auto newVector3 = new vec3(0.f);
+		if (equals != string::npos)
+		{
+			int currentFind = currentText.find("(") + 1;
+
+			GLfloat values[3];
+			for (auto i = 0; i < 3; ++i)
+			{
+				if (currentText.find(",") != string::npos)
+					values[i] = atof(currentText.substr(currentFind, currentText.find(",")).c_str());
+				else
+					values[i] = atof(currentText.substr(currentFind, currentText.find(")")).c_str());
+				currentFind = currentText.find(",", currentFind) + 1;
+			}
+			*newVector3 = vec3(values[0], values[1], values[2]);
+		}
 		m_data.reset(newVector3);
 	}
 	if (type == "vec4")
@@ -161,6 +222,21 @@ void ShaderVariable::parseType(const string &text)
 		m_type = VariableType::Vector4;
 
 		auto newVector4 = new vec4(0.f);
+		if (equals != string::npos)
+		{
+			int currentFind = currentText.find("(") + 1;
+
+			GLfloat values[4];
+			for (auto i = 0; i < 4; ++i)
+			{
+				if (currentText.find(",") != string::npos)
+					values[i] = atof(currentText.substr(currentFind, currentText.find(",")).c_str());
+				else
+					values[i] = atof(currentText.substr(currentFind, currentText.find(")")).c_str());
+				currentFind = currentText.find(",", currentFind) + 1;
+			}
+			*newVector4 = vec4(values[0], values[1], values[2], values[3]);
+		}
 		m_data.reset(newVector4);
 
 	}
@@ -207,13 +283,16 @@ void ShaderVariable::parseParameters(const string &text)
 			}
 		}
 
-		if (parameterType == "Min" || parameterType == "Max")
+		if (parameterType == "Min" || parameterType == "Max" || parameterType == "Step")
 		{
 			if (parameterType == "Min")
 				newParameter->type = ParameterType::Min;
 
 			if (parameterType == "Max")
 				newParameter->type = ParameterType::Max;
+
+			if (parameterType == "Step")
+				newParameter->type = ParameterType::Step;
 
 			auto valueParse = currentParameter.substr(currentParameter.find("(") + 1);
 			valueParse = valueParse.substr(0, valueParse.find(")"));

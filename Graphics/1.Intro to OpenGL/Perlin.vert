@@ -21,7 +21,7 @@ uniform mat4 NormalMatrix;
 uniform mat4 ProjectionViewModel;
 
 uniform sampler2D perlin_texture;
-// Inspector
+// Inspector Step(0.01f)
 uniform float perlinCoefficient = 0.25f;
 
 void main()

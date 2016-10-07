@@ -7,7 +7,8 @@ out vec4 outColour;
 
 uniform vec3 LightAmbient;
 
-uniform vec3 MaterialAmbient;
+// Inspector Color()
+uniform vec3 MaterialAmbient = vec3(1.f, 1.f, 1.f);
 
 uniform sampler2D diffuseMap;
 

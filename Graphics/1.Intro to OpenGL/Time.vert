@@ -17,6 +17,7 @@ void main()
 	vColour = inColour;
 
 	vec4 position = inPosition;
-	position.y += sin( time + inPosition.x ) * heightScale;
+	position.y += sin( time + inPosition.x ) * heightScale;
+
     gl_Position = ProjectionViewModel * position;
 }

@@ -1,12 +1,14 @@
 #include <MyApplication.h>
 #include <IntroToOpenGL.h>
 #include <RenderingGeometry.h>
+#define TINYOBJLOADER_IMPLEMENTATION
+#include <TinyObjLoader.h>
 
 int main()
 {
 	BaseApplication * app;
 
-	app = new RenderingGeometry();
+	app = new TinyObjLoader();
 	if (app->startup())
 		app->run();
 

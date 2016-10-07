@@ -22,7 +22,7 @@ int RenderingGeometry::startup()
 	m_plane->addComponent(Gizmos::Plane::createModel(32.f));
 
 	auto model = m_plane->getComponent<Model>();
-	model->setShader(Shader::time());
+	model->setShader(Shader::basic());
 	model->setName("Animated Plane");
 
 	return true;
@@ -60,8 +60,8 @@ void RenderingGeometry::lateUpdate()
 
 void RenderingGeometry::draw()
 {
-	Transform::drawGizmos(mat4(1), 0);
+	//Transform::drawGizmos(mat4(1), 0);
 
 	m_plane->draw();
-	Gizmos::drawGrid(vec3(0.f), vec2(1.f, 1.f), vec2(5.f, 5.f));
+	//Gizmos::drawGrid(vec3(0.f), vec2(1.f, 1.f), vec2(5.f, 5.f));
 }

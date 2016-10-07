@@ -163,7 +163,10 @@
       <Filter>Source Files\Application</Filter>
     </ClCompile>
     <ClCompile Include="RenderingGeometry.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="TinyObjLoader.cpp">
+      <Filter>Source Files\Application</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -258,7 +261,10 @@
       <Filter>Header Files\Application</Filter>
     </ClInclude>
     <ClInclude Include="RenderingGeometry.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="TinyObjLoader.h">
+      <Filter>Header Files\Application</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

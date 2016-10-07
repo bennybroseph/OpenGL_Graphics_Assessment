@@ -1,5 +1,5 @@
-#ifndef INTROTOOPENGL_H_
-#define INTROTOOPENGL_H_
+#ifndef _INTROTOOPENGL_H_
+#define _INTROTOOPENGL_H_
 #pragma once
 
 #include "BaseApplication.h"
@@ -25,4 +25,4 @@ private:
 };
 
 
-#endif // INTROTOOPENGL_H_
+#endif // _INTROTOOPENGL_H_

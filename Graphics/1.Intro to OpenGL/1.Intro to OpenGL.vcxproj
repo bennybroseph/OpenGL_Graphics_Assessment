@@ -161,6 +161,7 @@
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="StaticTransform.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="TinyObjLoader.cpp" />
     <ClCompile Include="Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -194,6 +195,7 @@
     <ClInclude Include="ShaderVariable.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="TinyObjLoader.h" />
     <ClInclude Include="Transform.h" />
   </ItemGroup>
   <ItemGroup>

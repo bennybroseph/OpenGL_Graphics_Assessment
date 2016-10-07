@@ -13,17 +13,19 @@ void Mesh::drawMesh(
 	glUseProgram(Shader::basic()->programID());
 
 	GLuint matUniform = glGetUniformLocation(Shader::basic()->programID(), "ProjectionViewModel");
-	glUniformMatrix4fv(
-		matUniform,
-		1,
-		false,
-		value_ptr(Camera::mainCamera()->getProjectionView() * matrix));
+	if (matUniform != -1)
+		glUniformMatrix4fv(
+			matUniform,
+			1,
+			false,
+			value_ptr(Camera::mainCamera()->getProjectionView() * matrix));
 
 	if (drawMesh)
 	{
 		// bind colour
 		GLuint materialUniform = glGetUniformLocation(Shader::basic()->programID(), "MaterialAmbient");
-		glUniform4fv(materialUniform, 1, &colour[0]);
+		if (materialUniform != -1)
+			glUniform4fv(materialUniform, 1, &colour[0]);
 
 		glBindVertexArray(m_vao);
 		glDrawElements(drawType, m_indexes->size(), GL_UNSIGNED_INT, nullptr);
@@ -34,7 +36,8 @@ void Mesh::drawMesh(
 		{
 			// bind colour
 			GLuint materialUniform = glGetUniformLocation(Shader::basic()->programID(), "MaterialAmbient");
-			glUniform4fv(materialUniform, 1, &vec4(1.f, 1.f, 1.f, 1.f)[0]);
+			if (materialUniform != -1)
+				glUniform4fv(materialUniform, 1, &vec4(1.f, 1.f, 1.f, 1.f)[0]);
 
 			glBindVertexArray(m_vao);
 			glDrawElements(drawType, m_indexes->size(), GL_UNSIGNED_INT, nullptr);
