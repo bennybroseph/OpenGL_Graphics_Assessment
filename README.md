@@ -1,4 +1,4 @@
-# ComputerGraphics
+# Graphics Assessment
 
 [Website](https://bennybroseph.github.io/Year-2/)
 
