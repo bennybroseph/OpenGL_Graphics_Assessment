@@ -1,5 +1,7 @@
 # ComputerGraphics
 
+[Website](https://bennybroseph.github.io/Year-2/)
+
 This repository is for the Graphics assessment for Year 2. It contains multiple compiled programs for each required part of the assessment. Check the releases tab for an easy way to find a compiled and zipped version of each program.
 
 Each is implemented as an application class derived from <b>BaseApplication</b>. To run a certain example simply change the application being created within <b>main.cpp</b>.
