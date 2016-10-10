@@ -12,7 +12,7 @@ int main()
 {
 	BaseApplication * app;
 
-	app = new ProceduralGeneration();
+	app = new MyApplication();
 	if (app->startup())
 		app->run();
 

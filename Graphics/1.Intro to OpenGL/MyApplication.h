@@ -35,9 +35,9 @@ private:
 	GameObjectPtrU m_camera = nullptr;
 	GameObjectPtrU m_light = nullptr;
 
-	GameObjectPtrU m_sun = nullptr;
+	/*GameObjectPtrU m_sun = nullptr;
 	GameObjectPtrU m_earth = nullptr;
-	GameObjectPtrU m_moon = nullptr;
+	GameObjectPtrU m_moon = nullptr;*/
 
 	const vectorPtrU<GameObjectPtrU> m_shapes = make_unique<vector<GameObjectPtrU>>();
 

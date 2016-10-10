@@ -44,8 +44,9 @@ int MyApplication::startup()
 	m_light->transform()->setPosition(vec3(0.f, 5.f, 0.f));
 	m_light->transform()->rotate(45.f, vec3(1.f, 0.f, 0.f));
 
-	m_sun = make_unique<GameObject>();
+	/*m_sun = make_unique<GameObject>();
 	m_sun->setName("Sun");
+	m_sun->transform()->setScale(2.f);
 	m_sun->addComponent(Gizmos::Sphere::create());
 
 	auto model = m_sun->getComponent<Model>();
@@ -54,6 +55,7 @@ int MyApplication::startup()
 	m_earth = make_unique<GameObject>();
 	m_earth->setName("Earth");
 	m_earth->transform()->setLocalPosition(vec3(2.f, 0.f, 0.f));
+	m_earth->transform()->setScale(0.5f);
 	m_earth->transform()->setParent(m_sun->transform(), false);
 	m_earth->addComponent(Gizmos::Sphere::create());
 
@@ -63,17 +65,18 @@ int MyApplication::startup()
 	m_moon = make_unique<GameObject>();
 	m_moon->setName("Moon");
 	m_moon->transform()->setLocalPosition(vec3(1.5f, 0.f, 0.f));
+	m_moon->transform()->setScale(0.5f);
 	m_moon->transform()->setParent(m_earth->transform(), false);
 	m_moon->addComponent(Gizmos::Sphere::create());
 
 	model = m_moon->getComponent<Model>();
-	model->setMaterialColour(vec4(1, 1, 1, 1));
+	model->setMaterialColour(vec4(1, 1, 1, 1));*/
 
 	auto newPlane = make_unique<GameObject>();
 	newPlane->setName("Test Plane");
 
 	newPlane->addComponent(Gizmos::Plane::createModel(32.f));
-	model = newPlane->getComponent<Model>();
+	auto model = newPlane->getComponent<Model>();
 	model->setShader(Shader::basic());
 	model->addTexture("data/textures/crate.png", FilteringType::Nearest);
 	model->setDiffuseTexture("data/textures/four_diffuse.tga", FilteringType::Linear);
@@ -90,7 +93,7 @@ int MyApplication::startup()
 	model->setMaterialColour(vec4(1));
 
 	newSphere->transform()->setLocalPosition(vec3(-2.f, 0.f, 0.f));
-	newSphere->transform()->setParent(m_sun->transform());
+	//newSphere->transform()->setParent(m_sun->transform());
 	m_shapes->push_back(move(newSphere));
 
 	return true;
@@ -122,7 +125,7 @@ void MyApplication::parseInput()
 	if (Input::getKey(GLFW_KEY_F1) == GLFW_PRESS)
 		m_shouldDrawGui = !m_shouldDrawGui;
 
-	if (Input::getKey(GLFW_KEY_1) >= GLFW_PRESS)
+	/*if (Input::getKey(GLFW_KEY_1) >= GLFW_PRESS)
 		m_sun->transform()->translate(vec3(0.f, 1.f * m_deltaTime, 0.f));
 
 	if (Input::getKey(GLFW_KEY_2) >= GLFW_PRESS)
@@ -143,12 +146,16 @@ void MyApplication::parseInput()
 		m_sun->transform()->scale(vec3(1.f + m_deltaTime, 1.f + m_deltaTime, 1.f + m_deltaTime));
 
 	if (Input::getKey(GLFW_KEY_COMMA, GLFW_MOD_SHIFT) >= GLFW_PRESS)
-		m_sun->transform()->scale(vec3(1.f - m_deltaTime, 1.f - m_deltaTime, 1.f - m_deltaTime));
+		m_sun->transform()->scale(vec3(1.f - m_deltaTime, 1.f - m_deltaTime, 1.f - m_deltaTime));*/
 }
 
 void MyApplication::update()
 {
 	m_camera->getComponent<FlyCamera>()->update(m_deltaTime);
+
+	/*m_sun->transform()->rotate(15.f * m_deltaTime, vec3(0.f, 1.f, 0.f));
+	m_earth->transform()->rotate(15.f * m_deltaTime, vec3(0.f, 1.f, 0.f));
+	m_moon->transform()->rotate(15.f * m_deltaTime, vec3(0.f, 1.f, 0.f));*/
 }
 
 void MyApplication::lateUpdate()
@@ -175,9 +182,9 @@ void MyApplication::draw()
 
 void MyApplication::drawSolarSystem() const
 {
-	m_sun->draw();
+	/*m_sun->draw();
 	m_earth->draw();
-	m_moon->draw();
+	m_moon->draw();*/
 
 	m_light->draw();
 }
