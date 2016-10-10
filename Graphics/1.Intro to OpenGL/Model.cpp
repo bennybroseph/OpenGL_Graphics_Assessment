@@ -20,7 +20,7 @@ Model::Model() : Component()
 
 	auto dims = 64.f;
 	auto perlin_data = new float[dims * dims];
-	auto scale = (1.0f / dims) * 3;
+	auto scale = (1.0f / dims) * 5.5f;
 	for (auto x = 0.f; x < dims; ++x)
 	{
 		for (auto y = 0.f; y < dims; ++y)

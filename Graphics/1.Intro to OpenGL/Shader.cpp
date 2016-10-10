@@ -76,7 +76,7 @@ int Shader::init()
 	returnValue = s_perlin->addShader("Perlin.vert", ShaderType::Vertex);
 	if (returnValue != 0)
 		return returnValue;
-	returnValue = s_perlin->addShader("Texture.frag", ShaderType::Fragment);
+	returnValue = s_perlin->addShader("Perlin.frag", ShaderType::Fragment);
 	if (returnValue != 0)
 		return returnValue;
 

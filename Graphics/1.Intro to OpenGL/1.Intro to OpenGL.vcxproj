@@ -137,9 +137,11 @@
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="BaseApplication.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CamerasAndProjections.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="DirectionalLight.cpp" />
+    <ClCompile Include="DirectLighting.cpp" />
     <ClCompile Include="FlyCamera.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Gizmos.cpp" />
@@ -154,6 +156,7 @@
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Plane.cpp" />
     <ClCompile Include="Planet.cpp" />
+    <ClCompile Include="ProceduralGeneration.cpp" />
     <ClCompile Include="RenderingGeometry.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -161,6 +164,7 @@
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="StaticTransform.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="Texturing.cpp" />
     <ClCompile Include="TinyObjLoader.cpp" />
     <ClCompile Include="Transform.cpp" />
   </ItemGroup>
@@ -170,10 +174,12 @@
     <ClInclude Include="..\src\imgui_impl_glfw_gl3.h" />
     <ClInclude Include="BaseApplication.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CamerasAndProjections.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="Delegate.h" />
     <ClInclude Include="DirectionalLight.h" />
+    <ClInclude Include="DirectLighting.h" />
     <ClInclude Include="FlyCamera.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Gizmos.h" />
@@ -189,12 +195,14 @@
     <ClInclude Include="Object.h" />
     <ClInclude Include="Plane.h" />
     <ClInclude Include="Planet.h" />
+    <ClInclude Include="ProceduralGeneration.h" />
     <ClInclude Include="RenderingGeometry.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="ShaderVariable.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="Texturing.h" />
     <ClInclude Include="TinyObjLoader.h" />
     <ClInclude Include="Transform.h" />
   </ItemGroup>

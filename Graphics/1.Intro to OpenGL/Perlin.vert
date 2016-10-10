@@ -22,7 +22,7 @@ uniform mat4 ProjectionViewModel;
 
 uniform sampler2D perlin_texture;
 // Inspector Step(0.01f)
-uniform float perlinCoefficient = 0.25f;
+uniform float perlinCoefficient = 0.15f;
 
 void main()
 {

@@ -1,9 +1,11 @@
+#ifndef _RENDERINGGEOMETRY_H_
+#define _RENDERINGGEOMETRY_H_
 #pragma once
 
 #include "BaseApplication.h"
 #include "GameObject.h"
 
-class RenderingGeometry  : public BaseApplication
+class RenderingGeometry : public BaseApplication
 {
 public:
 
@@ -24,3 +26,4 @@ private:
 
 };
 
+#endif // _RENDERINGGEOMETRY_H_

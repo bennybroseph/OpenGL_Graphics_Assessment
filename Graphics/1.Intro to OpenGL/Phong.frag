@@ -22,7 +22,7 @@ uniform vec3 MaterialDiffuse = vec3(1.f, 1.f, 1.f);
 uniform vec3 MaterialSpecular = vec3(1.f, 1.f, 1.f);
 
 // Inspector Min(1.f) Max(500.f)
-uniform float SpecularPower = 5.f;
+uniform float SpecularPower = 32.f;
 
 uniform vec3 CameraPosition;
 
