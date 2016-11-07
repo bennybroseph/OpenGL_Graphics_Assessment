@@ -1,6 +1,6 @@
 # Graphics Assessment
 
-[Website](https://bennybroseph.github.io/Year-2/)
+[Website](https://bennybroseph.github.io/OpenGL_Graphics_Assessment/)
 
 This repository is for the Graphics assessment for Year 2. It contains multiple compiled programs for each required part of the assessment. Check the releases tab for an easy way to find a compiled and zipped version of each program.
 
