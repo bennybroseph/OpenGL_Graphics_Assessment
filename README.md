@@ -18,6 +18,12 @@ Current working examples are:
 ## [<b>Putting it all Together</b>](https://github.com/bennybroseph/Year-2/releases/tag/Final)
 This is the final product. After putting all of the pieces together using a component based archetecture, we get this as the result. It contains a basic scene editor modeled after Unity complete with a transform hierachy and inspector. The first .exe provides a basic solar system of a sun, earth and moon to show transform parenting. The second one provides an example of texturing.
 
+### Different Material Ambient Color
+This Scene shows three spheres of decreasing sizes which are parented from largest to smallest. This scene is representing a sort of Sun, Earth,  and Moon. When the Sun rotates, the Earth rotates. When the Earth rotates, the Moon rotates. This is represented in the Hierarchy window on the left. The Sun is the root, the Earth is a child of the sun, the Earth is a parent of the Moon, and the Moon is a child of the Earth. On the right, the inspector window show the current values for the selected object(highlighted in a light purple color). The green, blue, and red lines are the Sun's up, forward, and right directions based on it's transform's orientation respectivly.
 ![Alt text](Images/SolarSystemSun.PNG?raw=true)
+### Different Color Directional Light Diffuse Color + Material Ambient Color
+This time the directional light is selected. In the inspector, the diffuse color was changed to a bright purple color. This is represented by the directional light's gizmo at the top center of the scene. The line starts out bright purple and fades into the specular color which is green.
 ![Alt text](Images/SolarSystemDirectionalLight.PNG?raw=true)
+### Texture Shader Options
+This Scene shows off the multiple different options for shaders which can be chagned at runtime. Each shader has it's own paramerters which are defined in the shader itself using a comment and read in by my custom parser for it. The options for a texture shader are shown in the screenshot. Clicking on the '...' button will open up a standard windows file open dialogue and the new image file can be selected from there. The object will then update it's texture immediatly upon selection.
 ![Alt text](Images/ShaderTexture.PNG?raw=true)
