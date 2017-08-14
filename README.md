@@ -17,3 +17,4 @@ Current working examples are:
 
 ## [<b>Putting it all Together</b>](https://github.com/bennybroseph/Year-2/releases/tag/Final)
 This is the final product. After putting all of the pieces together using a component based archetecture, we get this as the result. It contains a basic scene editor modeled after Unity complete with a transform hierachy and inspector. The first .exe provides a basic solar system of a sun, earth and moon to show transform parenting. The second one provides an example of texturing.
+![Alt text](/Images/SolarSystemSun.png?raw=true "Optional Title")
